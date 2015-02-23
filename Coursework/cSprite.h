@@ -1,10 +1,3 @@
-/*
-=================
-cSprite.h
-- Header file for class definition - SPECIFICATION
-- Header file for the Sprite class
-=================
-*/
 #pragma once
 
 #include "GameConstants.h"

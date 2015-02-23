@@ -45,8 +45,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
         return 1;
     }
 
-	cSprite cardSprite;
-
+	cGame game;
+	pgmWNDMgr->setGame(&game);
     //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
     {
@@ -55,9 +55,11 @@ int WINAPI WinMain(HINSTANCE hInstance,
         //We get the time that passed since the last frame
 		float elapsedTime = pgmWNDMgr->getElapsedSeconds();
 
+		game.Update(elapsedTime);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//game->render();
+		game.Render();
 
 		pgmWNDMgr->swapBuffers();
     }

@@ -12,9 +12,10 @@ cWNDManager.cpp
 #include "wglext.h"
 #include "windowOGL.h"
 #include "GameConstants.h"
-#include "Game.h"
+#include "cGame.h"
 
 cWNDManager* cWNDManager::pInstance = NULL;
+cGame* cWNDManager::game = NULL;
 
 typedef HGLRC(APIENTRYP PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC, HGLRC, const int*);
 PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
@@ -240,6 +241,8 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		{
 			DestroyWindow(pInstance->m_hwnd); //Send a WM_DESTROY message
 		}
+		else if(game)
+			game->HandleInput(wParam);
 	}
 		break;
 	default:

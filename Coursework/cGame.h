@@ -14,6 +14,6 @@ public:
 	~cGame();
 
 	void HandleInput(WPARAM key);
-	void Update();
+	void Update(float delta);
 	void Render();
 };

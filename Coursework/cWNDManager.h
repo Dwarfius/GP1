@@ -7,6 +7,7 @@ cWNDManager.h
 
 #include <windows.h>
 #include "windowOGL.h"
+#include "cGame.h"
 
 class cWNDManager
 {
@@ -31,6 +32,7 @@ public:
 	float getElapsedSeconds();
 	static cWNDManager* getInstance();
 
+	void setGame(cGame *cGame) { game = cGame; }
 
 private:
 	static cWNDManager* pInstance;
@@ -49,4 +51,6 @@ private:
 
 	HWND m_hwnd; //Window handle
 	HDC m_hdc; //Device context
+
+	static cGame *game; //
 };
