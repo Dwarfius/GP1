@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="b1fv.png" />
+    <Image Include="ship.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{47639238-92BD-46BF-BFCE-4C0AB1714AFA}</ProjectGuid>

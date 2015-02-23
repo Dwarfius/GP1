@@ -4,6 +4,8 @@
 class cGame
 {
 private:
+	HWND hWnd;
+
 	bool bPaused;
 	bool bMenu;
 
@@ -12,6 +14,8 @@ private:
 public:
 	cGame();
 	~cGame();
+
+	void SetHWND(HWND phWnd) { hWnd = phWnd; }
 
 	void HandleInput(WPARAM key);
 	void Update(float delta);

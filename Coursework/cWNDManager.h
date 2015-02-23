@@ -32,7 +32,7 @@ public:
 	float getElapsedSeconds();
 	static cWNDManager* getInstance();
 
-	void setGame(cGame *cGame) { game = cGame; }
+	void setGame(cGame *cGame) { game = cGame; game->SetHWND(m_hwnd); }
 
 private:
 	static cWNDManager* pInstance;

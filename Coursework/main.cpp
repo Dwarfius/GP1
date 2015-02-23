@@ -16,8 +16,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 {
 
     //Set our window settings
-    const int windowWidth = 1024;
-    const int windowHeight = 768;
+    const int windowWidth = WINDOW_WIDTH;
+    const int windowHeight = WINDOW_HEIGHT;
     const int windowBPP = 16;
 
     //This is our window

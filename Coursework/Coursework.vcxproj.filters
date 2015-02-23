@@ -73,5 +73,8 @@
     <Image Include="b1fv.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ship.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@ private:
 	float rotation;
 	glm::mat4x4 transform;
 	RECT boundingRect;
+	bool dirty;
 
 	// Texture width & Height
 	int textureWidth;
@@ -22,13 +23,13 @@ public:
 	~cSprite();
 
 	glm::vec2 getSpritePos() { return pos; }
-	void setSpritePos(glm::vec2 sPosition) { pos = sPosition; }
+	void setSpritePos(glm::vec2 sPosition) { pos = sPosition; dirty = true; }
 
 	glm::vec2 getSpriteScale() { return scale; }
-	void setSpriteScale(glm::vec2 sScale) { scale = sScale; }
+	void setSpriteScale(glm::vec2 sScale) { scale = sScale; dirty = true; }
 
 	float getSpriteRotation() { return rotation; }
-	void setSpriteRotation(float sRotation) { rotation = sRotation; }
+	void setSpriteRotation(float sRotation) { rotation = sRotation; dirty = true; }
 
 	RECT getSpriteBoundingRect() { return boundingRect; }
 
