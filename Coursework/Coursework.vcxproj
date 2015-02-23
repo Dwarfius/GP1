@@ -36,7 +36,6 @@
     <Library Include="Libraries\ILUT.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="b1fv.png" />
     <Image Include="ship.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

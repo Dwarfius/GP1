@@ -70,9 +70,6 @@
     <Library Include="Libraries\ILUT.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="b1fv.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="ship.png">
       <Filter>Resource Files</Filter>
     </Image>

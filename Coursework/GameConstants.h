@@ -35,6 +35,7 @@
 // Textures & Sprites
 #include "cTexture.h"
 #include "cSprite.h"
+#include "cGameObject.h"
 
 using namespace std;
 
