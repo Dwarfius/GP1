@@ -18,8 +18,6 @@ void cSprite::render()
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
 
 	glMatrixMode(GL_MODELVIEW);
-	if (dirty)
-		updateMatrix();
 	glLoadMatrixf(glm::value_ptr(transform));
 
 	glBegin(GL_QUADS);
@@ -31,7 +29,7 @@ void cSprite::render()
 		glTexCoord2i(1, 1);
 		glVertex2i(textureWidth / 2, textureHeight / 2);
 		glTexCoord2i(0, 1);
-		glVertex2i(-textureWidth / 2, textureHeight/2);
+		glVertex2i(-textureWidth / 2, textureHeight / 2);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
@@ -50,15 +48,11 @@ void cSprite::updateMatrix()
 	transform = glm::translate(transform, glm::vec3(pos.x, pos.y, 0));
 	transform = glm::rotate(transform, rotation, glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(scale.x, scale.y, 0));
-	dirty = false;
 }
 
 //call after the updateMatrix
 void cSprite::updateBoundingRect()
 {
-	if (dirty)
-		updateMatrix();
-
 	glm::vec4 points[4] = { glm::vec4(-textureWidth / 2, -textureHeight / 2, 0, 0), 
 							glm::vec4(textureWidth / 2, -textureHeight / 2, 0, 0),
 							glm::vec4(textureWidth / 2, textureHeight / 2, 0, 0), 

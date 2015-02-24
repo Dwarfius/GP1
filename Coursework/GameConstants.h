@@ -26,16 +26,12 @@
 #include "glm\gtc\quaternion.hpp"
 #include "glm\gtc\type_ptr.hpp"
 #include "glm\gtx\quaternion.hpp"
+#include "glm\gtx\rotate_vector.hpp"
 
 // STL Container & Algorithms
 #include <vector>
 #include <map>
 #include <algorithm>
-
-// Textures & Sprites
-#include "cTexture.h"
-#include "cSprite.h"
-#include "cGameObject.h"
 
 using namespace std;
 

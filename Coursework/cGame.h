@@ -1,6 +1,10 @@
 #pragma once
 
-#include "GameConstants.h"
+#include <Windows.h>
+#include "glm\glm.hpp"
+#include "cTexture.h"
+#include "cGameObject.h"
+
 class cGame
 {
 private:
@@ -11,8 +15,7 @@ private:
 	bool bMenu;
 
 	cTexture texture;
-	cSprite sprite;
-	cGameObject gameObject;
+	vector<cGameObject> gameObjects;
 
 public:
 	cGame();
