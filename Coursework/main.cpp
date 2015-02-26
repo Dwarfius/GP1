@@ -46,7 +46,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
     }
 
 	cGame game;
-	pgmWNDMgr->setGame(&game);
     //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
     {

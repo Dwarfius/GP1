@@ -13,6 +13,7 @@ cWNDManager.cpp
 #include "windowOGL.h"
 #include "GameConstants.h"
 #include "cInput.h"
+#include <Windowsx.h>
 
 cWNDManager* cWNDManager::pInstance = NULL;
 
@@ -218,7 +219,7 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 		pInstance->m_isRunning = true; //Mark our window as running
 	}
-		break;
+		return 0;
 	case WM_DESTROY: // window destroy
 	case WM_CLOSE: // windows is closing
 		wglMakeCurrent(pInstance->m_hdc, NULL);
@@ -226,25 +227,37 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		pInstance->m_isRunning = false; //Stop the main loop
 		PostQuitMessage(0); //Send a WM_QUIT message
 		return 0;
-		break;
 	case WM_SIZE:
 	{
 		int height = HIWORD(lParam);        // retrieve width and height
 		int width = LOWORD(lParam);
 		pInstance->getAttachedWND()->onResize(width, height); //Call the example's resize method
 	}
-		break;
+		return 0;
 	case WM_KEYDOWN:
 		cInput::SetKey(wParam, true);
-		break;
+		return 0;
 	case WM_KEYUP:
 		cInput::SetKey(wParam, false);
-		break;
+		return 0;
+	case WM_LBUTTONDOWN:
+		cInput::SetButton(0, true);
+		return 0;
+	case WM_LBUTTONUP:
+		cInput::SetButton(0, false);
+		return 0;
+	case WM_RBUTTONDOWN:
+		cInput::SetButton(1, true);
+		return 0;
+	case WM_RBUTTONUP:
+		cInput::SetButton(1, false);
+		return 0;
+	case WM_MOUSEMOVE:
+		cInput::SetMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		return 0;
 	default:
-		break;
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
-
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 windowOGL*  cWNDManager::getAttachedWND()

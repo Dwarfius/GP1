@@ -8,9 +8,6 @@
 class cGame
 {
 private:
-	HWND hWnd;
-	glm::vec2 mousePos;
-
 	bool bPaused;
 	bool bMenu;
 
@@ -20,8 +17,6 @@ private:
 public:
 	cGame();
 	~cGame();
-
-	void SetHWND(HWND phWnd) { hWnd = phWnd; }
 
 	void Update(float delta);
 	void Render();

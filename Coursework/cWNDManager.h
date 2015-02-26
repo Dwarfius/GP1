@@ -32,8 +32,6 @@ public:
 	float getElapsedSeconds();
 	static cWNDManager* getInstance();
 
-	void setGame(cGame *pGame) { pGame->SetHWND(m_hwnd); }
-
 private:
 	static cWNDManager* pInstance;
 	windowOGL* m_winOGL; //A link to the OGL window
