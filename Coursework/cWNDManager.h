@@ -32,7 +32,7 @@ public:
 	float getElapsedSeconds();
 	static cWNDManager* getInstance();
 
-	void setGame(cGame *cGame) { game = cGame; game->SetHWND(m_hwnd); }
+	void setGame(cGame *pGame) { pGame->SetHWND(m_hwnd); }
 
 private:
 	static cWNDManager* pInstance;
@@ -51,6 +51,4 @@ private:
 
 	HWND m_hwnd; //Window handle
 	HDC m_hdc; //Device context
-
-	static cGame *game; //
 };

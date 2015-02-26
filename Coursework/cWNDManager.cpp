@@ -12,10 +12,9 @@ cWNDManager.cpp
 #include "wglext.h"
 #include "windowOGL.h"
 #include "GameConstants.h"
-#include "cGame.h"
+#include "cInput.h"
 
 cWNDManager* cWNDManager::pInstance = NULL;
-cGame* cWNDManager::game = NULL;
 
 typedef HGLRC(APIENTRYP PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC, HGLRC, const int*);
 PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
@@ -236,14 +235,10 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	}
 		break;
 	case WM_KEYDOWN:
-	{
-		if (wParam == VK_ESCAPE) //If the escape key was pressed
-		{
-			DestroyWindow(pInstance->m_hwnd); //Send a WM_DESTROY message
-		}
-		else if(game)
-			game->HandleInput(wParam);
-	}
+		cInput::SetKey(wParam, true);
+		break;
+	case WM_KEYUP:
+		cInput::SetKey(wParam, false);
 		break;
 	default:
 		break;

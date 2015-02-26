@@ -15,7 +15,7 @@ private:
 	bool bMenu;
 
 	cTexture texture;
-	vector<cGameObject> gameObjects;
+	vector<cGameObject*> gameObjects;
 
 public:
 	cGame();
@@ -23,7 +23,6 @@ public:
 
 	void SetHWND(HWND phWnd) { hWnd = phWnd; }
 
-	void HandleInput(WPARAM key);
 	void Update(float delta);
 	void Render();
 };
