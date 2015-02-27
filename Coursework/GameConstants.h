@@ -39,3 +39,7 @@ using namespace std;
 #define WINDOW_TITLE "Space Arcade Game"
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
+
+struct RECTF {
+	float left, top, right, bottom;
+};

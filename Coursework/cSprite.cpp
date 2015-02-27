@@ -57,24 +57,25 @@ void cSprite::updateBoundingRect()
 							glm::vec4(textureWidth / 2, -textureHeight / 2, 0, 0),
 							glm::vec4(textureWidth / 2, textureHeight / 2, 0, 0), 
 							glm::vec4(-textureWidth / 2, textureHeight / 2, 0, 0) };
+#pragma message(": Warning: This matrix doesn't translate to world coords " __FILE__)
 	for (int i = 0; i < 4; i++)
 		points[i] = transform * points[i];
 
-	boundingRect.left = (int)points[0].x;
-	boundingRect.bottom = (int)points[0].y;
-	boundingRect.right = (int)points[0].x;
-	boundingRect.top = (int)points[0].y;
+	boundingRect.left = points[0].x;
+	boundingRect.bottom = points[0].y;
+	boundingRect.right = points[0].x;
+	boundingRect.top = points[0].y;
 
 	for (int i = 1; i < 4; i++)
 	{
-		if (boundingRect.left >(int)points[i].x)
-			boundingRect.left = (int)points[i].x;
-		if (boundingRect.top < (int)points[i].y)
-			boundingRect.top = (int)points[i].y;
+		if (boundingRect.left > points[i].x)
+			boundingRect.left = points[i].x;
+		if (boundingRect.top < points[i].y)
+			boundingRect.top = points[i].y;
 
-		if (boundingRect.bottom >(int)points[i].y)
-			boundingRect.bottom = (int)points[i].y;
-		if (boundingRect.right < (int)points[i].x)
-			boundingRect.right = (int)points[i].x;
+		if (boundingRect.bottom > points[i].y)
+			boundingRect.bottom = points[i].y;
+		if (boundingRect.right < points[i].x)
+			boundingRect.right = points[i].x;
 	}
 }

@@ -3,7 +3,7 @@
 
 #define GLX_GLXEXT_LEGACY //Must be declared so that our local glxext.h is picked up, rather than the system one
 
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include "windowOGL.h"
 #include "GameConstants.h"
@@ -14,6 +14,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR cmdLine,
                    int cmdShow)
 {
+	//for debug
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+	freopen("CON", "w", stdout);
 
     //Set our window settings
     const int windowWidth = WINDOW_WIDTH;
@@ -56,6 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 		game.Update(elapsedTime);
 
+		game.CollisionUpdate();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		game.Render();

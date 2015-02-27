@@ -24,6 +24,8 @@ public:
 	void SetVelocity(float pVelocity) { velocity = glm::clamp(pVelocity, -maxSpeed, maxSpeed); }
 	void AddVelocity(float delta) { velocity = glm::clamp(velocity + delta, -maxSpeed, maxSpeed); }
 
+	RECTF GetRect() { return sprite->getSpriteBoundingRect(); }
+
 	void SetSprite(cSprite *s) { sprite = s; }
 	void Update(float delta);
 	void Render();

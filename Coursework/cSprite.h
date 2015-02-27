@@ -10,7 +10,7 @@ private:
 	glm::vec2 scale;
 	float rotation;
 	glm::mat4x4 transform;
-	RECT boundingRect;
+	RECTF boundingRect;
 
 	// Texture width & Height
 	int textureWidth;
@@ -30,7 +30,7 @@ public:
 	float getSpriteRotation() { return rotation; }
 	void setSpriteRotation(float sRotation) { rotation = sRotation; }
 
-	RECT getSpriteBoundingRect() { return boundingRect; }
+	RECTF getSpriteBoundingRect() { return boundingRect; }
 
 	void setTexture(GLuint GLtexID) { GLTextureID = GLtexID; }
 	void setTextureDimensions(int texWidth, int textHeight);

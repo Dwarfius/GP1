@@ -19,5 +19,6 @@ public:
 	~cGame();
 
 	void Update(float delta);
+	void CollisionUpdate();
 	void Render();
 };
