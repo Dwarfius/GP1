@@ -53,11 +53,11 @@ void cSprite::updateMatrix()
 //call after the updateMatrix
 void cSprite::updateBoundingRect()
 {
-	glm::vec4 points[4] = { glm::vec4(-textureWidth / 2, -textureHeight / 2, 0, 0), 
-							glm::vec4(textureWidth / 2, -textureHeight / 2, 0, 0),
-							glm::vec4(textureWidth / 2, textureHeight / 2, 0, 0), 
-							glm::vec4(-textureWidth / 2, textureHeight / 2, 0, 0) };
-#pragma message(": Warning: This matrix doesn't translate to world coords " __FILE__)
+	glm::vec4 points[4] = { glm::vec4(-textureWidth / 2, -textureHeight / 2, 0, 1), 
+							glm::vec4(textureWidth / 2, -textureHeight / 2, 0, 1),
+							glm::vec4(textureWidth / 2, textureHeight / 2, 0, 1), 
+							glm::vec4(-textureWidth / 2, textureHeight / 2, 0, 1) };
+
 	for (int i = 0; i < 4; i++)
 		points[i] = transform * points[i];
 

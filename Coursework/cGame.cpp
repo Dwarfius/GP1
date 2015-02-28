@@ -52,25 +52,23 @@ void cGame::Render()
 
 bool Intersects(RECTF r1, RECTF r2)
 {
-	return r1.top < r2.bottom && r1.left < r2.right && r1.bottom > r2.top && r1.right > r2.left;
+	return (r2.left < r1.right &&
+		r2.right > r1.left &&
+		r2.top > r1.bottom &&
+		r2.bottom < r1.top);
 }
 
 void cGame::CollisionUpdate()
 {
-	float left = gameObjects[0]->GetRect().left;
-	float right = gameObjects[0]->GetRect().right;
-	float center = (left + right) / 2.f;
-	cout << to_string(left) + " + " + to_string(right) + " = " + to_string(center) << endl;
-
-	/*for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		for (int j = i + 1; j < 10; j++)
 		{
 			if (Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()))
 			{
-				delete gameObjects[j];
-				gameObjects.erase(gameObjects.begin() + j);
+//				delete gameObjects[j];
+//				gameObjects.erase(gameObjects.begin() + j);
 			}
 		}
-	}*/
+	}
 }
