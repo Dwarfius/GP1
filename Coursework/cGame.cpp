@@ -1,14 +1,16 @@
 #include "cGame.h"
 #include "cInput.h"
 
+#pragma warning(disable: 4018)
+
 cGame::cGame()
 {
 	gameObjects.reserve(10);
-	bool b = texture.createTexture("ship.png");
+	texture.createTexture("ship.png");
 	for (int i = 0; i < 10; i++)
 	{
 		cSprite *sprite = new cSprite();
-		sprite->setTexture(texture.getTexture());
+		sprite->setTexture(&texture);
 		sprite->setTextureDimensions(texture.getTWidth(), texture.getTHeight());
 		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
 		cGameObject *obj = new cGameObject();
@@ -20,7 +22,7 @@ cGame::cGame()
 
 cGame::~cGame()
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
 }
 
@@ -35,7 +37,7 @@ void cGame::Update(float delta)
 		gameObjects[0]->AddVelocity(-100 * delta);
 
 	gameObjects[0]->LookAt(mousePos);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < gameObjects.size(); i++)
 		gameObjects[i]->Update(delta);
 }
 
@@ -46,7 +48,7 @@ void cGame::Render()
 	glLoadIdentity();
 	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2,
 		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1.f, 1.f);
-	for(int i=0; i<10; i++)
+	for(int i=0; i<gameObjects.size(); i++)
 		gameObjects[i]->Render();
 }
 
@@ -60,14 +62,15 @@ bool Intersects(RECTF r1, RECTF r2)
 
 void cGame::CollisionUpdate()
 {
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < gameObjects.size() - 1; i++)
 	{
-		for (int j = i + 1; j < 10; j++)
+		for (int j = i + 1; j < gameObjects.size(); j++)
 		{
 			if (Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()))
 			{
-//				delete gameObjects[j];
-//				gameObjects.erase(gameObjects.begin() + j);
+				delete gameObjects[j];
+				gameObjects.erase(gameObjects.begin() + j);
+				j--;
 			}
 		}
 	}

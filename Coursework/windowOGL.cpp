@@ -10,11 +10,12 @@ bool windowOGL::initOGL(int width, int height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, width, height, 0.0, 0.0, -1.0); //change this here to - gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top);
+	glOrtho(0.0, width, height, 0.0, 0.0, -1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//Return success
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     return true;
 }
 

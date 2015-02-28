@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameConstants.h"
+#include "cTexture.h"
 
 class cSprite
 {
@@ -15,7 +16,7 @@ private:
 	// Texture width & Height
 	int textureWidth;
 	int textureHeight;
-	GLuint GLTextureID;
+	cTexture *texture;
 
 public:
 	cSprite();
@@ -32,7 +33,7 @@ public:
 
 	RECTF getSpriteBoundingRect() { return boundingRect; }
 
-	void setTexture(GLuint GLtexID) { GLTextureID = GLtexID; }
+	void setTexture(cTexture *pText) { texture = pText; }
 	void setTextureDimensions(int texWidth, int textHeight);
 	void updateMatrix();
 	void updateBoundingRect();

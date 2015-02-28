@@ -67,6 +67,7 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 
 	textureWidth = ilGetInteger(IL_IMAGE_WIDTH);
 	textureHeight = ilGetInteger(IL_IMAGE_HEIGHT);
+	txData = ilGetData();
 
 	glGenTextures(1, &GLTextureID); // GLTexture name generation 
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 

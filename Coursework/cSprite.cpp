@@ -15,7 +15,7 @@ cSprite::~cSprite()
 void cSprite::render()
 {
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
+	glBindTexture(GL_TEXTURE_2D, texture->getTexture()); // Binding of GLtexture name 
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(transform));

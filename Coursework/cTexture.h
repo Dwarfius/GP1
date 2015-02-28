@@ -27,4 +27,5 @@ public:
 	GLuint getTexture();						// return the texture.
 	GLsizei getTWidth();						// Return width of texture;
 	GLsizei getTHeight();						// Return height of texture;
+	ILubyte* GetData();
 };
