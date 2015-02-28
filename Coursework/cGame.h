@@ -14,6 +14,8 @@ private:
 	cTexture texture;
 	vector<cGameObject*> gameObjects;
 
+	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
+
 public:
 	cGame();
 	~cGame();

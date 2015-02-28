@@ -17,15 +17,15 @@ private:
 	GLsizei textureWidth;
 	GLsizei textureHeight;
 	ILuint ilTextureID;
-	ILubyte *txData;
+	byte *txData;
 
 public:
 	cTexture();
 	cTexture(LPCSTR theFilename);
 	~cTexture();
 	bool createTexture(LPCSTR theFilename);		// create the texture for use.
-	GLuint getTexture();						// return the texture.
-	GLsizei getTWidth();						// Return width of texture;
-	GLsizei getTHeight();						// Return height of texture;
-	ILubyte* GetData();
+	GLuint getTexture() { return GLTextureID; }
+	GLsizei getTWidth() { return textureWidth; }
+	GLsizei getTHeight() { return textureHeight; }
+	ILubyte* GetData() { return txData; }
 };

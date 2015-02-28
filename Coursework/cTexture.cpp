@@ -1,18 +1,5 @@
-/*
-=================
-cTexture.cpp
-- CPP file for class definition - IMPLEMENTATION
-- CPP file for the cD3DXTextureMgr class
-=================
-*/
 #include "cTexture.h"
 
-/*
-=================
-- Data constructor initializes the cD3DXTextureMgr object
-- Is always called, thus ensures all cD3DXTextureMgr objects are in a consistent state.
-=================
-*/
 cTexture::cTexture()
 {
 	cTexture::GLTextureID = NULL;
@@ -23,24 +10,13 @@ cTexture::cTexture(LPCSTR theFilename)
 	cTexture::createTexture(theFilename);
 }
 
-/*
-=================
-- Destructor.
-=================
-*/
 cTexture::~cTexture()
 {
 	ilDeleteImages(1, &ilTextureID);
 }
 
-/*
-=================
-- create the texture for use.
-=================
-*/
 bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 {
-
 	ILboolean success = false;
 
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
@@ -67,7 +43,8 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 
 	textureWidth = ilGetInteger(IL_IMAGE_WIDTH);
 	textureHeight = ilGetInteger(IL_IMAGE_HEIGHT);
-	txData = ilGetData();
+	txData = new byte[textureWidth * textureHeight * 4];
+	memcpy(txData, ilGetData(), textureWidth * textureHeight * 4); //saving the pixels locally since we perform cleanup after this
 
 	glGenTextures(1, &GLTextureID); // GLTexture name generation 
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
@@ -81,32 +58,4 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 	ilDeleteImages(1, &ilTextureID);
 
 	return true;
-}
-/*
-=================
-- return the texture.
-=================
-*/
-GLuint cTexture::getTexture()        // return the texture.
-{
-	return cTexture::GLTextureID;
-}
-
-/*
-=================
-- Return width of texture.
-=================
-*/
-GLsizei cTexture::getTWidth() 						// Return width of texture;
-{
-	return textureWidth;
-}
-/*
-=================
-- Return height of texture.
-=================
-*/
-GLsizei cTexture::getTHeight() 						// Return height of texture;
-{
-	return textureHeight;
 }

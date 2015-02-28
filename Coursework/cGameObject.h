@@ -26,6 +26,12 @@ public:
 
 	RECTF GetRect() { return sprite->getSpriteBoundingRect(); }
 
+	ILubyte *GetData() { return sprite->GetData(); }
+
+	glm::mat4x4 GetTransform() { return sprite->GetTransform(); }
+
+	glm::vec2 GetSize() { return sprite->GetSize(); }
+
 	void SetSprite(cSprite *s) { sprite = s; }
 	void Update(float delta);
 	void Render();

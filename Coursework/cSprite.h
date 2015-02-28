@@ -33,6 +33,12 @@ public:
 
 	RECTF getSpriteBoundingRect() { return boundingRect; }
 
+	ILubyte* GetData() { return texture->GetData(); }
+
+	glm::mat4x4 GetTransform() { return transform; }
+
+	glm::vec2 GetSize() { return glm::vec2(textureWidth, textureHeight); } //untransformed
+
 	void setTexture(cTexture *pText) { texture = pText; }
 	void setTextureDimensions(int texWidth, int textHeight);
 	void updateMatrix();
