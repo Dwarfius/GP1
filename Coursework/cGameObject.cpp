@@ -54,3 +54,8 @@ void cGameObject::UpdateForward()
 {
 	forward = glm::rotate(glm::vec2(0, -1), sprite->getSpriteRotation());
 }
+
+void cGameObject::CollidedWith(cGameObject *col)
+{
+
+}

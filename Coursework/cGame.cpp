@@ -69,6 +69,9 @@ void cGame::CollisionUpdate()
 			if (Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
 				PerPixelCollision(gameObjects[i], gameObjects[j]))
 			{
+				gameObjects[i]->CollidedWith(gameObjects[j]);
+				gameObjects[j]->CollidedWith(gameObjects[i]);
+				//Finish up later
 				delete gameObjects[j];
 				gameObjects.erase(gameObjects.begin() + j);
 				j--;

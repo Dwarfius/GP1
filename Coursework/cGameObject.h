@@ -5,13 +5,14 @@
 
 class cGameObject
 {
-private:
+protected:
 	cSprite *sprite;
 	float velocity;
 	float maxSpeed;
 	float rotSpeed;
 	float targetRot;
 	glm::vec2 forward;
+	bool destroy;
 
 public:
 	cGameObject();
@@ -32,9 +33,13 @@ public:
 
 	glm::vec2 GetSize() { return sprite->GetSize(); }
 
+	bool GetDestroy() { return destroy; }
+	void SetDestroy(bool flag) { destroy = flag; }
+
 	void SetSprite(cSprite *s) { sprite = s; }
-	void Update(float delta);
+	virtual void Update(float delta);
 	void Render();
 	void LookAt(glm::vec2 target);
 	void UpdateForward();
+	virtual void CollidedWith(cGameObject *col) {};
 };
