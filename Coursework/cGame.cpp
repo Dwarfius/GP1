@@ -37,6 +37,7 @@ void cGame::Update(float delta)
 		gameObjects[0]->AddVelocity(-100 * delta);
 
 	gameObjects[0]->LookAt(mousePos);
+
 	for (int i = 0; i < gameObjects.size(); i++)
 		gameObjects[i]->Update(delta);
 }
@@ -64,17 +65,28 @@ void cGame::CollisionUpdate()
 {
 	for (int i = 0; i < gameObjects.size() - 1; i++)
 	{
+		if (gameObjects[i]->IsDead())
+		{
+			delete gameObjects[i];
+			gameObjects.erase(gameObjects.begin() + i);
+			i--;
+			continue;
+		}
 		for (int j = i + 1; j < gameObjects.size(); j++)
 		{
+			if (gameObjects[j]->IsDead())
+			{
+				delete gameObjects[j];
+				gameObjects.erase(gameObjects.begin() + j);
+				j--;
+				continue;
+			}
+
 			if (Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
 				PerPixelCollision(gameObjects[i], gameObjects[j]))
 			{
 				gameObjects[i]->CollidedWith(gameObjects[j]);
 				gameObjects[j]->CollidedWith(gameObjects[i]);
-				//Finish up later
-				delete gameObjects[j];
-				gameObjects.erase(gameObjects.begin() + j);
-				j--;
 			}
 		}
 	}
@@ -83,8 +95,8 @@ void cGame::CollisionUpdate()
 bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 {
 	//required data
-	byte *g1Data = g1->GetData();
-	byte *g2Data = g2->GetData();
+	char *g1Data = g1->GetData();
+	char *g2Data = g2->GetData();
 	RECTF g1Rect = g1->GetRect();
 	RECTF g2Rect = g2->GetRect();
 	glm::mat4x4 g1InvTrans = glm::inverse(g1->GetTransform()); //returns pos to [-width, width], [-height, height]

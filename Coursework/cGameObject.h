@@ -27,13 +27,13 @@ public:
 
 	RECTF GetRect() { return sprite->getSpriteBoundingRect(); }
 
-	ILubyte *GetData() { return sprite->GetData(); }
+	char *GetData() { return sprite->GetData(); }
 
 	glm::mat4x4 GetTransform() { return sprite->GetTransform(); }
 
 	glm::vec2 GetSize() { return sprite->GetSize(); }
 
-	bool GetDestroy() { return destroy; }
+	bool IsDead() { return destroy; }
 	void SetDestroy(bool flag) { destroy = flag; }
 
 	void SetSprite(cSprite *s) { sprite = s; }
@@ -41,5 +41,5 @@ public:
 	void Render();
 	void LookAt(glm::vec2 target);
 	void UpdateForward();
-	virtual void CollidedWith(cGameObject *col) {};
+	virtual void CollidedWith(cGameObject *col);
 };

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "cGameObject.h"
 
 enum class eMunitionsType { Bullet = 1, Missile = 2 };

@@ -33,6 +33,7 @@ void cGameObject::Update(float delta)
 		velocity -= glm::sign(velocity) * 10 * delta;
 	}
 
+	//always have this!
 	sprite->updateMatrix();
 	sprite->updateBoundingRect();
 	UpdateForward();
@@ -57,5 +58,5 @@ void cGameObject::UpdateForward()
 
 void cGameObject::CollidedWith(cGameObject *col)
 {
-
+	cout << typeid(this).name() << " collided with " << typeid(col).name() << endl;
 }

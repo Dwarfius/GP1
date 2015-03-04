@@ -1,10 +1,3 @@
-/*
-=================
-cTexture.h
-- Header file for class definition - SPECIFICATION
-- Header file for the cD3DXTexture class
-=================
-*/
 #pragma once
 
 #include "GameConstants.h"
@@ -12,12 +5,12 @@ cTexture.h
 class cTexture
 {
 private:
+	char* txData;
 	GLuint GLTextureID;
 	GLuint aTextureInfo;
 	GLsizei textureWidth;
 	GLsizei textureHeight;
 	ILuint ilTextureID;
-	byte *txData;
 
 public:
 	cTexture();
@@ -27,5 +20,5 @@ public:
 	GLuint getTexture() { return GLTextureID; }
 	GLsizei getTWidth() { return textureWidth; }
 	GLsizei getTHeight() { return textureHeight; }
-	ILubyte* GetData() { return txData; }
+	char* GetData() { return txData; }
 };

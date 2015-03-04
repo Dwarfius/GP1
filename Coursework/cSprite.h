@@ -33,7 +33,7 @@ public:
 
 	RECTF getSpriteBoundingRect() { return boundingRect; }
 
-	ILubyte* GetData() { return texture->GetData(); }
+	char* GetData() { return texture->GetData(); }
 
 	glm::mat4x4 GetTransform() { return transform; }
 
