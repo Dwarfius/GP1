@@ -7,23 +7,23 @@ class cGameObject
 {
 protected:
 	cSprite *sprite;
-	float velocity;
-	float maxSpeed;
-	float rotSpeed;
-	float targetRot;
-	glm::vec2 forward;
+	float velocity = 0;
+	float maxVel = 100;
+	float rotSpeed = 50;
+	float targetRot = 0;
+	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;
 
 public:
-	cGameObject();
-	~cGameObject();
+	cGameObject() {} 
+	~cGameObject() { if (sprite) delete sprite; }
 
 	glm::vec2 GetPosition() { return sprite->getSpritePos(); }
 	void SetPosition(glm::vec2 pPos) { sprite->setSpritePos(pPos); }
 
 	float GetVelocity() { return velocity; }
-	void SetVelocity(float pVelocity) { velocity = glm::clamp(pVelocity, -maxSpeed, maxSpeed); }
-	void AddVelocity(float delta) { velocity = glm::clamp(velocity + delta, -maxSpeed, maxSpeed); }
+	void SetVelocity(float pVelocity) { velocity = glm::clamp(pVelocity, -maxVel, maxVel); }
+	void AddVelocity(float delta) { velocity = glm::clamp(velocity + delta, -maxVel, maxVel); }
 
 	RECTF GetRect() { return sprite->getSpriteBoundingRect(); }
 

@@ -12,7 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cInput.h" />
-    <ClInclude Include="cMunitions.h" />
+    <ClInclude Include="cBullet.h" />
+    <ClInclude Include="cPlayer.h" />
+    <ClInclude Include="cShip.h" />
     <ClInclude Include="cSprite.h" />
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cWNDManager.h" />
@@ -24,7 +26,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cInput.cpp" />
-    <ClCompile Include="cMunitions.cpp" />
+    <ClCompile Include="cBullet.cpp" />
+    <ClCompile Include="cPlayer.cpp" />
+    <ClCompile Include="cShip.cpp" />
     <ClCompile Include="cSprite.cpp" />
     <ClCompile Include="cTexture.cpp" />
     <ClCompile Include="cWNDManager.cpp" />

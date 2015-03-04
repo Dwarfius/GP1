@@ -1,20 +1,5 @@
 #include "cGameObject.h"
 
-cGameObject::cGameObject()
-{
-	maxSpeed = 100;
-	rotSpeed = 50;
-	velocity = 0;
-	targetRot = 0;
-	forward = glm::vec2(0, 1);
-}
-
-cGameObject::~cGameObject()
-{
-	if (sprite)
-		delete sprite;
-}
-
 void cGameObject::Update(float delta)
 {
 	float angleDelta = targetRot - sprite->getSpriteRotation();
@@ -30,7 +15,6 @@ void cGameObject::Update(float delta)
 		glm::vec2 pos = sprite->getSpritePos();
 		pos += forward * velocity * delta;
 		sprite->setSpritePos(pos);
-		velocity -= glm::sign(velocity) * 10 * delta;
 	}
 
 	//always have this!

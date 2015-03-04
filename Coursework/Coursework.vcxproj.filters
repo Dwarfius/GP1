@@ -42,7 +42,13 @@
     <ClInclude Include="cInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cMunitions.h">
+    <ClInclude Include="cBullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cShip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +77,13 @@
     <ClCompile Include="cInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cMunitions.cpp">
+    <ClCompile Include="cBullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cShip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
