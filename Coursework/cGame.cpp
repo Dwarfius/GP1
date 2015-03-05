@@ -5,20 +5,22 @@
 
 #pragma warning(disable: 4018 4244)
 
+cGame* cGame::singleton;
+
 cGame::cGame()
 {
-	gameObjects.reserve(10);
+	cTexture *missile = new cTexture("missile.png");
 	texture.createTexture("ship.png");
 
 	for (int i = 0; i < 10; i++)
 	{
 		cSprite *sprite = new cSprite();
 		sprite->setTexture(&texture);
-		sprite->setTextureDimensions(texture.getTWidth(), texture.getTHeight());
 		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
-		cGameObject *obj = i == 0 ? new cPlayer() : new cShip();
+		cShip *obj = i == 0 ? new cPlayer() : new cShip();
 		obj->SetSprite(sprite);
 		obj->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
+		obj->SetMissileText(missile);
 		gameObjects.push_back(obj);
 	}
 }
@@ -41,11 +43,20 @@ void cGame::Render()
 {
 	glm::vec2 pos = gameObjects[0]->GetPosition();
 	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2,
-		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1.f, 1.f);
+	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
+		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1, 1);
 	for(int i=0; i<gameObjects.size(); i++)
 		gameObjects[i]->Render();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glPushMatrix();
+	glLoadIdentity();
+	glRasterPos2f(0, 0);
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 't'); //http://openglut.sourceforge.net/group__bitmapfont.html#ga2
+	glPopMatrix();
 }
 
 bool Intersects(RECTF r1, RECTF r2)

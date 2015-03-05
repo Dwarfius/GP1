@@ -39,7 +39,7 @@ public:
 
 	glm::vec2 GetSize() { return glm::vec2(textureWidth, textureHeight); } //untransformed
 
-	void setTexture(cTexture *pText) { texture = pText; }
+	void setTexture(cTexture *pText);
 	void setTextureDimensions(int texWidth, int textHeight);
 	void updateMatrix();
 	void updateBoundingRect();

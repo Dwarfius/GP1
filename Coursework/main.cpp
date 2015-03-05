@@ -14,6 +14,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR cmdLine,
                    int cmdShow)
 {
+	glutInit(&__argc, __argv); //needed to have 2dfont writeout
+
 	//for debug
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
@@ -49,7 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
         return 1;
     }
 
-	cGame game;
+	cGame *game = cGame::Get();
     //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
     {
@@ -58,15 +60,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
         //We get the time that passed since the last frame
 		float elapsedTime = pgmWNDMgr->getElapsedSeconds();
 
-		game.Update(elapsedTime);
+		game->Update(elapsedTime);
 
-		game.CollisionUpdate();
+		game->CollisionUpdate();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		game.Render();
+		game->Render();
 
 		pgmWNDMgr->swapBuffers();
     }
+	delete game;
 
 	theOGLWnd.shutdown(); //Free any resources
 	pgmWNDMgr->destroyWND(); //Destroy the program window

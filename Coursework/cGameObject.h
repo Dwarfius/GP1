@@ -21,6 +21,9 @@ public:
 	glm::vec2 GetPosition() { return sprite->getSpritePos(); }
 	void SetPosition(glm::vec2 pPos) { sprite->setSpritePos(pPos); }
 
+	float GetRotation() { return sprite->getSpriteRotation(); }
+	void SetRotation(float rot) { sprite->setSpriteRotation(rot); targetRot = rot; }
+
 	float GetVelocity() { return velocity; }
 	void SetVelocity(float pVelocity) { velocity = glm::clamp(pVelocity, -maxVel, maxVel); }
 	void AddVelocity(float delta) { velocity = glm::clamp(velocity + delta, -maxVel, maxVel); }

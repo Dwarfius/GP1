@@ -7,10 +7,14 @@ void cPlayer::Update(float delta)
 	LookAt(mousePos);
 
 	if (cInput::GetKey('W'))
-		AddVelocity(40);
+		AddVelocity(400 * delta);
 	else if (cInput::GetKey('S'))
-		AddVelocity(-40);
+		AddVelocity(-400 * delta);
 	AddVelocity(glm::sign(velocity) * -10 * delta);
+	reloadTimer -= delta;
+
+	if (cInput::GetButton(0) && CanShoot())
+		Shoot();
 
 	cGameObject::Update(delta);
 }

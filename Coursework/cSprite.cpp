@@ -18,6 +18,7 @@ void cSprite::render()
 	glBindTexture(GL_TEXTURE_2D, texture->getTexture()); // Binding of GLtexture name 
 
 	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	glLoadMatrixf(glm::value_ptr(transform));
 
 	glBegin(GL_QUADS);
@@ -31,6 +32,7 @@ void cSprite::render()
 		glTexCoord2i(0, 1);
 		glVertex2i(-textureWidth / 2, textureHeight / 2);
 	glEnd();
+	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 }
@@ -48,6 +50,13 @@ void cSprite::updateMatrix()
 	transform = glm::translate(transform, glm::vec3(pos.x, pos.y, 0));
 	transform = glm::rotate(transform, rotation, glm::vec3(0, 0, 1));
 	transform = glm::scale(transform, glm::vec3(scale.x, scale.y, 1));
+}
+
+void cSprite::setTexture(cTexture *pText)
+{
+	texture = pText;
+	textureWidth = texture->getTWidth();
+	textureHeight = texture->getTHeight();
 }
 
 //call after the updateMatrix

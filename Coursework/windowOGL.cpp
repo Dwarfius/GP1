@@ -1,4 +1,5 @@
 #include "windowOGL.h"
+#include "GameConstants.h"
 
 windowOGL::windowOGL()
 {
@@ -10,7 +11,7 @@ bool windowOGL::initOGL(int width, int height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, width, height, 0.0, 0.0, -1.0);
+	glOrtho(0, width, height, 0, -1.f, 1.f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -35,10 +36,8 @@ void windowOGL::onResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
 	glLoadIdentity();
 	glOrtho(0, width, height, 0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
 	glLoadIdentity();
 }

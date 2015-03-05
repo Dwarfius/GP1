@@ -8,6 +8,8 @@
 class cGame
 {
 private:
+	cGame();
+	static cGame *singleton;
 	bool bPaused;
 	bool bMenu;
 
@@ -17,10 +19,11 @@ private:
 	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
 
 public:
-	cGame();
 	~cGame();
 
 	void Update(float delta);
 	void CollisionUpdate();
 	void Render();
+	void AddGameObject(cGameObject *obj) { gameObjects.push_back(obj); }
+	static cGame* Get() { if (!singleton) singleton = new cGame(); return singleton; }
 };

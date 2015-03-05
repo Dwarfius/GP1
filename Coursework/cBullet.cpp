@@ -15,4 +15,5 @@ void cBullet::CollidedWith(cGameObject *col)
 	destroy = true;
 	if (cShip *ship = (cShip *)col)
 		ship->ApplyDamage(damage);
+	cout << "Bullet collided with " << typeid(col).name() << endl;
 }

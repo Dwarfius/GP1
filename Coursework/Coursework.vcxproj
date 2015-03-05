@@ -44,6 +44,7 @@
     <Library Include="Libraries\ILUT.lib" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="missile.png" />
     <Image Include="ship.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
