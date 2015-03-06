@@ -14,6 +14,7 @@
     <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cInput.h" />
     <ClInclude Include="cBullet.h" />
+    <ClInclude Include="cMissile.h" />
     <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cShip.h" />
     <ClInclude Include="cSprite.h" />
@@ -30,6 +31,7 @@
     <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="cBullet.cpp" />
+    <ClCompile Include="cMissile.cpp" />
     <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cShip.cpp" />
     <ClCompile Include="cSprite.cpp" />

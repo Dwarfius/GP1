@@ -12,7 +12,7 @@ void cGUI::Update()
 		return;
 
 	vector<cGUIElement *> menu = menus[currentMenu];
-	for (vector<cGUIElement *>::iterator iter = menu.begin; iter != menu.end(); iter++)
+	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
 		(*iter)->Update();
 }
 
@@ -25,6 +25,6 @@ void cGUI::Render(glm::vec2 offest)
 	glTranslatef(offest.x - WINDOW_WIDTH / 2, offest.y - WINDOW_HEIGHT / 2 + 8, 0); //have to offset it by 8 so that it's visible
 	
 	vector<cGUIElement *> menu = menus[currentMenu];
-	for (vector<cGUIElement *>::iterator iter = menu.begin; iter != menu.end(); iter++)
+	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
 		(*iter)->Render();
 }

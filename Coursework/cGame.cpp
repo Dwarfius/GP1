@@ -11,6 +11,7 @@ cGame::cGame()
 {
 	cTexture *missile = new cTexture("missile.png");
 	texture.createTexture("ship.png");
+	gui = new cGUI();
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -34,9 +35,17 @@ cGame::~cGame()
 void cGame::Update(float delta)
 {
 	cInput::Update();
+	gui->Update();
 
 	for (int i = 0; i < gameObjects.size(); i++)
 		gameObjects[i]->Update(delta);
+
+	//cleaning up objects scheduled for deletion
+	while (objctsToDelete.size() > 0)
+	{
+		delete objctsToDelete[0];
+		objctsToDelete.erase(objctsToDelete.begin());
+	}
 }
 
 void cGame::Render()
@@ -49,14 +58,21 @@ void cGame::Render()
 
 	for(int i=0; i<gameObjects.size(); i++)
 		gameObjects[i]->Render();
+
+	gui->Render(pos);
 }
 
 bool Intersects(RECTF r1, RECTF r2)
 {
-	return (r2.left < r1.right &&
+	return r2.left < r1.right &&
 		r2.right > r1.left &&
 		r2.top > r1.bottom &&
-		r2.bottom < r1.top);
+		r2.bottom < r1.top;
+}
+
+bool InRect(RECTF r, glm::vec2 p)
+{
+	return p.x > r.left && p.x < r.right && p.y > r.bottom && p.y < r.top;
 }
 
 void cGame::CollisionUpdate()
@@ -65,7 +81,7 @@ void cGame::CollisionUpdate()
 	{
 		if (gameObjects[i]->IsDead())
 		{
-			delete gameObjects[i];
+			objctsToDelete.push_back(gameObjects[i]);
 			gameObjects.erase(gameObjects.begin() + i);
 			i--;
 			continue;
@@ -74,7 +90,7 @@ void cGame::CollisionUpdate()
 		{
 			if (gameObjects[j]->IsDead())
 			{
-				delete gameObjects[j];
+				objctsToDelete.push_back(gameObjects[j]);
 				gameObjects.erase(gameObjects.begin() + j);
 				j--;
 				continue;
@@ -134,4 +150,15 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 		}
 	}
 	return false;
+}
+
+cGameObject* cGame::ClickedOn(glm::vec2 pos)
+{
+	cGameObject *obj = NULL;
+	for (vector<cGameObject*>::iterator iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	{
+		if (InRect((*iter)->GetRect(), pos))
+			obj = *iter;
+	}
+	return obj;
 }

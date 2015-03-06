@@ -3,8 +3,8 @@
 
 void cBullet::Update(float delta)
 {
-	currentLife += delta;
-	if (currentLife > maxLife)
+	currentLife -= delta;
+	if (currentLife < 0)
 		destroy = true;
 
 	cGameObject::Update(delta);

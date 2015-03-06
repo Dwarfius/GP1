@@ -1,17 +1,16 @@
 #pragma once
-
 #include "cGameObject.h"
-
-class cBullet :
+class cMissile :
 	public cGameObject
 {
 private:
+	cGameObject *target;
 	float currentLife = 15;
 	int damage;
 
 public:
-	cBullet(int pDamage) { damage = pDamage; }
-	~cBullet() {}
+	cMissile(cGameObject *pTarget, int pDmg);
+	~cMissile() {}
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
 };

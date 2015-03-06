@@ -1,5 +1,6 @@
 #include "cPlayer.h"
 #include "cInput.h"
+#include "cGame.h"
 
 void cPlayer::Update(float delta)
 {
@@ -14,7 +15,12 @@ void cPlayer::Update(float delta)
 	reloadTimer -= delta;
 
 	if (cInput::GetButton(0) && CanShoot())
-		Shoot();
+	{
+		cGameObject *obj = cGame::Get()->ClickedOn(mousePos);
+		cout << "Found: " << obj << endl;
+		if (cShip *target = (cShip*)obj)
+			Shoot(target);
+	}
 
 	cGameObject::Update(delta);
 }

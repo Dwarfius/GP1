@@ -1,6 +1,7 @@
 #include "cShip.h"
 #include "cGame.h"
 #include "cBullet.h"
+#include "cMissile.h"
 
 void cShip::Update(float delta)
 {
@@ -13,13 +14,14 @@ void cShip::CollidedWith(cGameObject *col)
 
 }
 
-void cShip::Shoot()
+void cShip::Shoot(cGameObject *target)
 {
 	reloadTimer = timeToReload;
 	cSprite *bulletSprite = new cSprite();
 	bulletSprite->setTexture(missileText);
 	bulletSprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
-	cBullet *bullet = new cBullet(10);
+	//cBullet *bullet = new cBullet(10);
+	cMissile *bullet = new cMissile(target, 10);
 	bullet->SetSprite(bulletSprite);
 	bullet->SetRotation(sprite->getSpriteRotation());
 	bullet->SetPosition(GetPosition() + forward * 40.f);

@@ -15,7 +15,7 @@ private:
 protected:
 	float reloadTimer;
 
-	void Shoot();
+	void Shoot(cGameObject *target);
 	bool CanShoot() { return reloadTimer < 0; }
 	
 public:
