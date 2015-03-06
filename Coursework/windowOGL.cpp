@@ -10,7 +10,6 @@ bool windowOGL::initOGL(int width, int height)
 {
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 	glOrtho(0, width, height, 0, -1.f, 1.f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

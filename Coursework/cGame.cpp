@@ -43,20 +43,12 @@ void cGame::Render()
 {
 	glm::vec2 pos = gameObjects[0]->GetPosition();
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
 	glLoadIdentity();
 	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
 		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1, 1);
+
 	for(int i=0; i<gameObjects.size(); i++)
 		gameObjects[i]->Render();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	
-	glPushMatrix();
-	glLoadIdentity();
-	glRasterPos2f(0, 0);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 't'); //http://openglut.sourceforge.net/group__bitmapfont.html#ga2
-	glPopMatrix();
 }
 
 bool Intersects(RECTF r1, RECTF r2)

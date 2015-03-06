@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cInput.h" />
     <ClInclude Include="cBullet.h" />
     <ClInclude Include="cPlayer.h" />
@@ -21,10 +22,12 @@
     <ClInclude Include="cGame.h" />
     <ClInclude Include="GameConstants.h" />
     <ClInclude Include="cGameObject.h" />
+    <ClInclude Include="cGUI.h" />
     <ClInclude Include="wglext.h" />
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="cBullet.cpp" />
     <ClCompile Include="cPlayer.cpp" />
@@ -34,6 +37,7 @@
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="cGame.cpp" />
     <ClCompile Include="cGameObject.cpp" />
+    <ClCompile Include="cGUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
