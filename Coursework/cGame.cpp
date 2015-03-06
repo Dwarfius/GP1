@@ -34,7 +34,6 @@ cGame::~cGame()
 
 void cGame::Update(float delta)
 {
-	cInput::Update();
 	gui->Update();
 
 	for (int i = 0; i < gameObjects.size(); i++)
@@ -46,6 +45,7 @@ void cGame::Update(float delta)
 		delete objctsToDelete[0];
 		objctsToDelete.erase(objctsToDelete.begin());
 	}
+	cInput::Update();
 }
 
 void cGame::Render()

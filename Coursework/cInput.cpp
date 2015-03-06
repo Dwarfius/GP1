@@ -1,4 +1,5 @@
 #include "cInput.h"
+#include "GameConstants.h"
 
 bool cInput::keys[2][256];
 bool cInput::buttons[2][2];

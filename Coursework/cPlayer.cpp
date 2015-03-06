@@ -14,10 +14,9 @@ void cPlayer::Update(float delta)
 	AddVelocity(glm::sign(velocity) * -10 * delta);
 	reloadTimer -= delta;
 
-	if (cInput::GetButton(0) && CanShoot())
+	if (cInput::GetButtonDown(0) && CanShoot())
 	{
 		cGameObject *obj = cGame::Get()->ClickedOn(mousePos);
-		cout << "Found: " << obj << endl;
 		if (cShip *target = (cShip*)obj)
 			Shoot(target);
 	}
