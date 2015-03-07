@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cGUIElement.h" />
+    <ClInclude Include="cGUILabel.h" />
     <ClInclude Include="cInput.h" />
     <ClInclude Include="cBullet.h" />
     <ClInclude Include="cMissile.h" />
@@ -29,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cGUIElement.cpp" />
+    <ClCompile Include="cGUILabel.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="cBullet.cpp" />
     <ClCompile Include="cMissile.cpp" />

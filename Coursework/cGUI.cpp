@@ -1,9 +1,15 @@
 #include "cGUI.h"
 #include "GameConstants.h"
+#include "cGUILabel.h"
 
 cGUI::cGUI()
 {
-	//fill menus here
+	RECT r = RECT();
+	r.left = 0;
+	r.top = 0;
+	r.right = 100;
+	r.bottom = 100;
+	menus[0].push_back(new cGUILabel(NULL, r, "Hello World"));
 }
 
 void cGUI::Update()
