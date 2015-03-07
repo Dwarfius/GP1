@@ -79,10 +79,10 @@ void cSprite::updateBoundingRect()
 	{
 		if (boundingRect.left > points[i].x)
 			boundingRect.left = points[i].x;
-		if (boundingRect.top < points[i].y)
+		if (boundingRect.top > points[i].y)
 			boundingRect.top = points[i].y;
 
-		if (boundingRect.bottom > points[i].y)
+		if (boundingRect.bottom < points[i].y)
 			boundingRect.bottom = points[i].y;
 		if (boundingRect.right < points[i].x)
 			boundingRect.right = points[i].x;

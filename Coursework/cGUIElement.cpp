@@ -1,6 +1,6 @@
 #include "cGUIElement.h"
 
-cGUIElement::cGUIElement(cTexture *pTexture, RECT pRect) 
+cGUIElement::cGUIElement(cTexture *pTexture, RECTF pRect) 
 { 
 	texture = pTexture; 
 	rect = pRect; 

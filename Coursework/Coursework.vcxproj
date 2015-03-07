@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cGUIButton.h" />
     <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cGUILabel.h" />
     <ClInclude Include="cInput.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cGUIButton.cpp" />
     <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cGUILabel.cpp" />
     <ClCompile Include="cInput.cpp" />

@@ -1,6 +1,8 @@
 #include "cGUILabel.h"
 
-cGUILabel::cGUILabel(cTexture *pTexture, RECT pRect, string pText) :
+#pragma warning(disable : 4018)
+
+cGUILabel::cGUILabel(cTexture *pTexture, RECTF pRect, string pText) :
 	cGUIElement(pTexture, pRect)
 {
 	text = pText;

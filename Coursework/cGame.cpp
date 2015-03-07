@@ -13,7 +13,7 @@ cGame::cGame()
 	texture.createTexture("ship.png");
 	gui = new cGUI();
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		cSprite *sprite = new cSprite();
 		sprite->setTexture(&texture);
@@ -62,19 +62,6 @@ void cGame::Render()
 	gui->Render(pos);
 }
 
-bool Intersects(RECTF r1, RECTF r2)
-{
-	return r2.left < r1.right &&
-		r2.right > r1.left &&
-		r2.top > r1.bottom &&
-		r2.bottom < r1.top;
-}
-
-bool InRect(RECTF r, glm::vec2 p)
-{
-	return p.x > r.left && p.x < r.right && p.y > r.bottom && p.y < r.top;
-}
-
 void cGame::CollisionUpdate()
 {
 	for (int i = 0; i < gameObjects.size() - 1; i++)
@@ -95,8 +82,7 @@ void cGame::CollisionUpdate()
 				j--;
 				continue;
 			}
-
-			if (Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
+			if (RECTF::Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
 				PerPixelCollision(gameObjects[i], gameObjects[j]))
 			{
 				gameObjects[i]->CollidedWith(gameObjects[j]);
@@ -121,8 +107,8 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	glm::vec2 g2HalfSize = g2FullSize * 0.5f;
 
 	//rect of intersection
-	int top = max(g1Rect.bottom, g2Rect.bottom);
-	int bottom = min(g1Rect.top, g2Rect.top);
+	int bottom = max(g1Rect.bottom, g2Rect.bottom);
+	int top = min(g1Rect.top, g2Rect.top);
 	int left = min(g1Rect.left, g2Rect.left);
 	int right = max(g1Rect.right, g2Rect.right);
 
@@ -157,7 +143,7 @@ cGameObject* cGame::ClickedOn(glm::vec2 pos)
 	cGameObject *obj = NULL;
 	for (vector<cGameObject*>::iterator iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
-		if (InRect((*iter)->GetRect(), pos))
+		if (RECTF::InRect((*iter)->GetRect(), pos))
 			obj = *iter;
 	}
 	return obj;

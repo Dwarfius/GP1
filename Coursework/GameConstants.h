@@ -42,4 +42,17 @@ using namespace std;
 
 struct RECTF {
 	float left, top, right, bottom;
+
+	static bool Intersects(RECTF r1, RECTF r2)
+	{
+		return r2.left < r1.right &&
+			r2.right > r1.left &&
+			r2.top < r1.bottom &&
+			r2.bottom > r1.top;
+	}
+
+	static bool InRect(RECTF r, glm::vec2 p)
+	{
+		return p.x > r.left && p.x < r.right && p.y > r.top && p.y < r.bottom;
+	}
 };
