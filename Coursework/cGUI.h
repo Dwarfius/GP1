@@ -6,13 +6,16 @@
 class cGUI
 {
 private:
+	glm::vec2 windowSize;
 	int currentMenu = 0;
 	vector<cGUIElement *> menus[5];
 	bool active = true;
 
 public:
-	cGUI();
+	cGUI(glm::vec2 pWindowSize);
 	~cGUI() {}
+
+	void UpdateSize(glm::vec2 newSize);
 
 	void Update(float delta);
 	void Render(glm::vec2 offset);

@@ -3,8 +3,8 @@
 #include <Windows.h>
 #include "glm\glm.hpp"
 #include "cTexture.h"
-#include "cGameObject.h"
 #include "cGUI.h"
+#include "cPlayer.h"
 
 class cGame
 {
@@ -14,12 +14,13 @@ private:
 
 	cGUI *gui;
 	bool bPaused;
-	bool bMenu;
-	cTexture texture;
+	cPlayer *player = NULL;
 	vector<cGameObject*> gameObjects;
 	vector<cGameObject*> objctsToDelete;
+	map<string, cTexture*> textures;
 
 	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
+	void LoadTextures();
 
 public:
 	~cGame();
@@ -30,4 +31,6 @@ public:
 	void Render();
 	void AddGameObject(cGameObject *obj) { gameObjects.push_back(obj); }
 	cGameObject* ClickedOn(glm::vec2 pos);
+	void StartLevel(int level);
+	cPlayer* GetPlayer() { return player; };
 };

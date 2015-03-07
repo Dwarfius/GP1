@@ -24,5 +24,5 @@ void cGUIButton::Update()
 
 void cGUIButton::Render()
 {
-	cGUILabel::Render();
+	cGUILabel::Render(true);
 }

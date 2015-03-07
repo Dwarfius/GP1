@@ -85,7 +85,7 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="cGUIProgressBar.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="cGUIProgressBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +152,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="missile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bullet.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

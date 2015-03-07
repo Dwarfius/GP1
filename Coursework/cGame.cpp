@@ -9,27 +9,16 @@ cGame* cGame::singleton;
 
 cGame::cGame()
 {
-	cTexture *missile = new cTexture("missile.png");
-	texture.createTexture("ship.png");
-	gui = new cGUI();
-
-	for (int i = 0; i < 2; i++)
-	{
-		cSprite *sprite = new cSprite();
-		sprite->setTexture(&texture);
-		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
-		cShip *obj = i == 0 ? new cPlayer() : new cShip();
-		obj->SetSprite(sprite);
-		obj->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
-		obj->SetMissileText(missile);
-		gameObjects.push_back(obj);
-	}
+	LoadTextures();
+	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
 }
 
 cGame::~cGame()
 {
 	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
+	for (map<string, cTexture*>::iterator it = textures.begin(); it != textures.end(); it++)
+		delete it->second;
 }
 
 void cGame::Update(float delta)
@@ -45,12 +34,13 @@ void cGame::Update(float delta)
 		delete objctsToDelete[0];
 		objctsToDelete.erase(objctsToDelete.begin());
 	}
+
 	cInput::Update();
 }
 
 void cGame::Render()
 {
-	glm::vec2 pos = gameObjects[0]->GetPosition();
+	glm::vec2 pos = gameObjects.size() > 0 ? gameObjects[0]->GetPosition() : glm::vec2(0, 0);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
@@ -64,6 +54,9 @@ void cGame::Render()
 
 void cGame::CollisionUpdate()
 {
+	if (gameObjects.size() == 0)
+		return;
+
 	for (int i = 0; i < gameObjects.size() - 1; i++)
 	{
 		if (gameObjects[i]->IsDead())
@@ -147,4 +140,34 @@ cGameObject* cGame::ClickedOn(glm::vec2 pos)
 			obj = *iter;
 	}
 	return obj;
+}
+
+void cGame::StartLevel(int level)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		cSprite *sprite = new cSprite();
+		sprite->setTexture(textures["ship"]);
+		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
+
+		cShip *ship;
+		if (level == 0 && i == 0)
+		{
+			player = new cPlayer();
+			ship = player;
+		}
+		else
+			ship = new cShip();
+		ship->SetSprite(sprite);
+		ship->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
+		ship->SetMissileText(textures["bullet"]);
+		gameObjects.push_back(ship);
+	}
+}
+
+void cGame::LoadTextures()
+{
+	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
+	textures.insert(pair<string, cTexture*>("ship", new cTexture("ship.png")));
+	textures.insert(pair<string, cTexture*>("bullet", new cTexture("bullet.png")));
 }

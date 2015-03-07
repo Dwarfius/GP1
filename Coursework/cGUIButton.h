@@ -15,6 +15,7 @@ public:
 	cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pOnClick);
 	~cGUIButton() {}
 
+	void SetBackgroundColor(glm::vec3 pBkgdColor) { savedColor = pBkgdColor; }
 	void SetHighlightColor(glm::vec3 pHighlightColor) { highlightColor = pHighlightColor; }
 
 	void Update();

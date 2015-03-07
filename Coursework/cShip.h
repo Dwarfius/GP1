@@ -6,8 +6,8 @@ class cShip :
 	public cGameObject
 {
 private:
-	int health;
-	int maxHealth;
+	int health = 100;
+	int maxHealth = 100;
 	glm::vec2 targetPos;
 	float timeToReload = 1;
 	cTexture *missileText;
@@ -21,6 +21,10 @@ protected:
 public:
 	cShip() {}
 	~cShip() {}
+
+	int GetHealth() { return health; }
+	int GetMaxHealth() { return maxHealth; }
+
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
 	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }

@@ -14,7 +14,7 @@ public:
 	cGUIElement(cTexture *pTexture, RECTF pRect);
 	~cGUIElement() {}
 
-	void SetBackgroundColor(glm::vec3 pBkgdColor) { bkgdColor = pBkgdColor; }
+	virtual void SetBackgroundColor(glm::vec3 pBkgdColor) { bkgdColor = pBkgdColor; }
 
 	virtual void Update();
 	virtual void Render();

@@ -3,15 +3,42 @@
 #include "cGUILabel.h"
 #include "cGUIButton.h"
 #include "cGUIProgressBar.h"
+#include "cGame.h"
 
-cGUI::cGUI()
+#pragma warning(disable: 4244)
+
+cGUI::cGUI(glm::vec2 pWindowSize)
 {
-	RECTF r1 = { 0, 0, 100, 100 };
-	RECTF r2 = { 100, 0, 200, 100 };
-	cGUIButton *btn = new cGUIButton(NULL, r1, "Hello World", []() { cout << "test" << endl; });
-	btn->SetHighlightColor(glm::vec3(255, 0, 0));
+	windowSize = pWindowSize;
+	float btnWidth = 100;
+	float btnHeight = 25;
+	float emptySpace = 10;
+
+	//MainMenu
+	float x = (windowSize.x - btnWidth) / 2;
+	float y = windowSize.y / 8;
+	RECTF r = { x, y, x + btnWidth, y + btnHeight };
+
+	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game", [this]() { cGame::Get()->StartLevel(0); currentMenu++; });
+	btn->SetBackgroundColor(glm::vec3(0, 0, 1));
+	btn->SetHighlightColor(glm::vec3(0.3f, 0.3f, 1));
 	menus[0].push_back(btn);
-	menus[0].push_back(new cGUIProgressBar(NULL, r2, "Hello World", glm::vec3(255, 0, 0)));
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Quit", []() { exit(0); });
+	btn->SetBackgroundColor(glm::vec3(0, 0, 1));
+	btn->SetHighlightColor(glm::vec3(0.3f, 0.3f, 1));
+	menus[0].push_back(btn);
+
+	//GameOverlay
+	r = { windowSize.x / 2 - 100, windowSize.y - 40, windowSize.x / 2 + 100, windowSize.y };
+	cGUIProgressBar *bar = new cGUIProgressBar(NULL, r, "", glm::vec3(1, 0, 0));
+	menus[1].push_back(bar);
+}
+
+void cGUI::UpdateSize(glm::vec2 newSize)
+{
+
 }
 
 void cGUI::Update(float delta)
@@ -19,8 +46,21 @@ void cGUI::Update(float delta)
 	if (!active)
 		return;
 
-	cGUIProgressBar *bar = (cGUIProgressBar*)menus[0][1];
-	bar->AddPercentage(delta / 20);
+	switch (currentMenu)
+	{
+	case 1:
+	{
+		cPlayer *player = cGame::Get()->GetPlayer();
+		float health = player->GetHealth();
+		float max = player->GetMaxHealth();
+		cGUIProgressBar *bar = (cGUIProgressBar*)menus[1][0];
+		bar->SetPercentage(health / max);
+		bar->SetText(to_string((int)health) + "/" + to_string((int)max));
+	}
+		break;
+	default:
+		break;
+	}
 
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
@@ -33,7 +73,8 @@ void cGUI::Render(glm::vec2 offest)
 		return;
 
 	glMatrixMode(GL_PROJECTION);
-	glTranslatef(offest.x - WINDOW_WIDTH / 2, offest.y - WINDOW_HEIGHT / 2, 0);
+	glLoadIdentity();
+	glOrtho(0, windowSize.x, windowSize.y, 0, -1, 1);
 	
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)

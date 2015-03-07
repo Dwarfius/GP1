@@ -19,7 +19,7 @@ void cShip::Shoot(cGameObject *target)
 	reloadTimer = timeToReload;
 	cSprite *bulletSprite = new cSprite();
 	bulletSprite->setTexture(missileText);
-	bulletSprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
+	bulletSprite->setSpriteScale(glm::vec2(0.5f, 0.5f));
 	//cBullet *bullet = new cBullet(10);
 	cMissile *bullet = new cMissile(target, 10);
 	bullet->SetSprite(bulletSprite);
