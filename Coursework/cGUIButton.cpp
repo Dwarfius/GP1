@@ -1,10 +1,11 @@
 #include "cGUIButton.h"
 #include "cInput.h"
 
-cGUIButton::cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pFunc) :
+cGUIButton::cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pOnClick) :
 	cGUILabel(pTexture, pRect, pText)
 {
-	func = pFunc;
+	onClick = pOnClick;
+	savedColor = bkgdColor;
 }
 
 void cGUIButton::Update()
@@ -12,11 +13,10 @@ void cGUIButton::Update()
 	glm::vec2 mPos = cInput::GetMousePos();
 	if (RECTF::InRect(rect, mPos))
 	{
-		savedColor = bkgdColor;
 		bkgdColor = highlightColor;
 
 		if (cInput::GetButtonDown(0))
-			func();
+			onClick();
 	}
 	else
 		bkgdColor = savedColor;

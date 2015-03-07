@@ -16,7 +16,6 @@ public:
 
 	void SetColor(glm::vec3 pColor) { color = pColor; }
 
-	void Update();
-	void Render();
+	void Render(bool useElemRender = true);
 };
 

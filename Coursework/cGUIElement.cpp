@@ -1,5 +1,7 @@
 #include "cGUIElement.h"
 
+#pragma warning(disable: 4244)
+
 cGUIElement::cGUIElement(cTexture *pTexture, RECTF pRect) 
 { 
 	texture = pTexture; 

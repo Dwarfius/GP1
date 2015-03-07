@@ -26,7 +26,7 @@ public:
 	static cGame* Get() { if (!singleton) singleton = new cGame(); return singleton; }
 
 	void Update(float delta);
-	void CollisionUpdate();
+	void CollisionUpdate(); //Implement this - http://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374
 	void Render();
 	void AddGameObject(cGameObject *obj) { gameObjects.push_back(obj); }
 	cGameObject* ClickedOn(glm::vec2 pos);

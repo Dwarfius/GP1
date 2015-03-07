@@ -34,7 +34,7 @@ cGame::~cGame()
 
 void cGame::Update(float delta)
 {
-	gui->Update();
+	gui->Update(delta);
 
 	for (int i = 0; i < gameObjects.size(); i++)
 		gameObjects[i]->Update(delta);
@@ -112,7 +112,7 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	int left = min(g1Rect.left, g2Rect.left);
 	int right = max(g1Rect.right, g2Rect.right);
 
-	for (int y = top; y < bottom; y++)
+	for (int y = top; y < bottom; y++) //hello invcerted Y axis
 	{
 		for (int x = left; x < right; x++)
 		{
@@ -127,7 +127,7 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 
 			if (g1ColorP.x < 0 || g1ColorP.x >= g1FullSize.x || g1ColorP.y < 0 || g1ColorP.y >= g1FullSize.y ||
 				g2ColorP.x < 0 || g2ColorP.x >= g2FullSize.x || g2ColorP.y < 0 || g2ColorP.y >= g2FullSize.y)
-				continue; //since we're using bounding rects, we can get pixels outside of texture
+				continue; //since we're using AABB, we can get pixels outside of texture
 
 			int i1 = (int)(g1ColorP.y * g1FullSize.x + g1ColorP.x) * 4 + 3;
 			int i2 = (int)(g2ColorP.y * g2FullSize.x + g2ColorP.x) * 4 + 3;

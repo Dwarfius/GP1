@@ -2,21 +2,25 @@
 #include "GameConstants.h"
 #include "cGUILabel.h"
 #include "cGUIButton.h"
+#include "cGUIProgressBar.h"
 
 cGUI::cGUI()
 {
-	RECTF r = RECTF();
-	r.left = 0;
-	r.top = 0;
-	r.right = 100;
-	r.bottom = 100;
-	menus[0].push_back(new cGUIButton(NULL, r, "Hello World", []() { cout << "test" << endl; }));
+	RECTF r1 = { 0, 0, 100, 100 };
+	RECTF r2 = { 100, 0, 200, 100 };
+	cGUIButton *btn = new cGUIButton(NULL, r1, "Hello World", []() { cout << "test" << endl; });
+	btn->SetHighlightColor(glm::vec3(255, 0, 0));
+	menus[0].push_back(btn);
+	menus[0].push_back(new cGUIProgressBar(NULL, r2, "Hello World", glm::vec3(255, 0, 0)));
 }
 
-void cGUI::Update()
+void cGUI::Update(float delta)
 {
 	if (!active)
 		return;
+
+	cGUIProgressBar *bar = (cGUIProgressBar*)menus[0][1];
+	bar->AddPercentage(delta / 20);
 
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
@@ -29,7 +33,7 @@ void cGUI::Render(glm::vec2 offest)
 		return;
 
 	glMatrixMode(GL_PROJECTION);
-	glTranslatef(offest.x - WINDOW_WIDTH / 2, offest.y - WINDOW_HEIGHT / 2 + 8, 0); //have to offset it by 8 so that it's visible
+	glTranslatef(offest.x - WINDOW_WIDTH / 2, offest.y - WINDOW_HEIGHT / 2, 0);
 	
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)

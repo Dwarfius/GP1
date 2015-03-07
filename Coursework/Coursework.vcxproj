@@ -14,6 +14,7 @@
     <ClInclude Include="cGUIButton.h" />
     <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cGUILabel.h" />
+    <ClInclude Include="cGUIProgressBar.h" />
     <ClInclude Include="cInput.h" />
     <ClInclude Include="cBullet.h" />
     <ClInclude Include="cMissile.h" />
@@ -33,6 +34,7 @@
     <ClCompile Include="cGUIButton.cpp" />
     <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cGUILabel.cpp" />
+    <ClCompile Include="cGUIProgressBar.cpp" />
     <ClCompile Include="cInput.cpp" />
     <ClCompile Include="cBullet.cpp" />
     <ClCompile Include="cMissile.cpp" />

@@ -14,7 +14,7 @@ public:
 	cGUI();
 	~cGUI() {}
 
-	void Update();
+	void Update(float delta);
 	void Render(glm::vec2 offset);
 };
 

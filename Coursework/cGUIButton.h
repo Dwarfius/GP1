@@ -9,10 +9,10 @@ class cGUIButton :
 private:
 	glm::vec3 highlightColor;
 	glm::vec3 savedColor;
-	std::function<void()> func;
+	std::function<void()> onClick;
 
 public:
-	cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pFunc);
+	cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pOnClick);
 	~cGUIButton() {}
 
 	void SetHighlightColor(glm::vec3 pHighlightColor) { highlightColor = pHighlightColor; }
