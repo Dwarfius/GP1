@@ -7,10 +7,10 @@ class cGUIProgressBar :
 {
 private:
 	float percent;
-	glm::vec3 fillColor;
+	glm::vec4 fillColor;
 
 public:
-	cGUIProgressBar(cTexture *pTexture, RECTF pRect, string pText, glm::vec3 pFillColor);
+	cGUIProgressBar(cTexture *pTexture, RECTF pRect, string pText, glm::vec4 pFillColor);
 	~cGUIProgressBar() {}
 
 	void SetPercentage(float pPercent) { percent = glm::clamp(pPercent, 0.f, 1.f); }

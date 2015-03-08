@@ -9,7 +9,8 @@ private:
 	glm::vec2 windowSize;
 	int currentMenu = 0;
 	vector<cGUIElement *> menus[5];
-	bool active = true;
+
+	void SetUp();
 
 public:
 	cGUI(glm::vec2 pWindowSize);

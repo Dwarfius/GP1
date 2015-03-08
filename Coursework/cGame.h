@@ -13,7 +13,7 @@ private:
 	static cGame *singleton;
 
 	cGUI *gui;
-	bool bPaused;
+	bool paused;
 	cPlayer *player = NULL;
 	vector<cGameObject*> gameObjects;
 	vector<cGameObject*> objctsToDelete;
@@ -33,4 +33,6 @@ public:
 	cGameObject* ClickedOn(glm::vec2 pos);
 	void StartLevel(int level);
 	cPlayer* GetPlayer() { return player; };
+	void SetPaused(bool state) { paused = state; }
+	void Clear();
 };

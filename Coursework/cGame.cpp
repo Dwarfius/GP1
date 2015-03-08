@@ -25,14 +25,17 @@ void cGame::Update(float delta)
 {
 	gui->Update(delta);
 
-	for (int i = 0; i < gameObjects.size(); i++)
-		gameObjects[i]->Update(delta);
-
-	//cleaning up objects scheduled for deletion
-	while (objctsToDelete.size() > 0)
+	if (!paused)
 	{
-		delete objctsToDelete[0];
-		objctsToDelete.erase(objctsToDelete.begin());
+		for (int i = 0; i < gameObjects.size(); i++)
+			gameObjects[i]->Update(delta);
+
+		//cleaning up objects scheduled for deletion
+		while (objctsToDelete.size() > 0)
+		{
+			delete objctsToDelete[0];
+			objctsToDelete.erase(objctsToDelete.begin());
+		}
 	}
 
 	cInput::Update();
@@ -170,4 +173,22 @@ void cGame::LoadTextures()
 	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
 	textures.insert(pair<string, cTexture*>("ship", new cTexture("ship.png")));
 	textures.insert(pair<string, cTexture*>("bullet", new cTexture("bullet.png")));
+}
+
+void cGame::Clear()
+{
+	player = NULL;
+	paused = false;
+
+	while (gameObjects.size() > 0)
+	{
+		delete gameObjects[0];
+		gameObjects.erase(gameObjects.begin());
+	}
+	
+	while (objctsToDelete.size() > 0)
+	{
+		delete objctsToDelete[0];
+		objctsToDelete.erase(objctsToDelete.begin());
+	}
 }

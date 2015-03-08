@@ -21,7 +21,7 @@ void cGUIElement::Render()
 	glBindTexture(GL_TEXTURE_2D, texture ? texture->getTexture() : 0);
 
 	glBegin(GL_QUADS);
-		glColor3f(bkgdColor.x, bkgdColor.y, bkgdColor.z);
+		glColor4f(bkgdColor.x, bkgdColor.y, bkgdColor.z, bkgdColor.w);
 		glTexCoord2i(0, 0);
 		glVertex2i(rect.left, rect.top);
 		glTexCoord2i(1, 0);

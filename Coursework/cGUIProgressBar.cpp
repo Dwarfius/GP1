@@ -2,7 +2,7 @@
 
 #pragma warning(disable: 4244)
 
-cGUIProgressBar::cGUIProgressBar(cTexture *pTexture, RECTF pRect, string pText, glm::vec3 pFillColor) :
+cGUIProgressBar::cGUIProgressBar(cTexture *pTexture, RECTF pRect, string pText, glm::vec4 pFillColor) :
 	cGUILabel(pTexture, pRect, pText)
 {
 	fillColor = pFillColor;
