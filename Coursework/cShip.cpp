@@ -5,7 +5,9 @@
 
 void cShip::Update(float delta)
 {
-	velocity -= glm::sign(velocity) * 10 * delta;
+	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
+	velocity.y -= glm::sign(velocity.y) * 10 * delta;
+
 	cGameObject::Update(delta);
 }
 
@@ -25,6 +27,6 @@ void cShip::Shoot(cGameObject *target)
 	bullet->SetSprite(bulletSprite);
 	bullet->SetRotation(sprite->getSpriteRotation());
 	bullet->SetPosition(GetPosition() + forward * 40.f);
-	bullet->SetVelocity(100);
+	bullet->SetVelocity(bullet->GetForward() * 100.f);
 	cGame::Get()->AddGameObject(bullet);
 }

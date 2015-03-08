@@ -8,12 +8,18 @@ void cPlayer::Update(float delta)
 	LookAt(mousePos);
 
 	if (cInput::GetKey('W'))
-		AddVelocity(400 * delta);
+		AddVelocity(forward * 400.f * delta);
 	else if (cInput::GetKey('S'))
-		AddVelocity(-400 * delta);
-	AddVelocity(glm::sign(velocity) * -10 * delta);
-	reloadTimer -= delta;
+		AddVelocity(forward * -400.f * delta);
+	if (cInput::GetKey('D'))
+		AddVelocity(GetRight() * -400.f * delta);
+	else if (cInput::GetKey('A'))
+		AddVelocity(GetRight() * 400.f * delta);
 
+	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
+	velocity.y -= glm::sign(velocity.y) * 10 * delta;
+
+	reloadTimer -= delta;
 	if (cInput::GetButtonDown(0) && CanShoot())
 	{
 		cGameObject *obj = cGame::Get()->ClickedOn(mousePos);

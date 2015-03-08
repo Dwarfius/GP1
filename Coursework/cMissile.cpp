@@ -5,7 +5,7 @@ cMissile::cMissile(cGameObject *pTarget, int pDmg)
 {
 	target = pTarget; 
 	damage = pDmg;
-	SetVelocity(100);
+	SetVelocity(forward * 100.f);
 }
 
 void cMissile::Update(float delta)
