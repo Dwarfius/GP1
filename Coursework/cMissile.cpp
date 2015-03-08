@@ -1,19 +1,22 @@
 #include "cMissile.h"
 #include "cShip.h"
 
-cMissile::cMissile(cGameObject *pTarget, int pDmg)
+cMissile::cMissile(cGameObject *pTarget, int pDamage)
 {
 	target = pTarget; 
-	damage = pDmg;
-	SetVelocity(forward * 100.f);
+	damage = pDamage;
+	velocity = glm::vec2(100, 0);
 }
 
 void cMissile::Update(float delta)
 {
+	if (destroy)
+		return;
+
 	currentLife -= delta;
 	if (currentLife < 0)
 		destroy = true;
-
+	
 	if (target)
 	{
 		if (target->IsDead())

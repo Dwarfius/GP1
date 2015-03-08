@@ -10,9 +10,11 @@ private:
 	int damage;
 
 public:
-	cBullet(int pDamage) { damage = pDamage; }
+	cBullet(int pDamage);
 	~cBullet() {}
+
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
+	string GetName() { return "Bullet"; }
 };
 

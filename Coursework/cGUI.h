@@ -9,7 +9,9 @@ private:
 	glm::vec2 windowSize;
 	int currentMenu = 0;
 	vector<cGUIElement *> menus[5];
-
+	float timer = 0;
+	int frames = 0;
+	int fps = 0;
 	void SetUp();
 
 public:

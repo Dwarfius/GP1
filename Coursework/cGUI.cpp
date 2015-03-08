@@ -29,11 +29,11 @@ void cGUI::SetUp()
 	float btnHeight = 25;
 	float emptySpace = 10;
 
-	//Main Menu
 	float x = (windowSize.x - btnWidth) / 2;
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 
+	//Main Menu
 	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game", [this]() { cGame::Get()->StartLevel(0); currentMenu++; });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
@@ -70,6 +70,10 @@ void cGUI::SetUp()
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[2].push_back(btn);
+
+	//global fps counter
+	cGUILabel *lbl = new cGUILabel(NULL, { windowSize.x - 80, 0, windowSize.x, 20 }, "");
+	menus[3].push_back(lbl);
 }
 
 void cGUI::Update(float delta)
@@ -103,6 +107,14 @@ void cGUI::Update(float delta)
 	default:
 		break;
 	}
+	timer += delta;
+	if (timer > 1)
+	{
+		fps = frames / timer;
+		timer = 0;
+		frames = 0;
+	}
+	((cGUILabel*)menus[3][0])->SetText("FPS: " + to_string(fps));
 
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
@@ -111,11 +123,16 @@ void cGUI::Update(float delta)
 
 void cGUI::Render(glm::vec2 offest)
 {
+	frames++;
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, windowSize.x, windowSize.y, 0, -1, 1);
 	
 	vector<cGUIElement *> menu = menus[currentMenu];
-	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)
+	for (auto iter = menu.begin(); iter != menu.end(); iter++)
+		(*iter)->Render();
+
+	for (auto iter = menus[3].begin(); iter != menus[3].end(); iter++)
 		(*iter)->Render();
 }

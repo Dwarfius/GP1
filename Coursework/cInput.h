@@ -14,6 +14,8 @@ private:
 	~cInput() {}
 public:
 	static void Update();
+	static void Reset();
+
 	static void SetKey(short key, bool state) { keys[0][key] = state; }
 	static void SetButton(short btn, bool state) { buttons[0][btn] = state; }
 	static void SetMousePos(int x, int y) { mPos = glm::vec2(x, y); }

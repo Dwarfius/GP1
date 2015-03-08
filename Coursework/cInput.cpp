@@ -10,3 +10,9 @@ void cInput::Update()
 	memcpy(keys[1], keys[0], sizeof(keys[0]));
 	memcpy(buttons[1], buttons[0], sizeof(buttons[0]));
 }
+
+void cInput::Reset()
+{
+	memset(keys, 0, sizeof(keys));
+	memset(buttons, 0, sizeof(buttons));
+}

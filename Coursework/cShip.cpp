@@ -5,8 +5,14 @@
 
 void cShip::Update(float delta)
 {
+	if (destroy)
+		return;
+
 	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
 	velocity.y -= glm::sign(velocity.y) * 10 * delta;
+
+	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
+		(*iter)->Update(delta);
 
 	cGameObject::Update(delta);
 }
@@ -18,15 +24,10 @@ void cShip::CollidedWith(cGameObject *col)
 
 void cShip::Shoot(cGameObject *target)
 {
-	reloadTimer = timeToReload;
-	cSprite *bulletSprite = new cSprite();
-	bulletSprite->setTexture(missileText);
-	bulletSprite->setSpriteScale(glm::vec2(0.5f, 0.5f));
-	//cBullet *bullet = new cBullet(10);
-	cMissile *bullet = new cMissile(target, 10);
-	bullet->SetSprite(bulletSprite);
-	bullet->SetRotation(sprite->getSpriteRotation());
-	bullet->SetPosition(GetPosition() + forward * 40.f);
-	bullet->SetVelocity(bullet->GetForward() * 100.f);
-	cGame::Get()->AddGameObject(bullet);
+	glm::vec2 spawnPos = GetPosition() + forward * 40.f;
+	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
+	{
+		if ((*iter)->CanShoot())
+			(*iter)->Shoot(spawnPos, GetRotation(), target);
+	}
 }

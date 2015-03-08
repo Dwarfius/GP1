@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{a1b7e3c1-d0f5-4d66-aa79-e82f1ff9ec28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Items">
+      <UniqueIdentifier>{9911e6c4-6465-4902-b920-269d4e9bbb71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Items">
+      <UniqueIdentifier>{8c8b6f63-aaed-45d9-953c-f75e34c05155}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cGame.h">
@@ -87,6 +93,9 @@
     <ClInclude Include="cGUIProgressBar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="cWeapon.h">
+      <Filter>Header Files\Items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -139,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="cGUIProgressBar.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cWeapon.cpp">
+      <Filter>Source Files\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

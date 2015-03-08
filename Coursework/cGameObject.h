@@ -48,4 +48,5 @@ public:
 	void LookAt(glm::vec2 target);
 	void UpdateForward();
 	virtual void CollidedWith(cGameObject *col);
+	virtual string GetName() { return "GameObject"; }
 };

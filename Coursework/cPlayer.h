@@ -12,5 +12,6 @@ public:
 	~cPlayer() {}
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
+	string GetName() { return "Player"; }
 };
 

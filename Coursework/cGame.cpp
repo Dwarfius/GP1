@@ -78,6 +78,7 @@ void cGame::CollisionUpdate()
 				j--;
 				continue;
 			}
+			
 			if (RECTF::Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
 				PerPixelCollision(gameObjects[i], gameObjects[j]))
 			{
@@ -147,6 +148,9 @@ cGameObject* cGame::ClickedOn(glm::vec2 pos)
 
 void cGame::StartLevel(int level)
 {
+	if (level == 0)
+		cInput::Reset();
+
 	for (int i = 0; i < 3; i++)
 	{
 		cSprite *sprite = new cSprite();
@@ -158,20 +162,21 @@ void cGame::StartLevel(int level)
 		{
 			player = new cPlayer();
 			ship = player;
+			ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
+			ship->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
 		}
 		else
 			ship = new cShip();
 		ship->SetSprite(sprite);
 		ship->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
-		ship->SetMissileText(textures["bullet"]);
 		gameObjects.push_back(ship);
 	}
 }
 
 void cGame::LoadTextures()
 {
-	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
 	textures.insert(pair<string, cTexture*>("ship", new cTexture("ship.png")));
+	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
 	textures.insert(pair<string, cTexture*>("bullet", new cTexture("bullet.png")));
 }
 

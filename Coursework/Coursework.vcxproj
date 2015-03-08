@@ -22,6 +22,7 @@
     <ClInclude Include="cShip.h" />
     <ClInclude Include="cSprite.h" />
     <ClInclude Include="cTexture.h" />
+    <ClInclude Include="cWeapon.h" />
     <ClInclude Include="cWNDManager.h" />
     <ClInclude Include="cGame.h" />
     <ClInclude Include="GameConstants.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="cShip.cpp" />
     <ClCompile Include="cSprite.cpp" />
     <ClCompile Include="cTexture.cpp" />
+    <ClCompile Include="cWeapon.cpp" />
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="cGame.cpp" />
     <ClCompile Include="cGameObject.cpp" />
