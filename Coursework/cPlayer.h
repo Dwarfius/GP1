@@ -8,7 +8,7 @@ class cPlayer :
 private:
 
 public:
-	cPlayer() {}
+	cPlayer();
 	~cPlayer() {}
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);

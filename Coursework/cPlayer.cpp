@@ -2,6 +2,11 @@
 #include "cInput.h"
 #include "cGame.h"
 
+cPlayer::cPlayer() : cShip(Owner::Player)
+{
+	
+}
+
 void cPlayer::Update(float delta)
 {
 	if (destroy)
@@ -28,7 +33,7 @@ void cPlayer::Update(float delta)
 	if (cInput::GetButton(0))
 	{
 		cGameObject *obj = cGame::Get()->ClickedOn(mousePos);
-		Shoot((cShip*)obj);
+		Shoot(dynamic_cast<cShip*>(obj));
 	}
 
 	cGameObject::Update(delta);

@@ -1,11 +1,13 @@
 #include "cMissile.h"
 #include "cShip.h"
 
-cMissile::cMissile(cGameObject *pTarget, int pDamage)
+cMissile::cMissile(Owner pOwner, cGameObject *pTarget, int pDamage) :
+	cGameObject(pOwner)
 {
 	target = pTarget; 
 	damage = pDamage;
-	velocity = glm::vec2(100, 0);
+	velocity = glm::vec2(300, 0);
+	rotSpeed = 100;
 }
 
 void cMissile::Update(float delta)
@@ -31,6 +33,6 @@ void cMissile::Update(float delta)
 void cMissile::CollidedWith(cGameObject *col)
 {
 	destroy = true;
-	if (cShip *ship = (cShip*)col)
+	if (cShip *ship = dynamic_cast<cShip*>(col))
 		ship->ApplyDamage(damage);
 }

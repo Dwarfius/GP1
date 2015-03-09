@@ -16,7 +16,7 @@ void cWeapon::Update(float delta)
 	reload -= delta;
 }
 
-void cWeapon::Shoot(glm::vec2 spawnPos, float angle, cGameObject *target)
+void cWeapon::Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *target)
 {
 	if (type == WeaponType::Missile && target == NULL)
 		return;
@@ -28,14 +28,14 @@ void cWeapon::Shoot(glm::vec2 spawnPos, float angle, cGameObject *target)
 
 	if (type == WeaponType::Bullet)
 	{
-		cBullet *bullet = new cBullet(damage);
+		cBullet *bullet = new cBullet(owner, damage);
 		bullet->SetSprite(sprite);
 		bullet->SetRotation(angle);
 		cGame::Get()->AddGameObject(bullet);
 	}
 	else if (type == WeaponType::Missile)
 	{
-		cMissile *missile = new cMissile(target, damage);
+		cMissile *missile = new cMissile(owner, target, damage);
 		missile->SetSprite(sprite);
 		missile->SetRotation(angle);
 		cGame::Get()->AddGameObject(missile);

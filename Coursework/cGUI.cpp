@@ -74,10 +74,13 @@ void cGUI::SetUp()
 	//global fps counter
 	cGUILabel *lbl = new cGUILabel(NULL, { windowSize.x - 80, 0, windowSize.x, 20 }, "");
 	menus[3].push_back(lbl);
+	lbl = new cGUILabel(NULL, { windowSize.x - 80, 30, windowSize.x, 20 }, "");
+	menus[3].push_back(lbl);
 }
 
 void cGUI::Update(float delta)
 {
+	//per menu elements
 	switch (currentMenu)
 	{
 	case 1:
@@ -107,6 +110,8 @@ void cGUI::Update(float delta)
 	default:
 		break;
 	}
+
+	//Global elements
 	timer += delta;
 	if (timer > 1)
 	{
@@ -115,6 +120,9 @@ void cGUI::Update(float delta)
 		frames = 0;
 	}
 	((cGUILabel*)menus[3][0])->SetText("FPS: " + to_string(fps));
+
+	int count = cGame::Get()->GetGameObjetsCount();
+	((cGUILabel*)menus[3][1])->SetText("Objects: " + to_string(count));
 
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (vector<cGUIElement *>::iterator iter = menu.begin(); iter != menu.end(); iter++)

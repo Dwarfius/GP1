@@ -1,10 +1,11 @@
 #include "cBullet.h"
 #include "cShip.h"
 
-cBullet::cBullet(int pDamage)
+cBullet::cBullet(Owner pOwner, int pDamage) : 
+	cGameObject(pOwner)
 {
 	damage = pDamage; 
-	velocity = glm::vec2(100, 0);
+	velocity = glm::vec2(500, 0);
 }
 
 void cBullet::Update(float delta)
@@ -22,6 +23,6 @@ void cBullet::Update(float delta)
 void cBullet::CollidedWith(cGameObject *col)
 {
 	destroy = true;
-	if (cShip *ship = (cShip *)col)
+	if (cShip *ship = dynamic_cast<cShip*>(col))
 		ship->ApplyDamage(damage);
 }

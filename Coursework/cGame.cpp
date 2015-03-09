@@ -27,15 +27,15 @@ void cGame::Update(float delta)
 
 	if (!paused)
 	{
-		for (int i = 0; i < gameObjects.size(); i++)
-			gameObjects[i]->Update(delta);
-
 		//cleaning up objects scheduled for deletion
 		while (objctsToDelete.size() > 0)
 		{
 			delete objctsToDelete[0];
 			objctsToDelete.erase(objctsToDelete.begin());
 		}
+
+		for (int i = 0; i < gameObjects.size(); i++)
+			gameObjects[i]->Update(delta);
 	}
 
 	cInput::Update();
@@ -79,7 +79,8 @@ void cGame::CollisionUpdate()
 				continue;
 			}
 			
-			if (RECTF::Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
+			if (gameObjects[i]->GetOwner() != gameObjects[j]->GetOwner() && 
+				RECTF::Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
 				PerPixelCollision(gameObjects[i], gameObjects[j]))
 			{
 				gameObjects[i]->CollidedWith(gameObjects[j]);

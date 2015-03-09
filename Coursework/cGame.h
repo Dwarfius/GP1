@@ -35,4 +35,5 @@ public:
 	cPlayer* GetPlayer() { return player; };
 	void SetPaused(bool state) { paused = state; }
 	void Clear();
+	int GetGameObjetsCount() { return gameObjects.size(); }
 };

@@ -3,6 +3,12 @@
 #include "cBullet.h"
 #include "cMissile.h"
 
+cShip::cShip(Owner pOwner) : 
+	cGameObject(pOwner)
+{
+	maxVel = 100;
+}
+
 void cShip::Update(float delta)
 {
 	if (destroy)
@@ -28,6 +34,6 @@ void cShip::Shoot(cGameObject *target)
 	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
 	{
 		if ((*iter)->CanShoot())
-			(*iter)->Shoot(spawnPos, GetRotation(), target);
+			(*iter)->Shoot(owner, spawnPos, GetRotation(), target);
 	}
 }

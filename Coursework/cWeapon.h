@@ -19,7 +19,7 @@ public:
 	~cWeapon() {}
 
 	void Update(float delta);
-	void Shoot(glm::vec2 spawnPos, float angle, cGameObject *target);
+	void Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *target);
 	bool CanShoot() { return reload < 0; }
 };
 

@@ -17,7 +17,7 @@ protected:
 	void Shoot(cGameObject *target);
 	
 public:
-	cShip() {}
+	cShip(Owner pOwner = Owner::Enemy);
 	~cShip() {}
 
 	int GetHealth() { return health; }

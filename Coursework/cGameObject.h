@@ -3,19 +3,22 @@
 #include "cSprite.h"
 #include "glm\glm.hpp"
 
+enum class Owner { Player, Enemy, Neutral };
+
 class cGameObject
 {
 protected:
 	cSprite *sprite;
 	glm::vec2 velocity = glm::vec2(0, 0);
-	float maxVel = 100;
+	float maxVel = 10000000;
 	float rotSpeed = 50;
 	float targetRot = 0;
 	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;
+	Owner owner;
 
 public:
-	cGameObject() {} 
+	cGameObject(Owner pOwner) { owner = pOwner; }
 	~cGameObject() { if (sprite) delete sprite; }
 
 	glm::vec2 GetPosition() { return sprite->getSpritePos(); }
@@ -49,4 +52,5 @@ public:
 	void UpdateForward();
 	virtual void CollidedWith(cGameObject *col);
 	virtual string GetName() { return "GameObject"; }
+	Owner GetOwner() { return owner; }
 };
