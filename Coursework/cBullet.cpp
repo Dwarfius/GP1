@@ -21,7 +21,8 @@ void cBullet::Update(float delta)
 
 void cBullet::CollidedWith(cGameObject *col)
 {
-	destroy = true;
+	if (!dynamic_cast<cBullet*>(col))
+		destroy = true;
 	if (cShip *ship = dynamic_cast<cShip*>(col))
 		ship->ApplyDamage(damage);
 }

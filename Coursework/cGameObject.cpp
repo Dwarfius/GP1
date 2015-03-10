@@ -8,8 +8,8 @@ void cGameObject::Update(float delta)
 	float angleDelta = targetRot - sprite->getSpriteRotation();
 	if (glm::abs(angleDelta) > 180)
 		angleDelta = (360 - glm::abs(angleDelta)) * -glm::sign(angleDelta);
-	angleDelta = glm::clamp(angleDelta, -rotSpeed, rotSpeed);
-	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta * delta);
+	angleDelta = glm::clamp(angleDelta, -rotSpeed * delta, rotSpeed * delta);
+	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta);
 
 	if (glm::length(velocity) <= 1)
 		velocity = glm::vec2(0, 0);

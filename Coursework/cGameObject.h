@@ -11,7 +11,7 @@ protected:
 	cSprite *sprite;
 	glm::vec2 velocity = glm::vec2(0, 0);
 	float maxVel = 10000000;
-	float rotSpeed = 150;
+	float rotSpeed = 100;
 	float targetRot = 0;
 	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;

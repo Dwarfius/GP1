@@ -7,8 +7,8 @@ class cShip :
 	public cGameObject
 {
 private:
-	int health = 100;
-	int maxHealth = 100;
+	int health = 1000;
+	int maxHealth = 1000;
 	glm::vec2 targetPos;
 
 protected:
