@@ -16,13 +16,13 @@ void cPlayer::Update(float delta)
 	LookAt(mousePos);
 
 	if (cInput::GetKey('W'))
-		AddVelocity(glm::vec2(400 * delta, 0));
+		AddVelocity(GetForward() * 400.f * delta);
 	else if (cInput::GetKey('S'))
-		AddVelocity(glm::vec2(-400 * delta, 0));
+		AddVelocity(GetForward() * -400.f * delta);
 	if (cInput::GetKey('D'))
-		AddVelocity(glm::vec2(0, -400 * delta));
+		AddVelocity(GetRight() * -400.f * delta);
 	else if (cInput::GetKey('A'))
-		AddVelocity(glm::vec2(0, 400 * delta));
+		AddVelocity(GetRight() * 400.f * delta);
 
 	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
 	velocity.y -= glm::sign(velocity.y) * 10 * delta;

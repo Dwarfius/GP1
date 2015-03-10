@@ -28,5 +28,6 @@ public:
 	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }
 	void AddWeapon(cWeapon *weapon) { weapons.push_back(weapon); }
 	string GetName() { return "Ship"; }
+	void OnDestroy();
 };
 

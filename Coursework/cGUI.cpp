@@ -22,7 +22,7 @@ void cGUI::UpdateSize(glm::vec2 newSize)
 
 void cGUI::SetUp()
 {
-	for (int i = 0; i < menus->size(); i++)
+	for (int i = 0; i < 5; i++)
 		menus[i].clear();
 
 	float btnWidth = 100;
@@ -50,8 +50,13 @@ void cGUI::SetUp()
 	cGUIProgressBar *bar = new cGUIProgressBar(NULL, r, "", glm::vec4(1, 0, 0, 1));
 	menus[1].push_back(bar);
 
+	r.bottom -= 40; r.top -= 40;
+	cGUILabel *lbl = new cGUILabel(NULL, r, "");
+	menus[1].push_back(lbl);
+
 	//Pause Menu
-	menus[2].push_back(bar); //I want to have the healthbar visible in the pause screen
+	menus[2].push_back(bar); //I want health bar to be visible in the pause screen
+	menus[2].push_back(lbl);
 
 	cGUIElement *elem = new cGUIElement(NULL, { 0, 0, windowSize.x, windowSize.y });
 	elem->SetBackgroundColor(glm::vec4(0, 0, 0, 0.3f));
@@ -72,7 +77,7 @@ void cGUI::SetUp()
 	menus[2].push_back(btn);
 
 	//global fps counter
-	cGUILabel *lbl = new cGUILabel(NULL, { windowSize.x - 80, 0, windowSize.x, 20 }, "");
+	lbl = new cGUILabel(NULL, { windowSize.x - 80, 0, windowSize.x, 20 }, "");
 	menus[3].push_back(lbl);
 	lbl = new cGUILabel(NULL, { windowSize.x - 80, 30, windowSize.x, 20 }, "");
 	menus[3].push_back(lbl);
@@ -91,6 +96,9 @@ void cGUI::Update(float delta)
 		cGUIProgressBar *bar = (cGUIProgressBar*)menus[1][0];
 		bar->SetPercentage(health / max);
 		bar->SetText(to_string((int)health) + "/" + to_string((int)max));
+
+		cGUILabel *lbl = (cGUILabel*)menus[1][1];
+		lbl->SetText("Score: " + to_string(cGame::Get()->GetScore()));
 
 		if (cInput::GetKeyDown(27))
 		{

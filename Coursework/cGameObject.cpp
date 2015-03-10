@@ -11,15 +11,15 @@ void cGameObject::Update(float delta)
 	angleDelta = glm::clamp(angleDelta, -rotSpeed, rotSpeed);
 	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta * delta);
 
-	if (glm::abs(velocity.length()) <= 1)
+	if (glm::length(velocity) <= 1)
 		velocity = glm::vec2(0, 0);
 	else
 	{
-		velocity.x = glm::clamp(velocity.x, -maxVel, maxVel);
-		velocity.y = glm::clamp(velocity.y, -maxVel, maxVel);
+		if (glm::length(velocity) > maxVel)
+			velocity = glm::normalize(velocity) * maxVel;
 
 		glm::vec2 pos = sprite->getSpritePos();
-		pos += ((velocity.x * forward) + (velocity.y * GetRight())) * delta;
+		pos += velocity * delta;
 		sprite->setSpritePos(pos);
 	}
 

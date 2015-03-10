@@ -5,7 +5,6 @@ cBullet::cBullet(Owner pOwner, int pDamage) :
 	cGameObject(pOwner)
 {
 	damage = pDamage; 
-	velocity = glm::vec2(500, 0);
 }
 
 void cBullet::Update(float delta)

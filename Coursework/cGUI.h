@@ -19,6 +19,7 @@ public:
 	~cGUI() {}
 
 	void UpdateSize(glm::vec2 newSize);
+	void SetMenu(int menu) { currentMenu = menu; }
 
 	void Update(float delta);
 	void Render(glm::vec2 offset);

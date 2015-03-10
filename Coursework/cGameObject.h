@@ -11,7 +11,7 @@ protected:
 	cSprite *sprite;
 	glm::vec2 velocity = glm::vec2(0, 0);
 	float maxVel = 10000000;
-	float rotSpeed = 50;
+	float rotSpeed = 150;
 	float targetRot = 0;
 	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;
@@ -53,4 +53,5 @@ public:
 	virtual void CollidedWith(cGameObject *col);
 	virtual string GetName() { return "GameObject"; }
 	Owner GetOwner() { return owner; }
+	virtual void OnDestroy() {};
 };

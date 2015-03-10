@@ -14,6 +14,25 @@ void cShip::Update(float delta)
 	if (destroy)
 		return;
 
+	cPlayer *player = cGame::Get()->GetPlayer();
+	if (player && !player->IsDead())
+	{
+		glm::vec2 deltaVec = player->GetPosition() - GetPosition();
+		float distanceSqr = deltaVec.y * deltaVec.y + deltaVec.x * deltaVec.x;
+		if (distanceSqr < 1000000)
+		{
+			LookAt(player->GetPosition());
+			glm::vec2 dir = glm::normalize(deltaVec);
+			if (distanceSqr <= 10000)
+				dir = -dir;
+
+			AddVelocity(dir * maxVel * delta);
+
+			if (glm::abs(glm::dot(GetForward(), dir)) > 0.9f)
+				Shoot(player);
+		}
+	}
+
 	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
 	velocity.y -= glm::sign(velocity.y) * 10 * delta;
 
@@ -36,4 +55,9 @@ void cShip::Shoot(cGameObject *target)
 		if ((*iter)->CanShoot())
 			(*iter)->Shoot(owner, spawnPos, GetRotation(), target);
 	}
+}
+
+void cShip::OnDestroy()
+{
+	cGame::Get()->AddScore(10);
 }

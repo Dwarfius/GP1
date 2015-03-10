@@ -5,8 +5,6 @@
 class cPlayer :
 	public cShip
 {
-private:
-
 public:
 	cPlayer();
 	~cPlayer() {}

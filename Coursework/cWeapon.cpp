@@ -31,6 +31,7 @@ void cWeapon::Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *t
 		cBullet *bullet = new cBullet(owner, damage);
 		bullet->SetSprite(sprite);
 		bullet->SetRotation(angle);
+		bullet->SetVelocity(bullet->GetForward() * 400.f);
 		cGame::Get()->AddGameObject(bullet);
 	}
 	else if (type == WeaponType::Missile)

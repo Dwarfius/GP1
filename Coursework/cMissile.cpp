@@ -6,14 +6,16 @@ cMissile::cMissile(Owner pOwner, cGameObject *pTarget, int pDamage) :
 {
 	target = pTarget; 
 	damage = pDamage;
-	velocity = glm::vec2(300, 0);
-	rotSpeed = 100;
+	rotSpeed = 500;
+	maxVel = 400;
 }
 
 void cMissile::Update(float delta)
 {
 	if (destroy)
 		return;
+
+	velocity = maxVel * GetForward();
 
 	currentLife -= delta;
 	if (currentLife < 0)

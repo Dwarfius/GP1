@@ -30,12 +30,19 @@ void cGame::Update(float delta)
 		//cleaning up objects scheduled for deletion
 		while (objctsToDelete.size() > 0)
 		{
+			objctsToDelete[0]->OnDestroy();
 			delete objctsToDelete[0];
 			objctsToDelete.erase(objctsToDelete.begin());
 		}
 
 		for (int i = 0; i < gameObjects.size(); i++)
 			gameObjects[i]->Update(delta);
+
+		if (player && player->IsDead())
+		{
+			Clear();
+			gui->SetMenu(0);
+		}
 	}
 
 	cInput::Update();
@@ -163,11 +170,11 @@ void cGame::StartLevel(int level)
 		{
 			player = new cPlayer();
 			ship = player;
-			ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
-			ship->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
 		}
 		else
 			ship = new cShip();
+		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
+		ship->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
 		ship->SetSprite(sprite);
 		ship->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
 		gameObjects.push_back(ship);
@@ -183,6 +190,7 @@ void cGame::LoadTextures()
 
 void cGame::Clear()
 {
+	score = 0;
 	player = NULL;
 	paused = false;
 
@@ -197,4 +205,9 @@ void cGame::Clear()
 		delete objctsToDelete[0];
 		objctsToDelete.erase(objctsToDelete.begin());
 	}
+}
+
+void cGame::OnResize(int width, int height)
+{
+	gui->UpdateSize(glm::vec2(width, height));
 }

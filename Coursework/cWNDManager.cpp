@@ -232,6 +232,7 @@ LRESULT CALLBACK cWNDManager::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		int height = HIWORD(lParam);        // retrieve width and height
 		int width = LOWORD(lParam);
 		pInstance->getAttachedWND()->onResize(width, height); //Call the example's resize method
+		cGame::Get()->OnResize(width, height);
 	}
 		return 0;
 	case WM_KEYDOWN:
