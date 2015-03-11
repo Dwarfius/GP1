@@ -5,6 +5,7 @@
 #include "cTexture.h"
 #include "cGUI.h"
 #include "cPlayer.h"
+#include "cBackground.h"
 
 class cGame
 {
@@ -13,6 +14,7 @@ private:
 	static cGame *singleton;
 
 	cGUI *gui;
+	cBackground *background;
 	bool paused;
 	cPlayer *player = NULL;
 	vector<cGameObject*> gameObjects;

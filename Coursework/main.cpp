@@ -4,9 +4,9 @@
 #define GLX_GLXEXT_LEGACY //Must be declared so that our local glxext.h is picked up, rather than the system one
 
 #define _CRT_SECURE_NO_WARNINGS
-#include <windows.h>
-#include "windowOGL.h"
+
 #include "GameConstants.h"
+#include "windowOGL.h"
 #include "cWNDManager.h"
 
 int WINAPI WinMain(HINSTANCE hInstance,

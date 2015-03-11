@@ -11,10 +11,14 @@ cGame::cGame()
 {
 	LoadTextures();
 	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
+	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
 cGame::~cGame()
 {
+	delete gui;
+	delete background;
+
 	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
 	for (map<string, cTexture*>::iterator it = textures.begin(); it != textures.end(); it++)
@@ -23,8 +27,7 @@ cGame::~cGame()
 
 void cGame::Update(float delta)
 {
-	gui->Update(delta);
-
+	glm::vec2 deltaMove = glm::vec2(0, 0);
 	if (!paused)
 	{
 		//cleaning up objects scheduled for deletion
@@ -35,29 +38,42 @@ void cGame::Update(float delta)
 			objctsToDelete.erase(objctsToDelete.begin());
 		}
 
-		for (int i = 0; i < gameObjects.size(); i++)
-			gameObjects[i]->Update(delta);
-
-		if (player && player->IsDead())
+		if (player)
 		{
-			Clear();
-			gui->SetMenu(0);
+			glm::vec2 pos = player->GetPosition();
+			for (int i = 0; i < gameObjects.size(); i++)
+				gameObjects[i]->Update(delta);
+			deltaMove = player->GetPosition() - pos;
+
+			if (player->IsDead())
+			{
+				Clear();
+				gui->SetMenu(0);
+			}
 		}
 	}
 
+	background->Update(deltaMove);
+	gui->Update(delta);
 	cInput::Update();
 }
 
 void cGame::Render()
 {
-	glm::vec2 pos = gameObjects.size() > 0 ? gameObjects[0]->GetPosition() : glm::vec2(0, 0);
+	background->Render();
+
+	glm::vec2 pos = player ? player->GetPosition() : glm::vec2(0, 0);
 	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
 	glLoadIdentity();
 	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
 		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1, 1);
 
 	for(int i=0; i<gameObjects.size(); i++)
 		gameObjects[i]->Render();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
 
 	gui->Render(pos);
 }
@@ -186,6 +202,7 @@ void cGame::LoadTextures()
 	textures.insert(pair<string, cTexture*>("ship", new cTexture("ship.png")));
 	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
 	textures.insert(pair<string, cTexture*>("bullet", new cTexture("bullet.png")));
+	textures.insert(pair<string, cTexture*>("space", new cTexture("space.png")));
 }
 
 void cGame::Clear()
@@ -210,4 +227,5 @@ void cGame::Clear()
 void cGame::OnResize(int width, int height)
 {
 	gui->UpdateSize(glm::vec2(width, height));
+	background->UpdateSize(width, height);
 }

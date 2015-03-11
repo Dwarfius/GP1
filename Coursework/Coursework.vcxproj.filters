@@ -96,6 +96,9 @@
     <ClInclude Include="cWeapon.h">
       <Filter>Header Files\Items</Filter>
     </ClInclude>
+    <ClInclude Include="cBackground.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,6 +155,9 @@
     <ClCompile Include="cWeapon.cpp">
       <Filter>Source Files\Items</Filter>
     </ClCompile>
+    <ClCompile Include="cBackground.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\DevIL.lib" />
@@ -167,6 +173,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="bullet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="space.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

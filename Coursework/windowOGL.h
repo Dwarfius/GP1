@@ -1,8 +1,5 @@
 #pragma once
 
-#include <windows.h>
-#include "GL/glut.h"
-
 class windowOGL 
 {
 public:

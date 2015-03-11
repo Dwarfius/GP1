@@ -6,6 +6,7 @@ cGUILabel::cGUILabel(cTexture *pTexture, RECTF pRect, string pText) :
 	cGUIElement(pTexture, pRect)
 {
 	text = pText;
+	bkgdColor = glm::vec4(0, 0, 0, 0);
 	UpdateTextSize();
 }
 

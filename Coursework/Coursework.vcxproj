@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cBackground.h" />
     <ClInclude Include="cGUIButton.h" />
     <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cGUILabel.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cBackground.cpp" />
     <ClCompile Include="cGUIButton.cpp" />
     <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cGUILabel.cpp" />
@@ -61,6 +63,7 @@
     <Image Include="bullet.png" />
     <Image Include="missile.png" />
     <Image Include="ship.png" />
+    <Image Include="space.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{47639238-92BD-46BF-BFCE-4C0AB1714AFA}</ProjectGuid>
@@ -99,6 +102,9 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

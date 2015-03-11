@@ -140,10 +140,6 @@ void cGUI::Update(float delta)
 void cGUI::Render(glm::vec2 offest)
 {
 	frames++;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, windowSize.x, windowSize.y, 0, -1, 1);
 	
 	vector<cGUIElement *> menu = menus[currentMenu];
 	for (auto iter = menu.begin(); iter != menu.end(); iter++)
