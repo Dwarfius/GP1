@@ -47,8 +47,9 @@ void cGame::Update(float delta)
 
 			if (player->IsDead())
 			{
+				gui->SetFinalScore(score);
+				gui->SetMenu(Screen::Death);
 				Clear();
-				gui->SetMenu(0);
 			}
 		}
 	}
@@ -199,10 +200,12 @@ void cGame::StartLevel(int level)
 
 void cGame::LoadTextures()
 {
-	textures.insert(pair<string, cTexture*>("ship", new cTexture("ship.png")));
-	textures.insert(pair<string, cTexture*>("missile", new cTexture("missile.png")));
-	textures.insert(pair<string, cTexture*>("bullet", new cTexture("bullet.png")));
-	textures.insert(pair<string, cTexture*>("space", new cTexture("space.png")));
+	textures.insert(pair<string, cTexture*>("ship", new cTexture("Textures\\Ships\\ship.png")));
+	textures.insert(pair<string, cTexture*>("missile", new cTexture("Textures\\Weapons\\missile.png")));
+	textures.insert(pair<string, cTexture*>("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
+	int randomBg = rand() % 6;
+	string bg = "Textures\\Backgrounds\\space" + to_string(randomBg) + ".png";
+	textures.insert(pair<string, cTexture*>("space", new cTexture(bg.c_str())));
 }
 
 void cGame::Clear()

@@ -3,15 +3,19 @@
 #include "glm\glm.hpp"
 #include "cGUIElement.h"
 
+#define GUI_SCREENS 5
+enum class Screen { Main, GameOverlay, Pause, Death, Global };
+
 class cGUI
 {
 private:
 	glm::vec2 windowSize;
-	int currentMenu = 0;
-	vector<cGUIElement *> menus[5];
+	Screen currentMenu = Screen::Main;
+	vector<cGUIElement *> menus[GUI_SCREENS];
 	float timer = 0;
 	int frames = 0;
 	int fps = 0;
+
 	void SetUp();
 
 public:
@@ -19,9 +23,10 @@ public:
 	~cGUI() {}
 
 	void UpdateSize(glm::vec2 newSize);
-	void SetMenu(int menu) { currentMenu = menu; }
+	void SetMenu(Screen menu) { currentMenu = menu; }
 
 	void Update(float delta);
 	void Render(glm::vec2 offset);
+	void SetFinalScore(int score);
 };
 

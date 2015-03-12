@@ -59,12 +59,6 @@
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="bullet.png" />
-    <Image Include="missile.png" />
-    <Image Include="ship.png" />
-    <Image Include="space.png" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{47639238-92BD-46BF-BFCE-4C0AB1714AFA}</ProjectGuid>
     <RootNamespace>Coursework</RootNamespace>

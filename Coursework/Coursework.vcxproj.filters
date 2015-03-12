@@ -165,18 +165,4 @@
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="ship.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="missile.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="bullet.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="space.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
 </Project>

@@ -9,12 +9,15 @@
 #include "windowOGL.h"
 #include "cWNDManager.h"
 
+#pragma warning(disable : 4244)
+
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
                    LPSTR cmdLine,
                    int cmdShow)
 {
 	glutInit(&__argc, __argv); //needed to have 2dfont writeout
+	srand(time(NULL));
 
 	//for debug
 	AllocConsole();
