@@ -7,7 +7,7 @@ cMissile::cMissile(Owner pOwner, cGameObject *pTarget, int pDamage) :
 	target = pTarget; 
 	damage = pDamage;
 	rotSpeed = 500;
-	maxVel = 400;
+	maxVel = 200;
 }
 
 void cMissile::Update(float delta)

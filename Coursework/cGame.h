@@ -21,6 +21,7 @@ private:
 	vector<cGameObject*> objctsToDelete;
 	map<string, cTexture*> textures;
 	int score = 0;
+	int currentLevel = 0;
 
 	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
 	void LoadTextures();

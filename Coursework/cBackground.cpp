@@ -29,7 +29,6 @@ cBackground::~cBackground()
 	delete background;
 }
 
-
 void cBackground::Update(glm::vec2 deltaMove)
 {
 	for (int i = 0; i < BG_LAYER_COUNT; i++)
@@ -43,9 +42,6 @@ void cBackground::Render()
 	//first of all, the background
 	background->Render();
 
-	//http://ogldev.atspace.co.uk/www/tutorial02/tutorial02.html
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 0, 0);
 	glColor3f(1, 1, 1);
 	//then all the stars
 	for (int i = 0; i < BG_LAYER_COUNT; i++)
@@ -55,7 +51,11 @@ void cBackground::Render()
 		glTranslatef(translation[i].x, translation[i].y, 0);
 		glPointSize(i + 1);
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
+		//http://ogldev.atspace.co.uk/www/tutorial02/tutorial02.html
+		glEnableVertexAttribArray(0); //turns out you have to bind a buffer before enabling attribs
+		glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 0, 0); //thanks documentation
 		glDrawArrays(GL_POINTS, 0, BG_PART_COUNT);
+		//glDisableVertexAttribArray(0); since it's the only place I used VBOs I don't need to disable it
 
 		glPopMatrix();
 	}

@@ -31,7 +31,8 @@ void cGame::Update(float delta)
 	if (!paused)
 	{
 		//cleaning up objects scheduled for deletion
-		while (objctsToDelete.size() > 0)
+		int size = objctsToDelete.size();
+		while (size-- > 0)
 		{
 			objctsToDelete[0]->OnDestroy();
 			delete objctsToDelete[0];
@@ -41,8 +42,10 @@ void cGame::Update(float delta)
 		if (player)
 		{
 			glm::vec2 pos = player->GetPosition();
-			for (int i = 0; i < gameObjects.size(); i++)
+			size = gameObjects.size();
+			for (int i = 0; i < size; i++)
 				gameObjects[i]->Update(delta);
+				
 			deltaMove = player->GetPosition() - pos;
 
 			if (player->IsDead())
@@ -70,7 +73,8 @@ void cGame::Render()
 	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
 		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1, 1);
 
-	for(int i=0; i<gameObjects.size(); i++)
+	int size = gameObjects.size();
+	for(int i=0; i<size; i++)
 		gameObjects[i]->Render();
 
 	glMatrixMode(GL_PROJECTION);
@@ -81,25 +85,31 @@ void cGame::Render()
 
 void cGame::CollisionUpdate()
 {
-	if (gameObjects.size() == 0)
+	int size = gameObjects.size();
+	if (size == 0)
 		return;
 
-	for (int i = 0; i < gameObjects.size() - 1; i++)
+	if (size == 1 && !player->IsDead())
+		StartLevel(currentLevel++);
+
+	for (int i = 0; i < size - 1; i++)
 	{
 		if (gameObjects[i]->IsDead())
 		{
 			objctsToDelete.push_back(gameObjects[i]);
 			gameObjects.erase(gameObjects.begin() + i);
 			i--;
+			size--;
 			continue;
 		}
-		for (int j = i + 1; j < gameObjects.size(); j++)
+		for (int j = i + 1; j < size; j++)
 		{
 			if (gameObjects[j]->IsDead())
 			{
 				objctsToDelete.push_back(gameObjects[j]);
 				gameObjects.erase(gameObjects.begin() + j);
 				j--;
+				size--;
 				continue;
 			}
 			
@@ -173,27 +183,34 @@ cGameObject* cGame::ClickedOn(glm::vec2 pos)
 
 void cGame::StartLevel(int level)
 {
+	currentLevel = level;
 	if (level == 0)
-		cInput::Reset();
+	{
+		cInput::Reset(); //just so that there's no shooting after clicking Play
+		cSprite *sprite = new cSprite();
+		sprite->setTexture(textures["ship"]);
+		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
 
-	for (int i = 0; i < 3; i++)
+		player = new cPlayer();
+		player->SetSprite(sprite);
+		player->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
+		player->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
+		gameObjects.push_back(player);
+	}
+
+	int count = pow(2, level);
+	glm::vec2 playerPos = player->GetPosition();
+	for (int i = 0; i < count; i++)
 	{
 		cSprite *sprite = new cSprite();
 		sprite->setTexture(textures["ship"]);
 		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
 
-		cShip *ship;
-		if (level == 0 && i == 0)
-		{
-			player = new cPlayer();
-			ship = player;
-		}
-		else
-			ship = new cShip();
-		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
-		ship->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
+		cShip *ship = new cShip();
 		ship->SetSprite(sprite);
-		ship->SetPosition(glm::vec2(i % 2 * 300, i / 2 * 300));
+		glm::vec2 offset = glm::vec2(rand() % 800 - 400, rand() % 800 - 400);
+		ship->SetPosition(playerPos + offset);
+		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		gameObjects.push_back(ship);
 	}
 }

@@ -56,3 +56,6 @@ struct RECTF {
 		return p.x > r.left && p.x < r.right && p.y > r.top && p.y < r.bottom;
 	}
 };
+
+//level specifics
+#define LVL1_HEALTH 100
