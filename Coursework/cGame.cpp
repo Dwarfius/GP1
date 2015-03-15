@@ -21,13 +21,17 @@ cGame::~cGame()
 
 	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
-	for (map<string, cTexture*>::iterator it = textures.begin(); it != textures.end(); it++)
+	for (auto it = textures.begin(); it != textures.end(); it++)
 		delete it->second;
 }
 
 void cGame::Update(float delta)
 {
 	glm::vec2 deltaMove = glm::vec2(0, 0);
+
+	if (cInput::GetKeyDown(32))
+		paused = !paused; //figure out the strange bug
+
 	if (!paused)
 	{
 		//cleaning up objects scheduled for deletion
@@ -42,8 +46,7 @@ void cGame::Update(float delta)
 		if (player)
 		{
 			glm::vec2 pos = player->GetPosition();
-			size = gameObjects.size();
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < gameObjCount; i++)
 				gameObjects[i]->Update(delta);
 				
 			deltaMove = player->GetPosition() - pos;
@@ -67,14 +70,14 @@ void cGame::Render()
 	background->Render();
 
 	glm::vec2 pos = player ? player->GetPosition() : glm::vec2(0, 0);
+	float vel = player ? glm::length(player->GetVelocity()) : 0;
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(pos.x - WINDOW_WIDTH / 2, pos.x + WINDOW_WIDTH / 2, 
-		pos.y + WINDOW_HEIGHT / 2, pos.y - WINDOW_HEIGHT / 2, -1, 1);
+	glOrtho(pos.x - WINDOW_WIDTH / 2 - vel, pos.x + WINDOW_WIDTH / 2 + vel, 
+		pos.y + WINDOW_HEIGHT / 2 + vel, pos.y - WINDOW_HEIGHT / 2 - vel, -1, 1);
 
-	int size = gameObjects.size();
-	for(int i=0; i<size; i++)
+	for (int i = 0; i<gameObjCount; i++)
 		gameObjects[i]->Render();
 
 	glMatrixMode(GL_PROJECTION);
@@ -85,31 +88,30 @@ void cGame::Render()
 
 void cGame::CollisionUpdate()
 {
-	int size = gameObjects.size();
-	if (size == 0)
+	if (gameObjCount == 0)
 		return;
 
-	if (size == 1 && !player->IsDead())
-		StartLevel(currentLevel++);
+	if (gameObjCount == 1 && !player->IsDead())
+		StartLevel(++currentLevel);
 
-	for (int i = 0; i < size - 1; i++)
+	for (int i = 0; i < gameObjCount - 1; i++)
 	{
 		if (gameObjects[i]->IsDead())
 		{
 			objctsToDelete.push_back(gameObjects[i]);
 			gameObjects.erase(gameObjects.begin() + i);
 			i--;
-			size--;
+			gameObjCount--;
 			continue;
 		}
-		for (int j = i + 1; j < size; j++)
+		for (int j = i + 1; j < gameObjCount; j++)
 		{
 			if (gameObjects[j]->IsDead())
 			{
 				objctsToDelete.push_back(gameObjects[j]);
 				gameObjects.erase(gameObjects.begin() + j);
 				j--;
-				size--;
+				gameObjCount--;
 				continue;
 			}
 			
@@ -196,6 +198,7 @@ void cGame::StartLevel(int level)
 		player->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		player->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
 		gameObjects.push_back(player);
+		gameObjCount++;
 	}
 
 	int count = pow(2, level);
@@ -213,6 +216,7 @@ void cGame::StartLevel(int level)
 		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		gameObjects.push_back(ship);
 	}
+	gameObjCount += count;
 }
 
 void cGame::LoadTextures()
@@ -230,6 +234,7 @@ void cGame::Clear()
 	score = 0;
 	player = NULL;
 	paused = false;
+	gameObjCount = 0;
 
 	while (gameObjects.size() > 0)
 	{

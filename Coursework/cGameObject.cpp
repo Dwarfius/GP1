@@ -5,9 +5,11 @@ void cGameObject::Update(float delta)
 	if (destroy)
 		return;
 
-	float angleDelta = targetRot - sprite->getSpriteRotation();
-	if (glm::abs(angleDelta) > 180)
-		angleDelta = (360 - glm::abs(angleDelta)) * -glm::sign(angleDelta);
+	//http://stackoverflow.com/questions/11498169/dealing-with-angle-wrap-in-c-code
+	float angleDelta = glm::mod(targetRot - sprite->getSpriteRotation() + 180, 360.f);
+	if (angleDelta < 0)
+		angleDelta += 360;
+	angleDelta -= 180;
 	angleDelta = glm::clamp(angleDelta, -rotSpeed * delta, rotSpeed * delta);
 	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta);
 
@@ -47,5 +49,5 @@ void cGameObject::UpdateForward()
 
 void cGameObject::CollidedWith(cGameObject *col)
 {
-	cout << typeid(this).name() << " collided with " << typeid(col).name() << endl;
+	cout << GetName() << " collided with " << col->GetName() << endl;
 }

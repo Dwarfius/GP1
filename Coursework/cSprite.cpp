@@ -6,6 +6,7 @@ cSprite::cSprite()
 	pos.y = 0;
 	scale.x = scale.y = 1;
 	rotation = 0;
+	transform = glm::mat4x4();
 }
 
 cSprite::~cSprite()
