@@ -3,10 +3,17 @@
 #include "cBullet.h"
 #include "cMissile.h"
 
-cShip::cShip(Owner pOwner) : 
-	cGameObject(pOwner)
+cShip::cShip(cTexture *pText, Owner pOwner) : 
+	cGameObject(pText, pOwner)
 {
 	maxVel = 100;
+}
+
+void cShip::SetStats(int pMaxHealth, float pMaxVel, float pRotSpeed)
+{
+	health = maxHealth = pMaxHealth;
+	maxVel = pMaxVel;
+	rotSpeed = pRotSpeed;
 }
 
 void cShip::Update(float delta)

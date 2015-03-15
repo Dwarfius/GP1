@@ -2,7 +2,7 @@
 #include "cInput.h"
 #include "cGame.h"
 
-cPlayer::cPlayer() : cShip(Owner::Player)
+cPlayer::cPlayer(cTexture *pText) : cShip(pText, Owner::Player)
 {
 	
 }

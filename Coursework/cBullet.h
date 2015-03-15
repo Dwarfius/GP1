@@ -10,7 +10,7 @@ private:
 	int damage;
 
 public:
-	cBullet(Owner pOwner, int pDamage);
+	cBullet(cTexture *pText, Owner pOwner, int pDamage);
 	~cBullet() {}
 
 	void Update(float delta);

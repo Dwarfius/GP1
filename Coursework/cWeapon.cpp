@@ -21,26 +21,17 @@ void cWeapon::Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *t
 	if (type == WeaponType::Missile && target == NULL)
 		return;
 
-	cSprite *sprite = new cSprite();
-	sprite->setTexture(projTexture);
-	sprite->setSpriteScale(glm::vec2(0.5f, 0.5f));
-	sprite->setSpritePos(spawnPos);
-
+	cGameObject *obj = NULL;
 	if (type == WeaponType::Bullet)
-	{
-		cBullet *bullet = new cBullet(owner, damage);
-		bullet->SetSprite(sprite);
-		bullet->SetRotation(angle);
-		bullet->SetVelocity(bullet->GetForward() * 400.f);
-		cGame::Get()->AddGameObject(bullet);
-	}
+		obj = new cBullet(projTexture, owner, damage);
 	else if (type == WeaponType::Missile)
-	{
-		cMissile *missile = new cMissile(owner, target, damage);
-		missile->SetSprite(sprite);
-		missile->SetRotation(angle);
-		cGame::Get()->AddGameObject(missile);
-	}
+		obj = new cMissile(projTexture, owner, target, damage);
+
+	obj->SetPosition(spawnPos);
+	obj->SetRotation(angle);
+	if (type == WeaponType::Bullet)
+		obj->SetVelocity(obj->GetForward() * 400.f);
+	cGame::Get()->AddGameObject(obj);
 
 	reload = reloadTimer;
 }

@@ -1,8 +1,8 @@
 #include "cBullet.h"
 #include "cShip.h"
 
-cBullet::cBullet(Owner pOwner, int pDamage) : 
-	cGameObject(pOwner)
+cBullet::cBullet(cTexture *pText, Owner pOwner, int pDamage) : 
+	cGameObject(pText, pOwner)
 {
 	damage = pDamage; 
 }

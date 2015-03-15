@@ -1,5 +1,12 @@
 #include "cGameObject.h"
 
+cGameObject::cGameObject(cTexture *pText, Owner pOwner)
+{
+	owner = pOwner;
+	sprite = new cSprite();
+	sprite->setTexture(pText);
+}
+
 void cGameObject::Update(float delta)
 {
 	if (destroy)

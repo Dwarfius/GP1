@@ -18,7 +18,7 @@ protected:
 	Owner owner;
 
 public:
-	cGameObject(Owner pOwner) { owner = pOwner; }
+	cGameObject(cTexture *pText, Owner pOwner);
 	~cGameObject() { if (sprite) delete sprite; }
 
 	glm::vec2 GetPosition() { return sprite->getSpritePos(); }

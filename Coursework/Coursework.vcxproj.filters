@@ -99,6 +99,9 @@
     <ClInclude Include="cBackground.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="cQuadtree.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -156,6 +159,9 @@
       <Filter>Source Files\Items</Filter>
     </ClCompile>
     <ClCompile Include="cBackground.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="cQuadtree.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>

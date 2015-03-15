@@ -55,11 +55,9 @@ void cBackground::Render()
 		glEnableVertexAttribArray(0); //turns out you have to bind a buffer before enabling attribs
 		glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 0, 0); //thanks documentation
 		glDrawArrays(GL_POINTS, 0, BG_PART_COUNT);
-		//glDisableVertexAttribArray(0); since it's the only place I used VBOs I don't need to disable it
-
+		glDisableVertexAttribArray(0);
 		glPopMatrix();
 	}
-	glDisableVertexAttribArray(0);
 }
 
 void cBackground::UpdateSize(int width, int height)

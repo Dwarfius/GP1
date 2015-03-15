@@ -6,6 +6,7 @@
 #include "cGUI.h"
 #include "cPlayer.h"
 #include "cBackground.h"
+#include "cQuadtree.h"
 
 class cGame
 {
@@ -16,6 +17,7 @@ private:
 	cGUI *gui;
 	cBackground *background; 
 	cPlayer *player = NULL;
+	cQuadtree *tree;
 
 	bool paused = false;
 	vector<cGameObject*> gameObjects;

@@ -7,9 +7,9 @@ class cSprite
 {
 private:
 	// position, rotation, scalling
-	glm::vec2 pos;
-	glm::vec2 scale;
-	float rotation;
+	glm::vec2 pos = glm::vec2(0, 0);
+	glm::vec2 scale = glm::vec2(1, 1);
+	float rotation = 0;
 	glm::mat4x4 transform;
 	RECTF boundingRect;
 

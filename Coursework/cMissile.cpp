@@ -1,8 +1,8 @@
 #include "cMissile.h"
 #include "cShip.h"
 
-cMissile::cMissile(Owner pOwner, cGameObject *pTarget, int pDamage) :
-	cGameObject(pOwner)
+cMissile::cMissile(cTexture *pText, Owner pOwner, cGameObject *pTarget, int pDamage) :
+	cGameObject(pText, pOwner)
 {
 	target = pTarget; 
 	damage = pDamage;

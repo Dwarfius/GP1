@@ -12,6 +12,7 @@ cGame::cGame()
 	LoadTextures();
 	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
 	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
+	tree = new cQuadtree(0, { -10000, -10000, 10000, 10000 });
 }
 
 cGame::~cGame()
@@ -45,9 +46,26 @@ void cGame::Update(float delta)
 
 		if (player)
 		{
+			tree->Clear();
 			glm::vec2 pos = player->GetPosition();
+			int enemiesCount = 0;
 			for (int i = 0; i < gameObjCount; i++)
-				gameObjects[i]->Update(delta);
+			{
+				cGameObject *obj = gameObjects[i];
+				cShip *ship = dynamic_cast<cShip*>(obj);
+				if (ship &&	ship->GetOwner() == Owner::Enemy)
+					enemiesCount++;
+				obj->Update(delta);
+				if (obj->IsDead())
+				{
+					objctsToDelete.push_back(obj);
+					gameObjects.erase(gameObjects.begin() + i);
+					i--;
+					gameObjCount--;
+				}
+				else
+					tree->Insert(obj);
+			}
 				
 			deltaMove = player->GetPosition() - pos;
 
@@ -57,6 +75,8 @@ void cGame::Update(float delta)
 				gui->SetMenu(Screen::Death);
 				Clear();
 			}
+			else if (enemiesCount == 0)
+				StartLevel(++currentLevel);
 		}
 	}
 
@@ -91,36 +111,21 @@ void cGame::CollisionUpdate()
 	if (gameObjCount == 0)
 		return;
 
-	if (gameObjCount == 1 && !player->IsDead())
-		StartLevel(++currentLevel);
-
-	for (int i = 0; i < gameObjCount - 1; i++)
+	for (auto iter1 = gameObjects.begin(); iter1 != gameObjects.end(); iter1++)
 	{
-		if (gameObjects[i]->IsDead())
+		cGameObject *obj1 = (*iter1);
+		
+		vector<cGameObject*> cols;
+		tree->Get(cols, obj1->GetRect());
+		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++)
 		{
-			objctsToDelete.push_back(gameObjects[i]);
-			gameObjects.erase(gameObjects.begin() + i);
-			i--;
-			gameObjCount--;
-			continue;
-		}
-		for (int j = i + 1; j < gameObjCount; j++)
-		{
-			if (gameObjects[j]->IsDead())
-			{
-				objctsToDelete.push_back(gameObjects[j]);
-				gameObjects.erase(gameObjects.begin() + j);
-				j--;
-				gameObjCount--;
-				continue;
-			}
+			cGameObject *obj2 = (*iter2);
 			
-			if (gameObjects[i]->GetOwner() != gameObjects[j]->GetOwner() && 
-				RECTF::Intersects(gameObjects[i]->GetRect(), gameObjects[j]->GetRect()) &&
-				PerPixelCollision(gameObjects[i], gameObjects[j]))
+			if (obj1->GetOwner() != obj2->GetOwner() &&
+				RECTF::Intersects(obj1->GetRect(), obj2->GetRect()) &&
+				PerPixelCollision(obj1, obj2))
 			{
-				gameObjects[i]->CollidedWith(gameObjects[j]);
-				gameObjects[j]->CollidedWith(gameObjects[i]);
+				obj1->CollidedWith(obj2);
 			}
 		}
 	}
@@ -175,7 +180,12 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 cGameObject* cGame::ClickedOn(glm::vec2 pos)
 {
 	cGameObject *obj = NULL;
-	for (vector<cGameObject*>::iterator iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	vector<cGameObject*> cols;
+	RECTF r;
+	r.left = r.right = pos.x;
+	r.top = r.bottom = pos.y;
+	tree->Get(cols, r);
+	for (auto iter = cols.begin(); iter != cols.end(); iter++)
 	{
 		if (RECTF::InRect((*iter)->GetRect(), pos))
 			obj = *iter;
@@ -189,12 +199,9 @@ void cGame::StartLevel(int level)
 	if (level == 0)
 	{
 		cInput::Reset(); //just so that there's no shooting after clicking Play
-		cSprite *sprite = new cSprite();
-		sprite->setTexture(textures["ship"]);
-		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
 
-		player = new cPlayer();
-		player->SetSprite(sprite);
+		player = new cPlayer(textures["ship"]);
+		player->SetStats(5 * LVL1_HEALTH, 150, 100);
 		player->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		player->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
 		gameObjects.push_back(player);
@@ -205,12 +212,8 @@ void cGame::StartLevel(int level)
 	glm::vec2 playerPos = player->GetPosition();
 	for (int i = 0; i < count; i++)
 	{
-		cSprite *sprite = new cSprite();
-		sprite->setTexture(textures["ship"]);
-		sprite->setSpriteScale(glm::vec2(0.25f, 0.25f));
-
-		cShip *ship = new cShip();
-		ship->SetSprite(sprite);
+		cShip *ship = new cShip(textures["ship"]);
+		ship->SetStats(LVL1_HEALTH, 100, 100);
 		glm::vec2 offset = glm::vec2(rand() % 800 - 400, rand() % 800 - 400);
 		ship->SetPosition(playerPos + offset);
 		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
@@ -235,6 +238,7 @@ void cGame::Clear()
 	player = NULL;
 	paused = false;
 	gameObjCount = 0;
+	tree->Clear();
 
 	while (gameObjects.size() > 0)
 	{

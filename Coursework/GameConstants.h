@@ -40,7 +40,8 @@ using namespace std;
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
 
-struct RECTF {
+struct RECTF 
+{
 	float left, top, right, bottom;
 
 	static bool Intersects(RECTF r1, RECTF r2)

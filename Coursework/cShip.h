@@ -17,8 +17,10 @@ protected:
 	void Shoot(cGameObject *target);
 	
 public:
-	cShip(Owner pOwner = Owner::Enemy);
+	cShip(cTexture *pText, Owner pOwner = Owner::Enemy);
 	~cShip() {}
+
+	void SetStats(int pMaxHealth, float pMaxVel, float pRotSpeed);
 
 	int GetHealth() { return health; }
 	int GetMaxHealth() { return maxHealth; }

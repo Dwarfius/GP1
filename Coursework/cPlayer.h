@@ -6,7 +6,7 @@ class cPlayer :
 	public cShip
 {
 public:
-	cPlayer();
+	cPlayer(cTexture *pText);
 	~cPlayer() {}
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);

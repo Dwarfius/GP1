@@ -11,7 +11,7 @@ private:
 	int damage;
 
 public:
-	cMissile(Owner pOwner, cGameObject *pTarget, int pDamage);
+	cMissile(cTexture *pText, Owner pOwner, cGameObject *pTarget, int pDamage);
 	~cMissile() {}
 
 	void Update(float delta);
