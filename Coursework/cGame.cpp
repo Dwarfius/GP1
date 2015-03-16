@@ -46,7 +46,7 @@ void cGame::Update(float delta)
 
 		if (player)
 		{
-			tree->Clear();
+			
 			glm::vec2 pos = player->GetPosition();
 			int enemiesCount = 0;
 			for (int i = 0; i < gameObjCount; i++)
@@ -63,8 +63,6 @@ void cGame::Update(float delta)
 					i--;
 					gameObjCount--;
 				}
-				else
-					tree->Insert(obj);
 			}
 				
 			deltaMove = player->GetPosition() - pos;
@@ -111,21 +109,35 @@ void cGame::CollisionUpdate()
 	if (gameObjCount == 0)
 		return;
 
+	//repopulating the tree before checking for collisions
+	tree->Clear();
+	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
+	{
+		cGameObject *obj = (*iter);
+		if (!obj->IsDead())
+			tree->Insert(obj);
+	}
+
 	for (auto iter1 = gameObjects.begin(); iter1 != gameObjects.end(); iter1++)
 	{
 		cGameObject *obj1 = (*iter1);
+		if (obj1->IsDead()) //since objects remain in game for one extra frame, we can skip them
+			continue;
 		
 		vector<cGameObject*> cols;
 		tree->Get(cols, obj1->GetRect());
 		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++)
 		{
 			cGameObject *obj2 = (*iter2);
+			if (obj2->IsDead())
+				continue;
 			
 			if (obj1->GetOwner() != obj2->GetOwner() &&
 				RECTF::Intersects(obj1->GetRect(), obj2->GetRect()) &&
 				PerPixelCollision(obj1, obj2))
 			{
 				obj1->CollidedWith(obj2);
+				break; //can collide only once
 			}
 		}
 	}
@@ -175,22 +187,6 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 		}
 	}
 	return false;
-}
-
-cGameObject* cGame::ClickedOn(glm::vec2 pos)
-{
-	cGameObject *obj = NULL;
-	vector<cGameObject*> cols;
-	RECTF r;
-	r.left = r.right = pos.x;
-	r.top = r.bottom = pos.y;
-	tree->Get(cols, r);
-	for (auto iter = cols.begin(); iter != cols.end(); iter++)
-	{
-		if (RECTF::InRect((*iter)->GetRect(), pos))
-			obj = *iter;
-	}
-	return obj;
 }
 
 void cGame::StartLevel(int level)

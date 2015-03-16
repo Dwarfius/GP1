@@ -32,7 +32,7 @@ void cPlayer::Update(float delta)
 
 	if (cInput::GetButton(0))
 	{
-		cGameObject *obj = cGame::Get()->ClickedOn(mousePos);
+		cGameObject *obj = NULL; //cGame::Get()->ClickedOn(mousePos); change to closest in range
 		Shoot(dynamic_cast<cShip*>(obj));
 	}
 

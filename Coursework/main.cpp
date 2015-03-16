@@ -16,8 +16,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR cmdLine,
                    int cmdShow)
 {
-	glutInit(&__argc, __argv); //needed to have 2dfont writeout
 	srand(time(NULL));
+	glutInit(&__argc, __argv); //needed to have 2dfont writeout
 
 	//for debug
 	AllocConsole();
@@ -57,22 +57,25 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	cGame *game = cGame::Get();
     //This is the mainloop, we render frames until isRunning returns false
 	float timer = 0;
+	int t = 0;
+	float time = 0;
 	while (pgmWNDMgr->isWNDRunning())
     {
 		pgmWNDMgr->processWNDEvents(); //Process any window events
 
         //We get the time that passed since the last frame
 		float elapsedTime = pgmWNDMgr->getElapsedSeconds();
-		timer -= elapsedTime;
 
 		game->Update(elapsedTime);
-
+		
+		timer -= elapsedTime;
 		if (timer < 0)
 		{
+			t++;
+			timer = 1 / 60.f; //locking collision detection at ~60fps max
 			game->CollisionUpdate();
-			timer = 0.02f; //locking collision detection at 50fps
 		}
-		
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		game->Render();

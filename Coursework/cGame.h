@@ -41,7 +41,6 @@ public:
 	void CollisionUpdate(); //Implement this - http://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374
 	void Render();
 	void AddGameObject(cGameObject *obj) { gameObjects.push_back(obj); gameObjCount++; }
-	cGameObject* ClickedOn(glm::vec2 pos);
 	void StartLevel(int level);
 	cPlayer* GetPlayer() { return player; };
 	void SetPaused(bool state) { paused = state; }

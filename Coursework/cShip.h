@@ -10,6 +10,7 @@ private:
 	int health = 1000;
 	int maxHealth = 1000;
 	glm::vec2 targetPos;
+	int fliesRight;
 
 protected:
 	vector<cWeapon*> weapons;

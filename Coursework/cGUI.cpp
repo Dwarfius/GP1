@@ -136,7 +136,7 @@ void cGUI::Update(float delta)
 	timer += delta;
 	if (timer > 1)
 	{
-		fps = frames / timer;
+		fps = frames;
 		timer = 0;
 		frames = 0;
 	}
