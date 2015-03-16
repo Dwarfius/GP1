@@ -32,10 +32,9 @@ void cGameObject::Update(float delta)
 		sprite->setSpritePos(pos);
 	}
 
-	UpdateBoundingRect();
+	sprite->updateMatrix();
+	sprite->updateBoundingRect();
 	UpdateForward();
-
-	dirty = true;
 }
 
 void cGameObject::Render()
@@ -58,14 +57,4 @@ void cGameObject::UpdateForward()
 void cGameObject::CollidedWith(cGameObject *col)
 {
 	cout << GetName() << " collided with " << col->GetName() << endl;
-}
-
-void cGameObject::UpdateBoundingRect()
-{
-	if (dirty)
-	{
-		sprite->updateMatrix();
-		sprite->updateBoundingRect();
-		dirty = false;
-	}
 }

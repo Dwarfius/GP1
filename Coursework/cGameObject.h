@@ -16,7 +16,6 @@ protected:
 	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;
 	Owner owner;
-	bool dirty = true;
 
 public:
 	cGameObject(cTexture *pText, Owner pOwner);
@@ -59,5 +58,4 @@ public:
 	virtual string GetName() { return "GameObject"; }
 	Owner GetOwner() { return owner; }
 	virtual void OnDestroy() {};
-	void UpdateBoundingRect();
 };
