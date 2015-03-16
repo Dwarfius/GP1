@@ -26,6 +26,10 @@ public:
 	int GetHealth() { return health; }
 	int GetMaxHealth() { return maxHealth; }
 
+	//1100
+	//MBSP - Missile, Bullet, Ship, Player
+	int GetCollisionMask() { return 1 << 2 || 1 << 3; }
+
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
 	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }

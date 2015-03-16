@@ -27,7 +27,7 @@ void cShip::Update(float delta)
 	{
 		glm::vec2 deltaVec = player->GetPosition() - GetPosition();
 		float distanceSqr = deltaVec.y * deltaVec.y + deltaVec.x * deltaVec.x;
-		if (distanceSqr < 100000)
+		if (distanceSqr < 1000000)
 		{
 			LookAt(player->GetPosition());
 			glm::vec2 dir = glm::normalize(deltaVec);
@@ -37,7 +37,8 @@ void cShip::Update(float delta)
 			AddVelocity(dir * maxVel * delta);
 
 			//adding random right/0/left velocity so that they don't bunch up
-			//"optimizes" the quadtree collision detection
+			//"optimizes" the quadtree collision detection by separating them in to smaller
+			//chunks
 			AddVelocity(GetRight() * maxVel * delta * (float)fliesRight);
 
 			if (glm::abs(glm::dot(GetForward(), dir)) > 0.9f)

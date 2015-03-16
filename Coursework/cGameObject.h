@@ -46,6 +46,10 @@ public:
 	bool IsDead() { return destroy; }
 	void SetDestroy(bool flag) { destroy = flag; }
 
+	//0000
+	//MBSP - Missile, Bullet, Ship, Player
+	virtual int GetCollisionMask() { return 0; }
+
 	void SetSprite(cSprite *s) { sprite = s; }
 	virtual void Update(float delta);
 	void Render();

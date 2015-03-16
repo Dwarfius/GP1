@@ -124,6 +124,7 @@ void cGame::CollisionUpdate()
 		if (obj1->IsDead()) //since objects remain in game for one extra frame, we can skip them
 			continue;
 		
+		int colMask1 = obj1->GetCollisionMask();
 		vector<cGameObject*> cols;
 		tree->Get(cols, obj1->GetRect());
 		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++)
@@ -132,9 +133,11 @@ void cGame::CollisionUpdate()
 			if (obj2->IsDead())
 				continue;
 			
-			if (obj1->GetOwner() != obj2->GetOwner() &&
-				RECTF::Intersects(obj1->GetRect(), obj2->GetRect()) &&
-				PerPixelCollision(obj1, obj2))
+			int colMask2 = obj2->GetCollisionMask();
+			if ((colMask1 & colMask2) > 0 && //are the object types supposed to collide with each other
+				obj1->GetOwner() != obj2->GetOwner() && //friendlies don't collide
+				RECTF::Intersects(obj1->GetRect(), obj2->GetRect()) && //raw AABB intersection
+				PerPixelCollision(obj1, obj2)) //final perpixel check
 			{
 				obj1->CollidedWith(obj2);
 				break; //can collide only once

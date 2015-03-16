@@ -16,5 +16,9 @@ public:
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
 	string GetName() { return "Bullet"; }
+
+	//0011
+	//MBSP - Missile, Bullet, Ship, Player
+	int GetCollisionMask() { return 1 || 1 << 1; }
 };
 
