@@ -32,8 +32,8 @@ void cPlayer::Update(float delta)
 
 	if (cInput::GetButton(0))
 	{
-		cGameObject *obj = NULL; //cGame::Get()->ClickedOn(mousePos); change to closest in range
-		Shoot(dynamic_cast<cShip*>(obj));
+		cShip *ship = cGame::Get()->GetShipUnderPoint(mousePos);
+		Shoot(ship);
 	}
 
 	cGameObject::Update(delta);

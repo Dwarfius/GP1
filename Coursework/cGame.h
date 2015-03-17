@@ -21,6 +21,7 @@ private:
 
 	bool paused = false;
 	vector<cGameObject*> gameObjects;
+	vector<cShip*> ships;
 	int gameObjCount = 0;
 	vector<cGameObject*> objctsToDelete;
 	map<string, cTexture*> textures;
@@ -46,5 +47,7 @@ public:
 	void SetPaused(bool state) { paused = state; }
 	void Clear();
 	int GetGameObjetsCount() { return gameObjCount; }
+
 	void OnResize(int width, int height);
+	cShip* GetShipUnderPoint(glm::vec2 pos);
 };

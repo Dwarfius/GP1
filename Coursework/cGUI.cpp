@@ -40,10 +40,29 @@ void cGUI::SetUp()
 	menus[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Options", [this]() { currentMenu = Screen::Options; });
+	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
+	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	menus[(int)Screen::Main].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Quit", []() { exit(0); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::Main].push_back(btn);
+
+	//Options Menu
+	r = { x, y, x + btnWidth, y + btnHeight };
+	btn = new cGUIButton(NULL, r, "Background: On", [this]() { ToggleBackground(); });
+	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
+	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	menus[(int)Screen::Options].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Back", [this]() { currentMenu = Screen::Main; });
+	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
+	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	menus[(int)Screen::Options].push_back(btn);
 
 	//Game Overlay
 	r = { windowSize.x / 2 - 100, windowSize.y - 40, windowSize.x / 2 + 100, windowSize.y };
@@ -128,6 +147,9 @@ void cGUI::Update(float delta)
 			currentMenu = Screen::GameOverlay;
 		}
 		break;
+	case Screen::Options:
+		if (cInput::GetKeyDown(27))
+			currentMenu = Screen::Main;
 	default:
 		break;
 	}
@@ -166,4 +188,9 @@ void cGUI::SetFinalScore(int score)
 {
 	cGUILabel *lbl = (cGUILabel*)menus[(int)Screen::Death][0];
 	lbl->SetText("The final score is: " + to_string(score));
+}
+
+void cGUI::ToggleBackground()
+{
+
 }

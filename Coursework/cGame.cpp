@@ -46,15 +46,17 @@ void cGame::Update(float delta)
 
 		if (player)
 		{
-			
 			glm::vec2 pos = player->GetPosition();
 			int enemiesCount = 0;
+			//start thinking about multithreading this
+			//http://gamedev.stackexchange.com/questions/7338/multi-threaded-games-best-practices-one-thread-for-logic-one-for-rendering
 			for (int i = 0; i < gameObjCount; i++)
 			{
 				cGameObject *obj = gameObjects[i];
 				cShip *ship = dynamic_cast<cShip*>(obj);
 				if (ship &&	ship->GetOwner() == Owner::Enemy)
 					enemiesCount++;
+					
 				obj->Update(delta);
 				if (obj->IsDead())
 				{
@@ -62,6 +64,19 @@ void cGame::Update(float delta)
 					gameObjects.erase(gameObjects.begin() + i);
 					i--;
 					gameObjCount--;
+
+					if (ship)
+					{
+						int shipsCount = ships.size();
+						for (int j = 0; j < shipsCount; j++)
+						{
+							if (ships[j] == ship)
+							{
+								ships.erase(ships.begin() + j);
+								break;
+							}
+						}
+					}
 				}
 			}
 				
@@ -89,6 +104,7 @@ void cGame::Render()
 
 	glm::vec2 pos = player ? player->GetPosition() : glm::vec2(0, 0);
 	float vel = player ? glm::length(player->GetVelocity()) : 0;
+	vel /= 3; //just for the time being, need to change it up in the future
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -118,6 +134,8 @@ void cGame::CollisionUpdate()
 			tree->Insert(obj);
 	}
 
+	//start thinking about multithreading this
+	//http://gamedev.stackexchange.com/questions/7338/multi-threaded-games-best-practices-one-thread-for-logic-one-for-rendering
 	for (auto iter1 = gameObjects.begin(); iter1 != gameObjects.end(); iter1++)
 	{
 		cGameObject *obj1 = (*iter1);
@@ -217,6 +235,7 @@ void cGame::StartLevel(int level)
 		ship->SetPosition(playerPos + offset);
 		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		gameObjects.push_back(ship);
+		ships.push_back(ship);
 	}
 	gameObjCount += count;
 }
@@ -238,6 +257,7 @@ void cGame::Clear()
 	paused = false;
 	gameObjCount = 0;
 	tree->Clear();
+	ships.clear();
 
 	while (gameObjects.size() > 0)
 	{
@@ -256,4 +276,15 @@ void cGame::OnResize(int width, int height)
 {
 	gui->UpdateSize(glm::vec2(width, height));
 	background->UpdateSize(width, height);
+}
+
+cShip* cGame::GetShipUnderPoint(glm::vec2 pos)
+{
+	for (auto iter = ships.begin(); iter != ships.end(); iter++)
+	{
+		cShip *ship = (*iter);
+		if (!ship->IsDead() && RECTF::InRect(ship->GetRect(), pos))
+			return ship;
+	}
+	return NULL;
 }
