@@ -41,6 +41,7 @@ public:
 	void Update(float delta);
 	void CollisionUpdate(); //Implement this - http://gamedevelopment.tutsplus.com/tutorials/quick-tip-use-quadtrees-to-detect-likely-collisions-in-2d-space--gamedev-374
 	void Render();
+
 	void AddGameObject(cGameObject *obj) { gameObjects.push_back(obj); gameObjCount++; }
 	void StartLevel(int level);
 	cPlayer* GetPlayer() { return player; };
