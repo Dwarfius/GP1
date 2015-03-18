@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cBackground.h" />
+    <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGUIButton.h" />
     <ClInclude Include="cGUIElement.h" />
     <ClInclude Include="cGUILabel.h" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cBackground.cpp" />
+    <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGUIButton.cpp" />
     <ClCompile Include="cGUIElement.cpp" />
     <ClCompile Include="cGUILabel.cpp" />

@@ -48,6 +48,7 @@ public:
 	//0000
 	//MBSP - Missile, Bullet, Ship, Player
 	virtual int GetCollisionMask() { return 0; }
+	virtual int GetCollisionLayer() { return 0; }
 
 	void SetSprite(cSprite *s) { sprite = s; }
 	virtual void Update(float delta);

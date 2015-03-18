@@ -19,6 +19,7 @@ public:
 
 	//0011
 	//MBSP - Missile, Bullet, Ship, Player
-	int GetCollisionMask() { return 1 || 1 << 1; }
+	int GetCollisionMask() { return 1 | 1 << 1; }
+	int GetCollisionLayer() { return 1 << 2; }
 };
 

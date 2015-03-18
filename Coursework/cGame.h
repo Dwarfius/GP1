@@ -7,6 +7,7 @@
 #include "cPlayer.h"
 #include "cBackground.h"
 #include "cQuadtree.h"
+#include "cGrid.h"
 
 class cGame
 {
@@ -18,6 +19,7 @@ private:
 	cBackground *background; 
 	cPlayer *player = NULL;
 	cQuadtree *tree;
+	cGrid *grid;
 
 	bool paused = false;
 	vector<cGameObject*> gameObjects;

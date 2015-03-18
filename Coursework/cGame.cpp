@@ -12,13 +12,16 @@ cGame::cGame()
 	LoadTextures();
 	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
 	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
-	tree = new cQuadtree(0, { -10000, -10000, 10000, 10000 });
+	//tree = new cQuadtree(0, { -10000, -10000, 10000, 10000 });
+	grid = new cGrid(WINDOW_WIDTH * 3 / 2, WINDOW_HEIGHT * 3 / 2);
 }
 
 cGame::~cGame()
 {
 	delete gui;
 	delete background;
+	//delete tree;
+	delete grid;
 
 	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
@@ -126,12 +129,15 @@ void cGame::CollisionUpdate()
 		return;
 
 	//repopulating the tree before checking for collisions
-	tree->Clear();
+	//tree->Clear();
+	grid->Clear();
+	grid->SetPos(player->GetPosition());
 	for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++)
 	{
 		cGameObject *obj = (*iter);
 		if (!obj->IsDead())
-			tree->Insert(obj);
+			//tree->Insert(obj);
+			grid->Add(obj);
 	}
 
 	//start thinking about multithreading this
@@ -142,17 +148,18 @@ void cGame::CollisionUpdate()
 		if (obj1->IsDead()) //since objects remain in game for one extra frame, we can skip them
 			continue;
 		
-		int colMask1 = obj1->GetCollisionMask();
+		int colMask = obj1->GetCollisionMask();
 		vector<cGameObject*> cols;
-		tree->Get(cols, obj1->GetRect());
+		//tree->Get(cols, obj1->GetRect());
+		grid->Get(cols, obj1->GetRect());
 		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++)
 		{
 			cGameObject *obj2 = (*iter2);
-			if (obj2->IsDead())
+			if (obj1 == obj2 || obj2->IsDead())
 				continue;
 			
-			int colMask2 = obj2->GetCollisionMask();
-			if ((colMask1 & colMask2) > 0 && //are the object types supposed to collide with each other
+			int colLayer = obj2->GetCollisionLayer();
+			if ((colLayer & colMask) > 0 && //are the object types supposed to collide with each other
 				obj1->GetOwner() != obj2->GetOwner() && //friendlies don't collide
 				RECTF::Intersects(obj1->GetRect(), obj2->GetRect()) && //raw AABB intersection
 				PerPixelCollision(obj1, obj2)) //final perpixel check
@@ -184,27 +191,38 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	int left = min(g1Rect.left, g2Rect.left);
 	int right = max(g1Rect.right, g2Rect.right);
 
-	for (int y = top; y < bottom; y++) //hello invcerted Y axis
+	for (int y = top; y < bottom; y++) //hello inverted Y axis
 	{
 		for (int x = left; x < right; x++)
 		{
+			//Going separate it in 2 parts, part of optimization - if one of them is transparent, why
+			//check the other? So
 			//getting the point in model space
 			glm::vec4 point = glm::vec4(x, y, 0, 1);
 			glm::vec4 g1Point = g1InvTrans * point;
-			glm::vec4 g2Point = g2InvTrans * point;
 
 			//taking the color info
 			glm::vec2 g1ColorP = glm::vec2((int)g1Point.x, (int)g1Point.y) + g1HalfSize;
-			glm::vec2 g2ColorP = glm::vec2((int)g2Point.x, (int)g2Point.y) + g2HalfSize;
 
-			if (g1ColorP.x < 0 || g1ColorP.x >= g1FullSize.x || g1ColorP.y < 0 || g1ColorP.y >= g1FullSize.y ||
-				g2ColorP.x < 0 || g2ColorP.x >= g2FullSize.x || g2ColorP.y < 0 || g2ColorP.y >= g2FullSize.y)
-				continue; //since we're using AABB, we can get pixels outside of texture
+			//since we're using AABB, we can get pixels outside of texture, so check against that
+			if (!(g1ColorP.x >= 0 && g1ColorP.x < g1FullSize.x && g1ColorP.y >= 0 && g1ColorP.y < g1FullSize.y))
+				continue; 
 
+			//get the alpha byte
 			int i1 = (int)(g1ColorP.y * g1FullSize.x + g1ColorP.x) * 4 + 3;
+			if (g1Data[i1] == 0)
+				continue;
+
+			//now, repeating it for second object
+			glm::vec4 g2Point = g2InvTrans * point;
+			glm::vec2 g2ColorP = glm::vec2((int)g2Point.x, (int)g2Point.y) + g2HalfSize;
+			if (!(g2ColorP.x >= 0 && g2ColorP.x < g2FullSize.x && g2ColorP.y >= 0 && g2ColorP.y < g2FullSize.y))
+				continue;
 			int i2 = (int)(g2ColorP.y * g2FullSize.x + g2ColorP.x) * 4 + 3;
-			if (g1Data[i1] != 0 && g2Data[i2] != 0)
-				return true;
+			if (g2Data[i2] == 0)
+				continue;
+
+			return true;
 		}
 	}
 	return false;
@@ -256,7 +274,8 @@ void cGame::Clear()
 	player = NULL;
 	paused = false;
 	gameObjCount = 0;
-	tree->Clear();
+	//tree->Clear();
+	grid->Clear();
 	ships.clear();
 
 	while (gameObjects.size() > 0)
