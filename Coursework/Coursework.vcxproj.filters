@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Items">
       <UniqueIdentifier>{8c8b6f63-aaed-45d9-953c-f75e34c05155}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Audio">
+      <UniqueIdentifier>{e909da2a-b6da-465c-a3b1-f8e71f2ece9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{46f72a0d-93cd-465c-b793-9822c7ab98d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cGame.h">
@@ -69,9 +75,6 @@
     <ClInclude Include="windowOGL.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="wglext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cGUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -96,14 +99,23 @@
     <ClInclude Include="cWeapon.h">
       <Filter>Header Files\Items</Filter>
     </ClInclude>
-    <ClInclude Include="cBackground.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="cQuadtree.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="cGrid.h">
       <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="cSettings.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="cBackground.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="cSound.h">
+      <Filter>Header Files\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="cSoundMgr.h">
+      <Filter>Header Files\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,14 +173,23 @@
     <ClCompile Include="cWeapon.cpp">
       <Filter>Source Files\Items</Filter>
     </ClCompile>
-    <ClCompile Include="cBackground.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="cQuadtree.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="cGrid.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="cSettings.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="cBackground.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="cSound.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="cSoundMgr.cpp">
+      <Filter>Source Files\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,5 +197,7 @@
     <Library Include="Libraries\freeglut.lib" />
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
+    <Library Include="Libraries\OpenAL32.lib" />
+    <Library Include="Libraries\alut.lib" />
   </ItemGroup>
 </Project>

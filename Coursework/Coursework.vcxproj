@@ -22,7 +22,10 @@
     <ClInclude Include="cMissile.h" />
     <ClInclude Include="cPlayer.h" />
     <ClInclude Include="cQuadtree.h" />
+    <ClInclude Include="cSettings.h" />
     <ClInclude Include="cShip.h" />
+    <ClInclude Include="cSound.h" />
+    <ClInclude Include="cSoundMgr.h" />
     <ClInclude Include="cSprite.h" />
     <ClInclude Include="cTexture.h" />
     <ClInclude Include="cWeapon.h" />
@@ -31,7 +34,6 @@
     <ClInclude Include="GameConstants.h" />
     <ClInclude Include="cGameObject.h" />
     <ClInclude Include="cGUI.h" />
-    <ClInclude Include="wglext.h" />
     <ClInclude Include="windowOGL.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +48,10 @@
     <ClCompile Include="cMissile.cpp" />
     <ClCompile Include="cPlayer.cpp" />
     <ClCompile Include="cQuadtree.cpp" />
+    <ClCompile Include="cSettings.cpp" />
     <ClCompile Include="cShip.cpp" />
+    <ClCompile Include="cSound.cpp" />
+    <ClCompile Include="cSoundMgr.cpp" />
     <ClCompile Include="cSprite.cpp" />
     <ClCompile Include="cTexture.cpp" />
     <ClCompile Include="cWeapon.cpp" />
@@ -58,10 +63,12 @@
     <ClCompile Include="windowOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="Libraries\alut.lib" />
     <Library Include="Libraries\DevIL.lib" />
     <Library Include="Libraries\freeglut.lib" />
     <Library Include="Libraries\ILU.lib" />
     <Library Include="Libraries\ILUT.lib" />
+    <Library Include="Libraries\OpenAL32.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{47639238-92BD-46BF-BFCE-4C0AB1714AFA}</ProjectGuid>

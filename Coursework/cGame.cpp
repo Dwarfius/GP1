@@ -260,12 +260,17 @@ void cGame::StartLevel(int level)
 
 void cGame::LoadTextures()
 {
-	textures.insert(pair<string, cTexture*>("ship", new cTexture("Textures\\Ships\\ship.png")));
-	textures.insert(pair<string, cTexture*>("missile", new cTexture("Textures\\Weapons\\missile.png")));
-	textures.insert(pair<string, cTexture*>("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
+	textures.insert(make_pair("ship", new cTexture("Textures\\Ships\\ship.png")));
+	textures.insert(make_pair("missile", new cTexture("Textures\\Weapons\\missile.png")));
+	textures.insert(make_pair("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
 	int randomBg = rand() % 6;
 	string bg = "Textures\\Backgrounds\\space" + to_string(randomBg) + ".png";
-	textures.insert(pair<string, cTexture*>("space", new cTexture(bg.c_str())));
+	textures.insert(make_pair("space", new cTexture(bg.c_str())));
+}
+
+void cGame::LoadSounds()
+{
+
 }
 
 void cGame::Clear()

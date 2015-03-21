@@ -8,6 +8,7 @@
 #include "cBackground.h"
 #include "cQuadtree.h"
 #include "cGrid.h"
+#include "cSoundMgr.h"
 
 class cGame
 {
@@ -20,6 +21,7 @@ private:
 	cPlayer *player = NULL;
 	cQuadtree *tree;
 	cGrid *grid;
+	cSoundMgr *soundMgr;
 
 	bool paused = false;
 	vector<cGameObject*> gameObjects;
@@ -32,6 +34,7 @@ private:
 
 	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
 	void LoadTextures();
+	void LoadSounds();
 
 public:
 	~cGame();

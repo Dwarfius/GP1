@@ -5,6 +5,7 @@
 #include "cGUIProgressBar.h"
 #include "cGame.h"
 #include "cInput.h"
+#include "cSettings.h"
 
 #pragma warning(disable: 4018 4244)
 
@@ -25,7 +26,7 @@ void cGUI::SetUp()
 	for (int i = 0; i < 5; i++)
 		menus[i].clear();
 
-	float btnWidth = 100;
+	float btnWidth = 150;
 	float btnHeight = 25;
 	float emptySpace = 10;
 
@@ -53,7 +54,15 @@ void cGUI::SetUp()
 
 	//Options Menu
 	r = { x, y, x + btnWidth, y + btnHeight };
-	btn = new cGUIButton(NULL, r, "Background: On", [this]() { ToggleBackground(); });
+	string state = cSettings::Get()->GetDrawBackground() ? "On" : "Off";
+	btn = new cGUIButton(NULL, r, "Background: " + state, [this]() { ToggleBackground(); });
+	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
+	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	menus[(int)Screen::Options].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
+	btn = new cGUIButton(NULL, r, "Volume: " + state, [this]() { ToggleVolume(); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::Options].push_back(btn);
@@ -192,5 +201,17 @@ void cGUI::SetFinalScore(int score)
 
 void cGUI::ToggleBackground()
 {
+	cSettings::Get()->ToggleDrawBackground();
+	cGUIButton *btn = (cGUIButton*)menus[(int)Screen::Options][0];
+	btn->SetText(cSettings::Get()->GetDrawBackground() ? "Background: On" : "Background: Off");
+}
 
+void cGUI::ToggleVolume()
+{
+	float volume = cSettings::Get()->GetVolume() + 0.1f;
+	if (volume >= 1.1f)
+		volume = 0;
+	cSettings::Get()->SetVolume(volume);
+	cGUIButton *btn = (cGUIButton*)menus[(int)Screen::Options][1];
+	btn->SetText("Volume: " + to_string((int)(volume * 100)) + "%");
 }

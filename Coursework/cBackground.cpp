@@ -1,4 +1,5 @@
 #include "cBackground.h"
+#include "cSettings.h"
 
 #pragma warning(disable : 4244)
 
@@ -40,7 +41,8 @@ void cBackground::Render()
 	glMatrixMode(GL_MODELVIEW);
 
 	//first of all, the background
-	background->Render();
+	if (cSettings::Get()->GetDrawBackground())
+		background->Render();
 
 	glColor3f(1, 1, 1);
 	//then all the stars

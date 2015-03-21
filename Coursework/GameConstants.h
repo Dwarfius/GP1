@@ -15,9 +15,9 @@
 #include "IL\ilut.h"
 
 // Audio
-//#include "OpenAL\al.h"
-//#include "OpenAL\alc.h"
-//#include "OpenAL\alut.h"
+#include "OpenAL\al.h"
+#include "OpenAL\alc.h"
+#include "OpenAL\alut.h"
 
 // Maths functions
 #include "glm\glm.hpp"

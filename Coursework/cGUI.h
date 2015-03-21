@@ -18,6 +18,7 @@ private:
 
 	void SetUp();
 	void ToggleBackground();
+	void ToggleVolume();
 
 public:
 	cGUI(glm::vec2 pWindowSize);
