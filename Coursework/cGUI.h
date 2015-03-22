@@ -3,8 +3,8 @@
 #include "glm\glm.hpp"
 #include "cGUIElement.h"
 
-#define GUI_SCREENS 6
-enum class Screen { Main, Options, GameOverlay, Pause, Death, Global };
+#define GUI_SCREENS 8
+enum class Screen { Main, Instructions, Options, GameOverlay, Pause, PauseOptions, Death, Global };
 
 class cGUI
 {
@@ -16,13 +16,16 @@ private:
 	int frames = 0;
 	int fps = 0;
 
+	cTexture *tutorialTexture;
+
 	void SetUp();
 	void ToggleBackground();
 	void ToggleVolume();
+	void CleanUp();
 
 public:
-	cGUI(glm::vec2 pWindowSize);
-	~cGUI() {}
+	cGUI(glm::vec2 pWindowSize, cTexture *pTutorialTexture);
+	~cGUI();
 
 	void UpdateSize(glm::vec2 newSize);
 	void SetMenu(Screen menu) { currentMenu = menu; }

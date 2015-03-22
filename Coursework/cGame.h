@@ -56,4 +56,8 @@ public:
 
 	void OnResize(int width, int height);
 	cShip* GetShipUnderPoint(glm::vec2 pos);
+
+	cTexture* GetTexture(string name) { return textures[name]; }
+
+	void PlaySnd(string name) { soundMgr->GetSnd(name)->Play(false); }
 };

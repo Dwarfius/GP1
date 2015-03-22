@@ -9,14 +9,15 @@ private:
 	ALCcontext *m_OALContext;
 	ALCdevice *m_OALDevice;
 
-	cSoundMgr();
-	~cSoundMgr();
-	
 	map <string, cSound*> sounds;
 	void CreateContext();
 
+	void CleanUp();
+
 public:
+	cSoundMgr();
+	~cSoundMgr();
+
 	void Add(string sndName, string fileName);
 	cSound* GetSnd(string sndName);
-	void CleanUp();
 };

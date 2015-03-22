@@ -8,8 +8,6 @@
 class cSound
 {
 private:
-
-	char*        m_OALData = NULL;           //data for the buffer
 	ALenum       m_OALFormat;         //buffer format
 	ALsizei      m_OALFrequency = 0;     //frequency
 	long         m_OALBufferLen;      //bit depth

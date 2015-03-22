@@ -10,10 +10,12 @@ cGame* cGame::singleton;
 cGame::cGame()
 {
 	LoadTextures();
-	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT));
+	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT), textures["tutorial"]);
 	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
 	//tree = new cQuadtree(0, { -10000, -10000, 10000, 10000 });
 	grid = new cGrid(WINDOW_WIDTH * 3 / 2, WINDOW_HEIGHT * 3 / 2);
+	soundMgr = new cSoundMgr();
+	LoadSounds();
 }
 
 cGame::~cGame()
@@ -22,6 +24,7 @@ cGame::~cGame()
 	delete background;
 	//delete tree;
 	delete grid;
+	delete soundMgr;
 
 	for (int i = 0; i < gameObjects.size(); i++)
 		delete gameObjects[i];
@@ -270,7 +273,7 @@ void cGame::LoadTextures()
 
 void cGame::LoadSounds()
 {
-
+	soundMgr->Add("bullet", "Audio\\Bullet.wav");
 }
 
 void cGame::Clear()

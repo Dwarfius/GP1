@@ -5,19 +5,21 @@
 
 void cSound::LoadWAVFile(LPCSTR filename)
 {
-	alutLoadWAVFile((ALbyte *)filename, &m_OALFormat, (void **)&m_OALData, (ALsizei *)&m_OALBufferLen, &m_OALFrequency, &m_OALLoop);
+	char *buffer;
+	alutLoadWAVFile((ALbyte *)filename, &m_OALFormat, (void **)&buffer, (ALsizei *)&m_OALBufferLen, &m_OALFrequency, &m_OALLoop);
 
 	alGenSources(1, &m_OALSource);
 	alGenBuffers(1, &m_OALBuffer);
-	alBufferData(m_OALBuffer, m_OALFormat, m_OALData, m_OALBufferLen, m_OALFrequency);
+	alBufferData(m_OALBuffer, m_OALFormat, buffer, m_OALBufferLen, m_OALFrequency);
 	alSourcei(m_OALSource, AL_BUFFER, m_OALBuffer);
 
-	alutUnloadWAV(m_OALFormat, m_OALData, m_OALBufferLen, m_OALFrequency);
+	alutUnloadWAV(m_OALFormat, buffer, m_OALBufferLen, m_OALFrequency);
 }
 
 void cSound::Play(ALboolean loop)
 {
-	alSourcef(m_OALSource, loop, cSettings::Get()->GetVolume());
+	alSourcei(m_OALSource, AL_LOOPING, loop);
+	alSourcef(m_OALSource, AL_GAIN, cSettings::Get()->GetVolume());
 	alSourcePlay(m_OALSource);
 }
 
@@ -36,6 +38,4 @@ void cSound::CleanUp()
 	alDeleteSources(1, &m_OALSource);
 	alDeleteBuffers(1, &m_OALBuffer);
 	alcMakeContextCurrent(NULL);
-
-	delete m_OALData;
 }

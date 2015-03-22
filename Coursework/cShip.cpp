@@ -27,23 +27,19 @@ void cShip::Update(float delta)
 	{
 		glm::vec2 deltaVec = player->GetPosition() - GetPosition();
 		float distanceSqr = deltaVec.y * deltaVec.y + deltaVec.x * deltaVec.x;
-		if (distanceSqr < 1000000)
-		{
-			LookAt(player->GetPosition());
-			glm::vec2 dir = glm::normalize(deltaVec);
-			if (distanceSqr <= 10000)
-				dir = -dir;
+		LookAt(player->GetPosition());
+		glm::vec2 dir = glm::normalize(deltaVec);
+		if (distanceSqr <= 10000)
+			dir = -dir;
+		
+		AddVelocity(dir * maxVel * delta);
+		
+		//adding random right/0/left velocity so that they don't bunch up
+		//plays out better - the palyer has to deal with multiple clouds of ships
+		AddVelocity(GetRight() * maxVel * delta * (float)fliesRight);
 
-			AddVelocity(dir * maxVel * delta);
-
-			//adding random right/0/left velocity so that they don't bunch up
-			//"optimizes" the quadtree collision detection by separating them in to smaller
-			//chunks
-			AddVelocity(GetRight() * maxVel * delta * (float)fliesRight);
-
-			if (glm::abs(glm::dot(GetForward(), dir)) > 0.9f)
-				Shoot(player);
-		}
+		if (distanceSqr < 10000000 && glm::abs(glm::dot(GetForward(), dir)) > 0.9f)
+			Shoot(player);
 	}
 
 	velocity.x -= glm::sign(velocity.x) * 25 * delta;

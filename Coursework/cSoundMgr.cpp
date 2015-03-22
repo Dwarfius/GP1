@@ -7,6 +7,8 @@ cSoundMgr::cSoundMgr()
 
 cSoundMgr::~cSoundMgr()
 {
+	CleanUp();
+
 	//is it required?
 	m_OALContext = alcGetCurrentContext();
 	m_OALDevice = alcGetContextsDevice(m_OALContext);
@@ -41,4 +43,5 @@ void cSoundMgr::CleanUp()
 {
 	for (auto snd = sounds.begin(); snd != sounds.end(); ++snd)
 		delete snd->second;
+	sounds.clear();
 }

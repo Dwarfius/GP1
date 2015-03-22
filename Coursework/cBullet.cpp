@@ -1,10 +1,12 @@
 #include "cBullet.h"
 #include "cShip.h"
+#include "cGame.h"
 
 cBullet::cBullet(cTexture *pText, Owner pOwner, int pDamage) : 
 	cGameObject(pText, pOwner)
 {
 	damage = pDamage; 
+	cGame::Get()->PlaySnd("bullet");
 }
 
 void cBullet::Update(float delta)
