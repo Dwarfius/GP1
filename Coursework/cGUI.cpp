@@ -82,7 +82,7 @@ void cGUI::SetUp()
 	menus[(int)Screen::Options].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Main); });
+	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Main); cSettings::Get()->Serialize(); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::Options].push_back(btn);
@@ -141,7 +141,7 @@ void cGUI::SetUp()
 	menus[(int)Screen::PauseOptions].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Pause); });
+	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Pause); cSettings::Get()->Serialize(); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::PauseOptions].push_back(btn);
@@ -206,11 +206,19 @@ void cGUI::Update(float delta)
 		break;
 	case Screen::Options:
 		if (cInput::GetKeyDown(27))
+		{
 			SetMenu(Screen::Main);
+			cSettings::Get()->Serialize();
+		}
+			
 		break;
 	case Screen::PauseOptions:
 		if (cInput::GetKeyDown(27))
+		{
 			SetMenu(Screen::Pause);
+			cSettings::Get()->Serialize();
+		}
+			
 		break;
 	default:
 		break;
