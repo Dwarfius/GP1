@@ -1,7 +1,7 @@
 #include "cSettings.h"
-#include <string>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #pragma warning(disable : 4244)
 
@@ -21,9 +21,7 @@ cSettings::cSettings()
 
 void cSettings::Serialize()
 {
-	ofstream file("settings.txt", ios::trunc | ios::app);
-	if (!file.is_open())
-		return;
+	fstream file("settings.txt", ios::out | ios::trunc);
 
 	file << to_string(drawBackground) << endl;
 	file << to_string(volume) << endl;
@@ -34,7 +32,7 @@ void cSettings::Serialize()
 
 bool cSettings::Deserialize()
 {
-	ifstream file("settings.txt");
+	fstream file("settings.txt", ios::in);
 	if (!file.is_open())
 		return false;
 
