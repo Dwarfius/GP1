@@ -21,6 +21,8 @@ private:
 	void SetUp();
 	void ToggleBackground();
 	void ToggleVolume();
+	void UpdateVolumeBtn();
+	void UpdateBackgroundBtn();
 	void CleanUp();
 
 public:

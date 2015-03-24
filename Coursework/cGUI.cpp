@@ -51,7 +51,7 @@ void cGUI::SetUp()
 	menus[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::Options); });
+	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::Options); UpdateVolumeBtn(); UpdateBackgroundBtn(); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::Main].push_back(btn);
@@ -110,7 +110,7 @@ void cGUI::SetUp()
 	menus[(int)Screen::Pause].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::PauseOptions); });
+	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::PauseOptions); UpdateVolumeBtn(); UpdateBackgroundBtn(); });
 	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
 	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
 	menus[(int)Screen::Pause].push_back(btn);
@@ -266,9 +266,7 @@ void cGUI::SetFinalScore(int score)
 void cGUI::ToggleBackground()
 {
 	cSettings::Get()->ToggleDrawBackground();
-	int offset = currentMenu == Screen::Options ? 0 : 1;
-	cGUIButton *btn = (cGUIButton*)menus[(int)currentMenu][offset];
-	btn->SetText(cSettings::Get()->GetDrawBackground() ? "Background: On" : "Background: Off");
+	UpdateBackgroundBtn();
 }
 
 void cGUI::ToggleVolume()
@@ -277,9 +275,7 @@ void cGUI::ToggleVolume()
 	if (volume >= 1.1f)
 		volume = 0;
 	cSettings::Get()->SetVolume(volume);
-	int offset = currentMenu == Screen::Options ? 0 : 1;
-	cGUIButton *btn = (cGUIButton*)menus[(int)currentMenu][offset + 1];
-	btn->SetText("Volume: " + to_string((int)(volume * 100)) + "%");
+	UpdateVolumeBtn();
 }
 
 void cGUI::CleanUp()
@@ -290,4 +286,19 @@ void cGUI::CleanUp()
 			delete menus[i][j];
 		menus[i].clear();
 	}
+}
+
+void cGUI::UpdateVolumeBtn()
+{
+	float volume = cSettings::Get()->GetVolume();
+	int offset = currentMenu == Screen::Options ? 0 : 1;
+	cGUIButton *btn = (cGUIButton*)menus[(int)currentMenu][offset + 1];
+	btn->SetText("Volume: " + to_string((int)(volume * 100)) + "%");
+}
+
+void cGUI::UpdateBackgroundBtn()
+{
+	int offset = currentMenu == Screen::Options ? 0 : 1;
+	cGUIButton *btn = (cGUIButton*)menus[(int)currentMenu][offset];
+	btn->SetText(cSettings::Get()->GetDrawBackground() ? "Background: On" : "Background: Off");
 }
