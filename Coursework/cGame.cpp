@@ -2,6 +2,7 @@
 #include "cInput.h"
 #include "cPlayer.h"
 #include "cShip.h"
+#include "cSettings.h"
 
 #pragma warning(disable: 4018 4244)
 
@@ -35,9 +36,6 @@ cGame::~cGame()
 void cGame::Update(float delta)
 {
 	glm::vec2 deltaMove = glm::vec2(0, 0);
-
-	if (cInput::GetKeyDown(32))
-		paused = !paused; //figure out the strange bug
 
 	if (!paused)
 	{
@@ -90,6 +88,7 @@ void cGame::Update(float delta)
 
 			if (player->IsDead())
 			{
+				cSettings::Get()->AddScore(score);
 				gui->SetFinalScore(score);
 				gui->SetMenu(Screen::Death);
 				Clear();

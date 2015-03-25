@@ -2,14 +2,15 @@
 class cSettings
 {
 private:
-	bool drawBackground = true;
-	float volume = 0.5f;
+	bool drawBackground;
+	float volume;
 	int scores[10];
 
 	cSettings();
 	static cSettings *singleton;
 
-	bool Deserialize();
+	void Deserialize();
+	void SwapDown(int val, int index);
 
 public:
 	~cSettings() {}
@@ -19,6 +20,10 @@ public:
 
 	void SetVolume(float pVolume) { volume = pVolume; }
 	float GetVolume() { return volume; }
+
+	void AddScore(int score);
+	int* GetScores() { return scores; }
+	void ClearScores();
 
 	void Serialize();
 

@@ -3,8 +3,8 @@
 #include "glm\glm.hpp"
 #include "cGUIElement.h"
 
-#define GUI_SCREENS 8
-enum class Screen { Main, Instructions, Options, GameOverlay, Pause, PauseOptions, Death, Global };
+#define GUI_SCREENS 9
+enum class Screen { Main, Instructions, Highscores, Options, GameOverlay, Pause, PauseOptions, Death, Global };
 
 class cGUI
 {
@@ -15,6 +15,7 @@ private:
 	float timer = 0;
 	int frames = 0;
 	int fps = 0;
+	int finalScore = 0;
 
 	cTexture *tutorialTexture;
 
@@ -24,16 +25,28 @@ private:
 	void UpdateVolumeBtn();
 	void UpdateBackgroundBtn();
 	void CleanUp();
+	void CleanUp(Screen menu);
+
+	//menu set up methods
+	void SetUpMain();
+	void SetUpInstructions();
+	void SetUpHightscores();
+	void SetUpOptions();
+	void SetUpGameOverlay();
+	void SetUpPause();
+	void SetUpPauseOptions();
+	void SetUpDeath();
+	void SetUpGlobalDataOverlay();
 
 public:
 	cGUI(glm::vec2 pWindowSize, cTexture *pTutorialTexture);
 	~cGUI();
 
 	void UpdateSize(glm::vec2 newSize);
-	void SetMenu(Screen menu) { currentMenu = menu; }
+	void SetMenu(Screen menu);
 
 	void Update(float delta);
 	void Render(glm::vec2 offset);
-	void SetFinalScore(int score);
+	void SetFinalScore(int score) { finalScore = score; }
 };
 

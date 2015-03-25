@@ -11,12 +11,10 @@ cSettings* cSettings::singleton = 0;
 
 cSettings::cSettings()
 {
-	if (!Deserialize())
-	{
-		drawBackground = true;
-		volume = 0.5f;
-		memset(scores, 0, sizeof(scores));
-	}
+	drawBackground = true;
+	volume = 0.5f;
+	memset(scores, 0, sizeof(scores));
+	Deserialize();
 }
 
 void cSettings::Serialize()
@@ -30,11 +28,11 @@ void cSettings::Serialize()
 	file.close();
 }
 
-bool cSettings::Deserialize()
+void cSettings::Deserialize()
 {
 	fstream file("settings.txt", ios::in);
 	if (!file.is_open())
-		return false;
+		return;
 
 	string line;
 	int i = 0;
@@ -49,5 +47,33 @@ bool cSettings::Deserialize()
 		i++;
 	}
 	file.close();
-	return true;
+}
+
+void cSettings::AddScore(int score)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (score > scores[i])
+		{
+			SwapDown(scores[i], i + 1);
+			scores[i] = score;
+			Serialize();
+			return;
+		}
+	}
+}
+
+void cSettings::SwapDown(int val, int index)
+{
+	if (index == 10 || val == 0)
+		return;
+
+	SwapDown(scores[index], index + 1);
+	scores[index] = val;
+}
+
+void cSettings::ClearScores()
+{
+	memset(scores, 0, sizeof(scores));
+	Serialize();
 }

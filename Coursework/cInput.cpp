@@ -16,3 +16,23 @@ void cInput::Reset()
 	memset(keys, 0, sizeof(keys));
 	memset(buttons, 0, sizeof(buttons));
 }
+
+bool cInput::GetAnyKey()
+{
+	for (int i = 0; i < 256; i++)
+	{
+		if (GetKey(i))
+			return true;
+	}
+	return false;
+}
+
+bool cInput::GetAnyKeyDown()
+{
+	for (int i = 0; i < 256; i++)
+	{
+		if (GetKeyDown(i))
+			return true;
+	}
+	return false;
+}

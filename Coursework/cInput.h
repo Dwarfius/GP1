@@ -28,6 +28,9 @@ public:
 	static bool GetButtonDown(short btn) { return buttons[0][btn] && !buttons[1][btn]; }
 	static bool GetButtonUp(short btn) { return !buttons[0][btn] && buttons[1][btn]; }
 
+	static bool GetAnyKey();
+	static bool GetAnyKeyDown();
+
 	static glm::vec2 GetMousePos() { return mPos; }
 };
 
