@@ -100,7 +100,7 @@ void cGame::Update(float delta)
 
 	background->Update(deltaMove);
 	gui->Update(delta);
-	cInput::Update();
+	cInput::Update(delta);
 }
 
 void cGame::Render()
