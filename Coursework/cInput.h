@@ -6,6 +6,22 @@
 
 #pragma comment(lib, "Xinput9_1_0.lib")
 
+enum class GamepadKeys
+{
+	Up,
+	Down,
+	Left,
+	Right,
+	X,
+	Y, 
+	A,
+	B,
+	Start,
+	Back,
+	LBumper,
+	RBumper
+};
+
 class cInput
 {
 private:
@@ -14,14 +30,16 @@ private:
 	static glm::vec2 mPos;
 
 	//controller
-	static float lX, lY, rX, rY; //left/right sticks
-	static float lT, rT; //left/right triggers
-	static bool controller[10]; //remaining buttons
+	static float lXN, lYN, rXN, rYN; //left/right sticks (normalized)
+	static bool lT, rT; //left/right triggers
+	static bool controller[12]; //remaining buttons
 	static float resetPollingTimer;
 	static int msgInd;
 
 	cInput() {}
 	~cInput() {}
+
+	static void Parse(XINPUT_GAMEPAD &pad);
 public:
 	static void Update(float delta);
 	static void Reset();
@@ -45,6 +63,10 @@ public:
 	static glm::vec2 GetMousePos() { return mPos; }
 
 	//controller
-
+	static glm::vec2 GetLeftStick() { return glm::vec2(lXN, lYN); }
+	static glm::vec2 GetRightStick() { return glm::vec2(rXN, rYN); }
+	static bool GetLeftTrigger() { return lT; }
+	static bool GetRightTrigger() { return rT; } 
+	static bool GetControllerKey(GamepadKeys key) { return controller[(int)key]; }
 };
 
