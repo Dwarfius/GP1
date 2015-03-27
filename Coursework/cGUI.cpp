@@ -1,7 +1,6 @@
 #include "cGUI.h"
 #include "GameConstants.h"
 #include "cGUILabel.h"
-#include "cGUIButton.h"
 #include "cGUIProgressBar.h"
 #include "cGame.h"
 #include "cInput.h"
@@ -37,11 +36,40 @@ void cGUI::SetUp()
 	SetUpPause();
 	SetUpPauseOptions();
 	SetUpGlobalDataOverlay();
+	SetMenu(Screen::Main);
 }
 
 void cGUI::Update(float delta)
 {
-	//per menu elements
+	
+
+	//global (almost) button handling
+	if (currentMenu != Screen::GameOverlay)
+	{
+		bool updBtn = false;
+		if (cInput::GetControllerKeyDown(GamepadKeys::Up) || cInput::GetKeyDown('W'))
+		{
+			btns[(int)currentMenu][activeBtn]->SetActive(false);
+			activeBtn--;
+			updBtn = true;
+		}
+		else if (cInput::GetControllerKeyDown(GamepadKeys::Down) || cInput::GetKeyDown('S'))
+		{
+			btns[(int)currentMenu][activeBtn]->SetActive(false);
+			activeBtn++;
+			updBtn = true;
+		}
+		if (updBtn)
+		{
+			if (activeBtn < 0)
+				activeBtn = btns[(int)currentMenu].size() - 1;
+			else if (activeBtn == btns[(int)currentMenu].size())
+				activeBtn = 0;
+			btns[(int)currentMenu][activeBtn]->SetActive(true);
+		}
+	}
+
+	//menu-specific updates
 	switch (currentMenu)
 	{
 	case Screen::GameOverlay:
@@ -56,22 +84,23 @@ void cGUI::Update(float delta)
 		cGUILabel *lbl = (cGUILabel*)menus[(int)Screen::GameOverlay][1];
 		lbl->SetText("Score: " + to_string(cGame::Get()->GetScore()));
 
-		if (cInput::GetKeyDown(27))
+		if (cInput::GetKeyDown(27) || cInput::GetControllerKeyDown(GamepadKeys::Start))
 		{
 			SetMenu(Screen::Pause);
 			cGame::Get()->SetPaused(true);
 		}
 	}
-		break;
+	break;
 	case Screen::Pause:
-		if (cInput::GetKeyDown(27))
+		if (cInput::GetKeyDown(27) || cInput::GetControllerKeyDown(GamepadKeys::B) || 
+			cInput::GetControllerKeyDown(GamepadKeys::Start))
 		{
 			cGame::Get()->SetPaused(false);
 			SetMenu(Screen::GameOverlay);
 		}
 		break;
 	case Screen::Options:
-		if (cInput::GetKeyDown(27))
+		if (cInput::GetKeyDown(27) || cInput::GetControllerKeyDown(GamepadKeys::B))
 		{
 			SetMenu(Screen::Main);
 			cSettings::Get()->Serialize();
@@ -79,7 +108,7 @@ void cGUI::Update(float delta)
 			
 		break;
 	case Screen::PauseOptions:
-		if (cInput::GetKeyDown(27))
+		if (cInput::GetKeyDown(27) || cInput::GetControllerKeyDown(GamepadKeys::B))
 		{
 			SetMenu(Screen::Pause);
 			cSettings::Get()->Serialize();
@@ -101,6 +130,7 @@ void cGUI::Update(float delta)
 		timer = 0;
 		frames = 0;
 	}
+
 	((cGUILabel*)menus[(int)Screen::Global][0])->SetText("FPS: " + to_string(fps));
 
 	int count = cGame::Get()->GetGameObjetsCount();
@@ -144,11 +174,7 @@ void cGUI::ToggleVolume()
 void cGUI::CleanUp()
 {
 	for (int i = 0; i < GUI_SCREENS; i++)
-	{
-		for (int j = 0; j < menus[i].size(); j++)
-			delete menus[i][j];
-		menus[i].clear();
-	}
+		CleanUp((Screen)i);
 }
 
 void cGUI::CleanUp(Screen menu)
@@ -156,6 +182,7 @@ void cGUI::CleanUp(Screen menu)
 	for (int i = 0; i < menus[(int)menu].size(); i++)
 		delete menus[(int)menu][i];
 	menus[(int)menu].clear();
+	btns[(int)menu].clear();
 }
 
 void cGUI::UpdateVolumeBtn()
@@ -175,6 +202,11 @@ void cGUI::UpdateBackgroundBtn()
 
 void cGUI::SetMenu(Screen menu)
 {
+	cInput::Reset(); //removes annoying bugs, which happen because after menu is changed the buttons get updated,
+					 //but since it's the same frame, the Get...Down is still true, forcing another trigger
+	if (currentMenu != Screen::GameOverlay && currentMenu != Screen::Instructions)
+		btns[(int)currentMenu][activeBtn]->SetActive(false);
+	activeBtn = 0;
 	currentMenu = menu;
 	switch (currentMenu)
 	{
@@ -194,6 +226,8 @@ void cGUI::SetMenu(Screen menu)
 	default:
 		break;
 	}
+	if (currentMenu != Screen::GameOverlay && currentMenu != Screen::Instructions)
+		btns[(int)currentMenu][activeBtn]->SetActive(true);
 }
 
 void cGUI::SetUpMain()
@@ -207,33 +241,38 @@ void cGUI::SetUpMain()
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 
 	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game", [this]() { cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
+	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Instructions", [this]() { SetMenu(Screen::Instructions); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
+	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Highscores", [this]() { SetMenu(Screen::Highscores); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
+	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::Options); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
+	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Quit", []() { exit(0); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
+	btns[(int)Screen::Main].push_back(btn);
 }
 
 void cGUI::SetUpInstructions()
@@ -262,9 +301,10 @@ void cGUI::SetUpHightscores()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	cGUIButton *btn = new cGUIButton(NULL, r, "Back", [this](){ SetMenu(Screen::Main); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Highscores].push_back(btn);
+	btns[(int)Screen::Highscores].push_back(btn);
 }
 
 void cGUI::SetUpOptions()
@@ -278,29 +318,33 @@ void cGUI::SetUpOptions()
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 	string state = cSettings::Get()->GetDrawBackground() ? "On" : "Off";
 	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state, [this]() { ToggleBackground(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
+	btns[(int)Screen::Options].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
 	btn = new cGUIButton(NULL, r, "Volume: " + state, [this]() { ToggleVolume(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
+	btns[(int)Screen::Options].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
 	btn = new cGUIButton(NULL, r, "Clear Scores", []() { cSettings::Get()->ClearScores(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
+	btns[(int)Screen::Options].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Main); cSettings::Get()->Serialize(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
+	btns[(int)Screen::Options].push_back(btn);
 }
 
 void cGUI::SetUpGameOverlay()
@@ -328,21 +372,24 @@ void cGUI::SetUpPause()
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 	cGUIButton *btn = new cGUIButton(NULL, r, "Resume", [this]() { cGame::Get()->SetPaused(false); SetMenu(Screen::GameOverlay); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
+	btns[(int)Screen::Pause].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::PauseOptions); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
+	btns[(int)Screen::Pause].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Main Menu", [this]() { cGame::Get()->Clear(); SetMenu(Screen::Main); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
+	btns[(int)Screen::Pause].push_back(btn);
 }
 
 void cGUI::SetUpPauseOptions()
@@ -360,29 +407,33 @@ void cGUI::SetUpPauseOptions()
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 	string state = cSettings::Get()->GetDrawBackground() ? "On" : "Off";
 	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state, [this]() { ToggleBackground(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
+	btns[(int)Screen::PauseOptions].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
 	btn = new cGUIButton(NULL, r, "Volume: " + state, [this]() { ToggleVolume(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
+	btns[(int)Screen::PauseOptions].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
 	btn = new cGUIButton(NULL, r, "Clear Scores", []() { cSettings::Get()->ClearScores(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
+	btns[(int)Screen::PauseOptions].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Pause); cSettings::Get()->Serialize(); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
+	btns[(int)Screen::PauseOptions].push_back(btn);
 }
 
 void cGUI::SetUpDeath()
@@ -413,15 +464,17 @@ void cGUI::SetUpDeath()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	cGUIButton *btn = new cGUIButton(NULL, r, "Try Again", [this]() { cGame::Get()->Clear(); cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Death].push_back(btn);
+	btns[(int)Screen::Death].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Back To Main", [this]() { SetMenu(Screen::Main); });
-	btn->SetBackgroundColor(glm::vec4(0, 0, 1, 1));
-	btn->SetHighlightColor(glm::vec4(0.3f, 0.3f, 1, 1));
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Death].push_back(btn);
+	btns[(int)Screen::Death].push_back(btn);
 }
 
 void cGUI::SetUpGlobalDataOverlay()

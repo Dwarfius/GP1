@@ -2,6 +2,10 @@
 
 #include "glm\glm.hpp"
 #include "cGUIElement.h"
+#include "cGUIButton.h"
+
+#define COLOR_NORMAL glm::vec4(0, 0, 1, 1)
+#define COLOR_HIGHL glm::vec4(0.5f, 0.5f, 1, 1)
 
 #define GUI_SCREENS 9
 enum class Screen { Main, Instructions, Highscores, Options, GameOverlay, Pause, PauseOptions, Death, Global };
@@ -12,10 +16,12 @@ private:
 	glm::vec2 windowSize;
 	Screen currentMenu = Screen::Main;
 	vector<cGUIElement *> menus[GUI_SCREENS];
+	vector<cGUIButton *> btns[GUI_SCREENS];
 	float timer = 0;
 	int frames = 0;
 	int fps = 0;
 	int finalScore = 0;
+	int activeBtn = 0;
 
 	cTexture *tutorialTexture;
 

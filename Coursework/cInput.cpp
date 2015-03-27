@@ -5,8 +5,10 @@ bool cInput::keys[2][256];
 bool cInput::buttons[2][2];
 glm::vec2 cInput::mPos;
 float cInput::lXN = 0, cInput::lYN = 0, cInput::rXN = 0, cInput::rYN = 0;
+bool cInput::lStickActive = false, cInput::rStickActive = false;
 bool cInput::lT = false, cInput::rT = false;
-bool cInput::controller[12] = {};
+bool cInput::connected = false;
+bool cInput::controller[2][12];
 float cInput::resetPollingTimer = 0;
 int cInput::msgInd = -1;
 
@@ -14,6 +16,7 @@ void cInput::Update(float delta)
 {
 	memcpy(keys[1], keys[0], sizeof(keys[0]));
 	memcpy(buttons[1], buttons[0], sizeof(buttons[0]));
+	memcpy(controller[1], controller[0], sizeof(controller[0]));
 
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/ee417001%28v=vs.85%29.aspx
 	if (resetPollingTimer -= delta <= 0)
@@ -24,13 +27,18 @@ void cInput::Update(float delta)
 		res = XInputGetState(0, &state);
 		if (res == ERROR_SUCCESS)
 		{
+			connected = true;
 			if (msgInd != state.dwPacketNumber)
 				Parse(state.Gamepad);
 			msgInd = state.dwPacketNumber;
 		}
 		else
 		{
+			connected = false;
 			resetPollingTimer = 2;
+			lXN = lYN = rXN = rYN = 0;
+			lT = rT = false;
+			memset(controller, 0, sizeof(controller));
 		}
 	}
 }
@@ -39,6 +47,9 @@ void cInput::Reset()
 {
 	memset(keys, 0, sizeof(keys));
 	memset(buttons, 0, sizeof(buttons));
+	lXN = lYN = rXN = rYN = 0;
+	lT = rT = false;
+	memset(controller, 0, sizeof(controller));
 }
 
 bool cInput::GetAnyKey()
@@ -46,6 +57,11 @@ bool cInput::GetAnyKey()
 	for (int i = 0; i < 256; i++)
 	{
 		if (GetKey(i))
+			return true;
+	}
+	for (int i = 0; i < 12; i++)
+	{
+		if (GetControllerKey((GamepadKeys)i))
 			return true;
 	}
 	return false;
@@ -58,6 +74,11 @@ bool cInput::GetAnyKeyDown()
 		if (GetKeyDown(i))
 			return true;
 	}
+	for (int i = 0; i < 12; i++)
+	{
+		if (GetControllerKeyDown((GamepadKeys)i))
+			return true;
+	}
 	return false;
 }
 
@@ -68,7 +89,8 @@ void cInput::Parse(XINPUT_GAMEPAD &pad)
 	float y = pad.sThumbLY;
 	
 	float mag = sqrt(x * x + y * y);
-	if (mag > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
+	lStickActive = mag > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+	if (lStickActive)
 	{
 		lXN = x / 32767;
 		lYN = y / 32767;
@@ -81,7 +103,8 @@ void cInput::Parse(XINPUT_GAMEPAD &pad)
 	y = pad.sThumbRY;
 
 	mag = sqrt(x*x + y*y);
-	if (mag > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+	rStickActive = mag > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+	if (rStickActive)
 	{
 		rXN = x / 32767;
 		rYN = y / 32767;
@@ -109,16 +132,16 @@ void cInput::Parse(XINPUT_GAMEPAD &pad)
 		rT = false;
 
 	//key pressses
-	controller[(int)GamepadKeys::Up] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_UP) != 0);
-	controller[(int)GamepadKeys::Down] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) != 0);
-	controller[(int)GamepadKeys::Left] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) != 0);
-	controller[(int)GamepadKeys::Right] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) != 0);
-	controller[(int)GamepadKeys::X] = ((pad.wButtons & XINPUT_GAMEPAD_X) != 0);
-	controller[(int)GamepadKeys::Y] = ((pad.wButtons & XINPUT_GAMEPAD_Y) != 0);
-	controller[(int)GamepadKeys::A] = ((pad.wButtons & XINPUT_GAMEPAD_A) != 0);
-	controller[(int)GamepadKeys::B] = ((pad.wButtons & XINPUT_GAMEPAD_B) != 0);
-	controller[(int)GamepadKeys::Start] = ((pad.wButtons & XINPUT_GAMEPAD_START) != 0);
-	controller[(int)GamepadKeys::Back] = ((pad.wButtons & XINPUT_GAMEPAD_BACK) != 0);
-	controller[(int)GamepadKeys::LBumper] = ((pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0);
-	controller[(int)GamepadKeys::RBumper] = ((pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0);
+	controller[0][(int)GamepadKeys::Up] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_UP) != 0);
+	controller[0][(int)GamepadKeys::Down] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) != 0);
+	controller[0][(int)GamepadKeys::Left] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) != 0);
+	controller[0][(int)GamepadKeys::Right] = ((pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) != 0);
+	controller[0][(int)GamepadKeys::X] = ((pad.wButtons & XINPUT_GAMEPAD_X) != 0);
+	controller[0][(int)GamepadKeys::Y] = ((pad.wButtons & XINPUT_GAMEPAD_Y) != 0);
+	controller[0][(int)GamepadKeys::A] = ((pad.wButtons & XINPUT_GAMEPAD_A) != 0);
+	controller[0][(int)GamepadKeys::B] = ((pad.wButtons & XINPUT_GAMEPAD_B) != 0);
+	controller[0][(int)GamepadKeys::Start] = ((pad.wButtons & XINPUT_GAMEPAD_START) != 0);
+	controller[0][(int)GamepadKeys::Back] = ((pad.wButtons & XINPUT_GAMEPAD_BACK) != 0);
+	controller[0][(int)GamepadKeys::LBumper] = ((pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0);
+	controller[0][(int)GamepadKeys::RBumper] = ((pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0);
 }

@@ -31,11 +31,13 @@ private:
 
 	//controller
 	static float lXN, lYN, rXN, rYN; //left/right sticks (normalized)
+	static bool lStickActive, rStickActive;
 	static bool lT, rT; //left/right triggers
-	static bool controller[12]; //remaining buttons
+	static bool connected;
+	static bool controller[2][12]; //remaining buttons
 	static float resetPollingTimer;
 	static int msgInd;
-
+	
 	cInput() {}
 	~cInput() {}
 
@@ -63,10 +65,15 @@ public:
 	static glm::vec2 GetMousePos() { return mPos; }
 
 	//controller
+	static bool ControllerConnected() { return connected; }
 	static glm::vec2 GetLeftStick() { return glm::vec2(lXN, lYN); }
 	static glm::vec2 GetRightStick() { return glm::vec2(rXN, rYN); }
+	static bool LeftStickActive() { return lStickActive; }
+	static bool RightStickActive() { return rStickActive; }
 	static bool GetLeftTrigger() { return lT; }
 	static bool GetRightTrigger() { return rT; } 
-	static bool GetControllerKey(GamepadKeys key) { return controller[(int)key]; }
+	static bool GetControllerKey(GamepadKeys key) { return controller[0][(int)key]; }
+	static bool GetControllerKeyDown(GamepadKeys key) { return controller[0][(int)key] && !controller[1][(int)key]; }
+	static bool GetControllerKeyUp(GamepadKeys key) { return !controller[0][(int)key] && controller[1][(int)key]; }
 };
 

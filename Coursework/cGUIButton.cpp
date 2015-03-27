@@ -11,11 +11,12 @@ cGUIButton::cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::funct
 void cGUIButton::Update()
 {
 	glm::vec2 mPos = cInput::GetMousePos();
-	if (RECTF::InRect(rect, mPos))
+	bool inRect = RECTF::InRect(rect, mPos);
+	if (inRect || active)
 	{
 		bkgdColor = highlightColor;
 
-		if (cInput::GetButtonDown(0))
+		if ((inRect && cInput::GetButtonDown(0)) || (active && cInput::GetControllerKeyDown(GamepadKeys::A)))
 			onClick();
 	}
 	else

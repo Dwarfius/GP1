@@ -235,8 +235,6 @@ void cGame::StartLevel(int level)
 	currentLevel = level;
 	if (level == 0)
 	{
-		cInput::Reset(); //just so that there's no shooting after clicking Play
-
 		player = new cPlayer(textures["ship"]);
 		player->SetStats(5 * LVL1_HEALTH, 150, 100);
 		player->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
