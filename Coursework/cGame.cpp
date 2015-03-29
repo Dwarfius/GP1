@@ -188,10 +188,10 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	glm::vec2 g2HalfSize = g2FullSize * 0.5f;
 
 	//rect of intersection
-	int bottom = max(g1Rect.bottom, g2Rect.bottom);
-	int top = min(g1Rect.top, g2Rect.top);
-	int left = min(g1Rect.left, g2Rect.left);
-	int right = max(g1Rect.right, g2Rect.right);
+	int bottom = min(g1Rect.bottom, g2Rect.bottom);
+	int top = max(g1Rect.top, g2Rect.top);
+	int left = max(g1Rect.left, g2Rect.left);
+	int right = min(g1Rect.right, g2Rect.right);
 
 	for (int y = top; y < bottom; y++) //hello inverted Y axis
 	{

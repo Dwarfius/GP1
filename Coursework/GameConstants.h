@@ -56,6 +56,11 @@ struct RECTF
 	{
 		return p.x > r.left && p.x < r.right && p.y > r.top && p.y < r.bottom;
 	}
+
+	string ToString()
+	{
+		return "(" + to_string((int)left) + ", " + to_string((int)top) + ", " + to_string((int)right) + ", " + to_string((int)bottom) + ")";
+	}
 };
 
 //level specifics
