@@ -4,7 +4,6 @@
 
 cPlayer::cPlayer(cTexture *pText) : cShip(pText, Owner::Player)
 {
-	
 }
 
 void cPlayer::Update(float delta)

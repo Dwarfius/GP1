@@ -18,9 +18,13 @@ void cSound::LoadWAVFile(LPCSTR filename)
 
 void cSound::Play(ALboolean loop)
 {
-	alSourcei(m_OALSource, AL_LOOPING, loop);
-	alSourcef(m_OALSource, AL_GAIN, cSettings::Get()->GetVolume());
-	alSourcePlay(m_OALSource);
+	float volume = cSettings::Get()->GetVolume(); //no need to call to play the sound if volume is 0
+	if (volume > 0.05f)
+	{
+		alSourcei(m_OALSource, AL_LOOPING, loop);
+		alSourcef(m_OALSource, AL_GAIN, volume);
+		alSourcePlay(m_OALSource);
+	}
 }
 
 void cSound::Stop()

@@ -17,6 +17,8 @@ protected:
 	bool destroy;
 	Owner owner;
 
+	float WrapAngle(float angle);
+
 public:
 	cGameObject(cTexture *pText, Owner pOwner);
 	~cGameObject() { if (sprite) delete sprite; }

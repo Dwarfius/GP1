@@ -18,7 +18,12 @@ void cBullet::Update(float delta)
 	if (currentLife < 0)
 		destroy = true;
 
-	cGameObject::Update(delta);
+	glm::vec2 pos = sprite->getSpritePos();
+	pos += velocity * delta;
+	sprite->setSpritePos(pos);
+
+	sprite->updateMatrix();
+	sprite->updateBoundingRect();
 }
 
 void cBullet::CollidedWith(cGameObject *col)

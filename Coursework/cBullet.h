@@ -6,7 +6,7 @@ class cBullet :
 	public cGameObject
 {
 private:
-	float currentLife = 15;
+	float currentLife = 5;
 	int damage;
 
 public:
