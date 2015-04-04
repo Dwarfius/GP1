@@ -6,13 +6,17 @@ class cGUILabel :
 	public cGUIElement
 {
 protected:
+	vector<string> lines;
+	vector<int> widths;
+	bool centered;
 	string text;
 	glm::vec2 textSize;
 	glm::vec3 color = glm::vec3(1, 1, 1);
+
 	void UpdateTextSize();
 
 public:
-	cGUILabel(cTexture *pTexture, RECTF pRect, string pText);
+	cGUILabel(cTexture *pTexture, RECTF pRect, string pText, bool pCentered = true);
 	~cGUILabel() {}
 
 	void SetColor(glm::vec3 pColor) { color = pColor; }

@@ -13,6 +13,7 @@ cGUI::cGUI(glm::vec2 pWindowSize, cTexture *pTutorialTexture)
 	windowSize = pWindowSize;
 	tutorialTexture = pTutorialTexture;
 	SetUp();
+	
 }
 
 cGUI::~cGUI()
@@ -36,13 +37,11 @@ void cGUI::SetUp()
 	SetUpPause();
 	SetUpPauseOptions();
 	SetUpGlobalDataOverlay();
-	SetMenu(Screen::Main);
+	SetMenu(currentMenu);
 }
 
 void cGUI::Update(float delta)
 {
-	
-
 	//global (almost) button handling
 	if (currentMenu != Screen::GameOverlay)
 	{
@@ -204,7 +203,7 @@ void cGUI::SetMenu(Screen menu)
 {
 	cInput::Reset(); //removes annoying bugs, which happen because after menu is changed the buttons get updated,
 					 //but since it's the same frame, the Get...Down is still true, forcing another trigger
-	if (currentMenu != Screen::GameOverlay && currentMenu != Screen::Instructions)
+	if (btns[(int)currentMenu].size() > 0)
 		btns[(int)currentMenu][activeBtn]->SetActive(false);
 	activeBtn = 0;
 	currentMenu = menu;
@@ -223,10 +222,13 @@ void cGUI::SetMenu(Screen menu)
 		CleanUp(Screen::Highscores);
 		SetUpHightscores();
 		break;
+	case Screen::Upgrade:
+		CleanUp(Screen::Upgrade);
+		SetUpUpgrade();
 	default:
 		break;
 	}
-	if (currentMenu != Screen::GameOverlay && currentMenu != Screen::Instructions)
+	if (btns[(int)currentMenu].size() > 0)
 		btns[(int)currentMenu][activeBtn]->SetActive(true);
 }
 
@@ -358,6 +360,135 @@ void cGUI::SetUpGameOverlay()
 	menus[(int)Screen::GameOverlay].push_back(lbl);
 }
 
+void cGUI::SetUpUpgrade()
+{
+	cGUIElement *elem = new cGUIElement(NULL, { 0, 0, windowSize.x, windowSize.y });
+	elem->SetBackgroundColor(glm::vec4(0, 0, 0, 0.3f));
+	menus[(int)Screen::Upgrade].push_back(elem);
+
+	cPlayer *p = cGame::Get()->GetPlayer();
+	float btnWidth = 150;
+	float btnHeight = 38;
+	float emptySpace = 10;
+
+	float x = (windowSize.x - btnWidth) / 2;
+	float y = windowSize.y / 4;
+	RECTF r = { x, y, x + btnWidth, y + btnHeight };
+
+	cGUILabel *lbl = new cGUILabel(NULL, r, "Upgrade Screen");
+	menus[(int)Screen::Upgrade].push_back(lbl);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	r.left -= windowSize.x / 4; r.right -= windowSize.x / 4;
+	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\nCost:"+to_string(p->GetShipUpCost()), [](){ 
+		int score = cGame::Get()->GetScore();
+		int level = (int)cGame::Get()->GetPlayer()->GetShipType();
+		int cost = cGame::Get()->GetPlayer()->GetShipUpCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->SetShipType((ShipType)(level + 1));
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Upgrade Hull\nCost:"+to_string(p->GetHullUpCost()), [](){
+		int score = cGame::Get()->GetScore();
+		int level = cGame::Get()->GetPlayer()->GetHullLevel() + 1;
+		int cost = cGame::Get()->GetPlayer()->GetHullUpCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->SetHullLevel(level);
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Upgrade Guns\nCost:"+to_string(p->GetBulletUpCost()), [](){
+		int score = cGame::Get()->GetScore();
+		int level = cGame::Get()->GetPlayer()->GetBulletLevel() + 1;
+		int cost = cGame::Get()->GetPlayer()->GetBulletUpCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->SetBulletLevel(level);
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Upgrade Missiles\nCost:"+to_string(p->GetMissileUpCost()), [](){
+		int score = cGame::Get()->GetScore();
+		int level = cGame::Get()->GetPlayer()->GetMissileLevel() + 1;
+		int cost = cGame::Get()->GetPlayer()->GetMissileUpCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->SetMissileLevel(level);
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Upgrade Engine\nCost:"+to_string(p->GetEngineUpCost()), [](){
+		int score = cGame::Get()->GetScore();
+		int level = cGame::Get()->GetPlayer()->GetEngineLevel() + 1;
+		int cost = cGame::Get()->GetPlayer()->GetEngineUpCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->SetEngineLevel(level);
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
+	btn = new cGUIButton(NULL, r, "Fix Ship\nCost:"+to_string(p->GetFixCost()), [](){
+		int score = cGame::Get()->GetScore();
+		int cost = cGame::Get()->GetPlayer()->GetFixCost();
+		if (cost < score)
+		{
+			cGame::Get()->GetPlayer()->Repair();
+			cGame::Get()->AddScore(-cost);
+		}
+	});
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace - 13;
+	r.left = x; r.right = x + btnWidth;
+	btn = new cGUIButton(NULL, r, "Continue", [this]() { SetMenu(Screen::GameOverlay); cGame::Get()->StartNextLevel(); });
+	btn->SetBackgroundColor(COLOR_NORMAL);
+	btn->SetHighlightColor(COLOR_HIGHL);
+	menus[(int)Screen::Upgrade].push_back(btn);
+	btns[(int)Screen::Upgrade].push_back(btn);
+
+	x = windowSize.x / 4 + btnWidth + emptySpace;
+	y = windowSize.y / 4 + btnHeight + emptySpace;
+	r = { x, y, x + windowSize.x / 4, y + btnHeight };
+	lbl = new cGUILabel(NULL, r, GetUpgradeLabelText(), false);
+	menus[(int)Screen::Upgrade].push_back(lbl);
+}
+
 void cGUI::SetUpPause()
 {
 	cGUIElement *elem = new cGUIElement(NULL, { 0, 0, windowSize.x, windowSize.y });
@@ -483,4 +614,24 @@ void cGUI::SetUpGlobalDataOverlay()
 	menus[(int)Screen::Global].push_back(lbl);
 	lbl = new cGUILabel(NULL, { windowSize.x - 80, 30, windowSize.x, 20 }, "");
 	menus[(int)Screen::Global].push_back(lbl);
+}
+
+string cGUI::GetUpgradeLabelText()
+{
+	cPlayer *player = cGame::Get()->GetPlayer();
+	ShipType type = player->GetShipType();
+	int t = cGame::Get()->GetScore();
+	string s = "Welcome to the Upgrade screen.\n";
+	s += "Here you have the options to upgrade parts of your ship. ";
+	s += "Currently you have " + to_string(t) + " points to spend.\n\n";
+	string tmp = type == ShipType::Scout ? "Scout" : type == ShipType::Fighter ? "Fighter" : type == ShipType::Corvette ? "Corvette" : "Cruiser";
+	s += "Your ship is a " + tmp + " type. It has ";
+	tmp = type == ShipType::Scout ? "1 gun" : type == ShipType::Fighter ? "1 gun and 1 missile launcher" : type == ShipType::Corvette ? "2 guns and 1 missile launchers" : "2 guns, 1 missile launcher and 1 turret";
+	s += tmp + ".\n\n";
+	t = player->GetBulletLevel() + 1;
+	s += "Your guns are at level " + to_string(t) + ". They do " + to_string(t * 10) + " damage per hit.\n";
+	s += "Each level in guns gives +10 damage.\n\n";
+	//s += "    Cost: " + to_string(player->GetBulletLevel()) + "\n\n";
+
+ 	return s;
 }

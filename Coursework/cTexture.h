@@ -21,4 +21,6 @@ public:
 	GLsizei getTWidth() { return textureWidth; }
 	GLsizei getTHeight() { return textureHeight; }
 	char* GetData() { return txData; }
+
+	void PrintOut(int channel);
 };

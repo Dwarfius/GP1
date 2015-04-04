@@ -7,8 +7,8 @@
 #define COLOR_NORMAL glm::vec4(0, 0, 1, 1)
 #define COLOR_HIGHL glm::vec4(0.5f, 0.5f, 1, 1)
 
-#define GUI_SCREENS 9
-enum class Screen { Main, Instructions, Highscores, Options, GameOverlay, Pause, PauseOptions, Death, Global };
+#define GUI_SCREENS 10
+enum class Screen { Main, Instructions, Highscores, Options, GameOverlay, Upgrade, Pause, PauseOptions, Death, Global };
 
 class cGUI
 {
@@ -39,10 +39,13 @@ private:
 	void SetUpHightscores();
 	void SetUpOptions();
 	void SetUpGameOverlay();
+	void SetUpUpgrade();
 	void SetUpPause();
 	void SetUpPauseOptions();
 	void SetUpDeath();
 	void SetUpGlobalDataOverlay();
+
+	string GetUpgradeLabelText();
 
 public:
 	cGUI(glm::vec2 pWindowSize, cTexture *pTutorialTexture);

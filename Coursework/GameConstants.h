@@ -62,6 +62,3 @@ struct RECTF
 		return "(" + to_string((int)left) + ", " + to_string((int)top) + ", " + to_string((int)right) + ", " + to_string((int)bottom) + ")";
 	}
 };
-
-//level specifics
-#define LVL1_HEALTH 100

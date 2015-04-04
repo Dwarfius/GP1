@@ -52,10 +52,24 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Use linear interpolation for minifying filter 
 	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), textureWidth,
 		textureHeight, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
-		ilGetData()); /* Texture specification */
+		txData); /* Texture specification */
 	glBindTexture(GL_TEXTURE_2D, GLTextureID); // Binding of GLtexture name 
 
 	ilDeleteImages(1, &ilTextureID);
 
 	return true;
+}
+
+void cTexture::PrintOut(int channel)
+{
+	for (int y = 0; y < textureHeight; y++)
+	{
+		for (int x = 0; x < textureWidth; x++)
+		{
+			byte c = (byte)txData[(y * textureWidth + x) * 4 + channel];
+			cout << ((c == 0) ? '0' : '1');
+		}
+		cout << endl;
+	}
+	cout << endl;
 }

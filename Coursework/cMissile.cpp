@@ -7,7 +7,6 @@ cMissile::cMissile(cTexture *pText, Owner pOwner, cGameObject *pTarget, int pDam
 	target = pTarget; 
 	damage = pDamage;
 	rotSpeed = 250;
-	maxVel = 300;
 }
 
 void cMissile::Update(float delta)
@@ -15,7 +14,7 @@ void cMissile::Update(float delta)
 	if (destroy)
 		return;
 
-	velocity = maxVel * GetForward();
+	velocity = 300.f * GetForward();
 
 	currentLife -= delta;
 	if (currentLife < 0)

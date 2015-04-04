@@ -15,7 +15,6 @@ private:
 	GLuint buffers[BG_LAYER_COUNT];
 	glm::vec2 translation[BG_LAYER_COUNT];
 
-
 	PFNGLGENBUFFERSPROC glGenBuffers;
 	PFNGLBINDBUFFERPROC glBindBuffer;
 	PFNGLBUFFERDATAPROC glBufferData;

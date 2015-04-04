@@ -16,18 +16,9 @@ void cGameObject::Update(float delta)
 	angleDelta = glm::clamp(angleDelta, -rotSpeed * delta, rotSpeed * delta);
 	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta);
 
-	float length2 = glm::length2(velocity);
-	if (length2 <= 1)
-		velocity = glm::vec2(0, 0);
-	else
-	{
-		if (length2 > maxVel * maxVel)
-			velocity = glm::normalize(velocity) * maxVel;
-
-		glm::vec2 pos = sprite->getSpritePos();
-		pos += velocity * delta;
-		sprite->setSpritePos(pos);
-	}
+	glm::vec2 pos = sprite->getSpritePos();
+	pos += velocity * delta;
+	sprite->setSpritePos(pos);
 
 	sprite->updateMatrix();
 	sprite->updateBoundingRect();

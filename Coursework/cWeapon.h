@@ -21,5 +21,9 @@ public:
 	void Update(float delta);
 	void Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *target);
 	bool CanShoot() { return reload < 0; }
+
+	void SetDamage(int pDamage) { damage = pDamage; }
+
+	WeaponType GetType() { return type; }
 };
 

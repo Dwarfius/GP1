@@ -2,8 +2,12 @@
 #include "cInput.h"
 #include "cGame.h"
 
-cPlayer::cPlayer(cTexture *pText) : cShip(pText, Owner::Player)
+cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 {
+	SetBulletLevel(0);
+	SetEngineLevel(0);
+	SetHullLevel(0);
+	SetMissileLevel(0);
 }
 
 void cPlayer::Update(float delta)
@@ -18,7 +22,7 @@ void cPlayer::Update(float delta)
 		{
 			glm::vec2 leftStick = cInput::GetLeftStick();
 			leftStick.y *= -1.f;
-			AddVelocity(leftStick * 400.f * delta);
+			AddVelocity(leftStick * accelRate * delta);
 		}
 		
 		if (cInput::RightStickActive())
@@ -31,17 +35,21 @@ void cPlayer::Update(float delta)
 	else
 	{
 		if (cInput::GetKey('W'))
-			AddVelocity(GetForward() * 400.f * delta);
+			AddVelocity(GetForward() * accelRate * delta);
 		else if (cInput::GetKey('S'))
-			AddVelocity(GetForward() * -400.f * delta);
+			AddVelocity(GetForward() * -accelRate * delta);
 
 		if (cInput::GetKey('D'))
-			AddVelocity(GetRight() * -400.f * delta);
+			AddVelocity(GetRight() * -accelRate * delta);
 		else if (cInput::GetKey('A'))
-			AddVelocity(GetRight() * 400.f * delta);
+			AddVelocity(GetRight() * accelRate * delta);
 
 		LookAt(mousePos);
 	}
+
+	float length2 = glm::length2(velocity);
+	if (length2 > maxVel * maxVel)
+		velocity = glm::normalize(velocity) * maxVel;
 
 	velocity.x -= glm::sign(velocity.x) * 10 * delta; //dampening of 10m/s
 	velocity.y -= glm::sign(velocity.y) * 10 * delta;

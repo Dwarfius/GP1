@@ -16,7 +16,8 @@ void cGUIButton::Update()
 	{
 		bkgdColor = highlightColor;
 
-		if ((inRect && cInput::GetButtonDown(0)) || (active && cInput::GetControllerKeyDown(GamepadKeys::A)))
+		if ((inRect && cInput::GetButtonDown(0)) ||
+			(active && (cInput::GetControllerKeyDown(GamepadKeys::A) || cInput::GetKeyDown(32))))
 			onClick();
 	}
 	else

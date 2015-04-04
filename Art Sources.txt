@@ -1,2 +1,8 @@
 Missile:
 http://makepixelart.com/peoplepods/files/images/723008.original.png
+
+Ship:
+(Scout) http://wayofthepixel.net/index.php?topic=436.0
+(Fighter) http://forums.gametrailers.com/Gam-F6/Gen-F23/Pos-T1291919/?start=60
+(Corvette) http://nach77.deviantart.com/art/Turian-Corvette-Concept-Views-385105327
+(Cruiser) http://nach77.deviantart.com/art/Alliance-Cruiser-Valparaiso-Class-490711664

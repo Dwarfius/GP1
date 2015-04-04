@@ -10,18 +10,18 @@ class cGameObject
 protected:
 	cSprite *sprite;
 	glm::vec2 velocity = glm::vec2(0, 0);
-	float maxVel = 10000000;
 	float rotSpeed = 100;
 	float targetRot = 0;
 	glm::vec2 forward = glm::vec2(0, 1);
 	bool destroy;
 	Owner owner;
+	bool collisionsHandled;
 
 	float WrapAngle(float angle);
 
 public:
 	cGameObject(cTexture *pText, Owner pOwner);
-	~cGameObject() { if (sprite) delete sprite; }
+	~cGameObject() { delete sprite; }
 
 	glm::vec2 GetPosition() { return sprite->getSpritePos(); }
 	void SetPosition(glm::vec2 pPos) { sprite->setSpritePos(pPos); }
@@ -43,6 +43,9 @@ public:
 
 	glm::vec2 GetForward() { return forward; }
 	glm::vec2 GetRight() { return glm::vec2(forward.y, -forward.x); }
+
+	bool GetCollisionsHandledFlag() { return collisionsHandled; }
+	void SetCollisionsHandledFlag(bool state) { collisionsHandled = state; }
 
 	bool IsDead() { return destroy; }
 	void SetDestroy(bool flag) { destroy = flag; }

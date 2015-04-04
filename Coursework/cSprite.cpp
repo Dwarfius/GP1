@@ -55,9 +55,12 @@ void cSprite::updateMatrix()
 
 void cSprite::setTexture(cTexture *pText)
 {
-	texture = pText;
-	textureWidth = texture->getTWidth();
-	textureHeight = texture->getTHeight();
+	if (pText)
+	{
+		texture = pText;
+		textureWidth = texture->getTWidth();
+		textureHeight = texture->getTHeight();
+	}
 }
 
 //call after the updateMatrix

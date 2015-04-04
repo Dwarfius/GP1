@@ -6,7 +6,7 @@ class cPlayer :
 	public cShip
 {
 public:
-	cPlayer(cTexture *pText);
+	cPlayer(ShipType pType);
 	~cPlayer() {}
 
 	void Update(float delta);

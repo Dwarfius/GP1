@@ -94,7 +94,10 @@ void cGame::Update(float delta)
 				Clear();
 			}
 			else if (enemiesCount == 0)
-				StartLevel(++currentLevel);
+			{
+				gui->SetMenu(Screen::Upgrade);
+				paused = true;
+			}
 		}
 	}
 
@@ -116,7 +119,7 @@ void cGame::Render()
 	glOrtho(pos.x - WINDOW_WIDTH / 2 - vel, pos.x + WINDOW_WIDTH / 2 + vel, 
 		pos.y + WINDOW_HEIGHT / 2 + vel, pos.y - WINDOW_HEIGHT / 2 - vel, -1, 1);
 
-	for (int i = 0; i<gameObjCount; i++)
+	for (int i = gameObjCount - 1; i>=0; i--) //rendering backwards cause bullets are at the end, but should be hidden by ships
 		gameObjects[i]->Render();
 
 	glMatrixMode(GL_PROJECTION);
@@ -138,8 +141,11 @@ void cGame::CollisionUpdate()
 	{
 		cGameObject *obj = (*iter);
 		if (!obj->IsDead())
+		{
 			//tree->Insert(obj);
 			grid->Add(obj);
+			obj->SetCollisionsHandledFlag(false);
+		}
 	}
 
 	//start thinking about multithreading this
@@ -154,11 +160,11 @@ void cGame::CollisionUpdate()
 		vector<cGameObject*> cols;
 		//tree->Get(cols, obj1->GetRect());
 		grid->Get(cols, obj1->GetRect());
-		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++)
+		for (auto iter2 = cols.begin(); iter2 != cols.end(); iter2++) //this does per pixel 2 times. introduce a flag to limit checks
 		{
 			cGameObject *obj2 = (*iter2);
-			if (obj1 == obj2 || obj2->IsDead())
-				continue;
+			if (obj1 == obj2 || obj2->IsDead() || obj2->GetCollisionsHandledFlag())
+				continue; //don't check if same object/dead/already handled collision
 			
 			int colLayer = obj2->GetCollisionLayer();
 			if ((colLayer & colMask) > 0 && //are the object types supposed to collide with each other
@@ -167,9 +173,11 @@ void cGame::CollisionUpdate()
 				PerPixelCollision(obj1, obj2)) //final perpixel check
 			{
 				obj1->CollidedWith(obj2);
+				obj2->CollidedWith(obj1);
 				break; //can collide only once
 			}
 		}
+		obj1->SetCollisionsHandledFlag(true); //this deals with repeated per pixel collision check (A -> B, then B -> A)
 	}
 }
 
@@ -180,12 +188,12 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	char *g2Data = g2->GetData();
 	RECTF g1Rect = g1->GetRect();
 	RECTF g2Rect = g2->GetRect();
-	glm::mat4x4 g1InvTrans = glm::inverse(g1->GetTransform()); //returns pos to [-width, width], [-height, height]
-	glm::mat4x4 g2InvTrans = glm::inverse(g2->GetTransform()); //need to adjust for that later on
+	glm::mat4x4 g1InvTrans = glm::inverse(g1->GetTransform()); //need to figure out a way to use 1 matrix
+	glm::mat4x4 g2InvTrans = glm::inverse(g2->GetTransform()); //multiplication instead of 2
 	glm::vec2 g1FullSize = g1->GetSize(); //non-transformed size
 	glm::vec2 g2FullSize = g2->GetSize();
-	glm::vec2 g1HalfSize = g1FullSize * 0.5f;
-	glm::vec2 g2HalfSize = g2FullSize * 0.5f;
+	glm::vec2 g1HalfSize = glm::vec2((int)g1FullSize.x / 2, (int)g1FullSize.y / 2);
+	glm::vec2 g2HalfSize = glm::vec2((int)g2FullSize.x / 2, (int)g2FullSize.y / 2);
 
 	//rect of intersection
 	int bottom = min(g1Rect.bottom, g2Rect.bottom);
@@ -198,7 +206,7 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 		for (int x = left; x < right; x++)
 		{
 			//Going separate it in 2 parts, part of optimization - if one of them is transparent, why
-			//check the other? So
+			//check the other?
 			//getting the point in model space
 			glm::vec4 point = glm::vec4(x, y, 0, 1);
 			glm::vec4 g1Point = g1InvTrans * point;
@@ -212,7 +220,7 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 
 			//get the alpha byte
 			int i1 = (int)(g1ColorP.y * g1FullSize.x + g1ColorP.x) * 4 + 3;
-			if (g1Data[i1] == 0)
+			if ((byte)g1Data[i1] == 0) //transparent == no collision
 				continue;
 
 			//now, repeating it for second object
@@ -221,10 +229,10 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 			if (!(g2ColorP.x >= 0 && g2ColorP.x < g2FullSize.x && g2ColorP.y >= 0 && g2ColorP.y < g2FullSize.y))
 				continue;
 			int i2 = (int)(g2ColorP.y * g2FullSize.x + g2ColorP.x) * 4 + 3;
-			if (g2Data[i2] == 0)
+			if ((byte)g2Data[i2] == 0)
 				continue;
 
-			return true;
+			return true; //both pixels opaque => colliding
 		}
 	}
 	return false;
@@ -232,26 +240,33 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 
 void cGame::StartLevel(int level)
 {
+	paused = false;
 	currentLevel = level;
 	if (level == 0)
 	{
-		player = new cPlayer(textures["ship"]);
-		player->SetStats(5 * LVL1_HEALTH, 150, 100);
-		player->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
-		player->AddWeapon(new cWeapon(textures["missile"], 2, WeaponType::Missile, 30));
+		player = new cPlayer(ShipType::Scout);
 		gameObjects.push_back(player);
 		gameObjCount++;
 	}
 
-	int count = pow(2, level);
+	int count = level + 1;
 	glm::vec2 playerPos = player->GetPosition();
 	for (int i = 0; i < count; i++)
 	{
-		cShip *ship = new cShip(textures["ship"]);
-		ship->SetStats(LVL1_HEALTH, 100, 100);
+		int rnd = rand() % 100;
+		ShipType t;
+		if (rnd < 10 + (-7 + level) * 2)
+			t = ShipType::Scout; //change this!
+		else if (rnd < 15 + (-4 + level) * 3)
+			t = ShipType::Corvette;
+		else if (rnd < 20 + (-2 + level) * 5)
+			t = ShipType::Fighter;
+		else
+			t = ShipType::Scout;
+			
+		cShip *ship = new cShip(t);
 		glm::vec2 offset = glm::vec2(rand() % 800 - 400, rand() % 800 - 400);
 		ship->SetPosition(playerPos + offset);
-		ship->AddWeapon(new cWeapon(textures["bullet"], 0.5f, WeaponType::Bullet, 10));
 		gameObjects.push_back(ship);
 		ships.push_back(ship);
 	}
@@ -260,7 +275,9 @@ void cGame::StartLevel(int level)
 
 void cGame::LoadTextures()
 {
-	textures.insert(make_pair("ship", new cTexture("Textures\\Ships\\ship.png")));
+	textures.insert(make_pair("scout", new cTexture("Textures\\Ships\\scout.png")));
+	textures.insert(make_pair("fighter", new cTexture("Textures\\Ships\\fighter.png")));
+	textures.insert(make_pair("corvette", new cTexture("Textures\\Ships\\corvette.png")));
 	textures.insert(make_pair("missile", new cTexture("Textures\\Weapons\\missile.png")));
 	textures.insert(make_pair("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
 	int randomBg = rand() % 6;
