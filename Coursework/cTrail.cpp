@@ -24,19 +24,7 @@ cTrail::cTrail()
 	memset(nodes, 0, sizeof(nodes));
 
 	glGenBuffers(1, &vbo);
-
 	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	//enabling the position for vertex shader
-	GLuint attrib = glGetAttribLocation(shaderProgram, "pos");
-	glEnableVertexAttribArray(attrib);
-	glVertexAttribPointer(attrib, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-	
-	//enabling the life timer for frag shader
-	attrib = glGetAttribLocation(shaderProgram, "life");
-	glEnableVertexAttribArray(attrib);
-	glVertexAttribPointer(attrib, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
 void cTrail::Add(glm::vec2 pos)
@@ -70,7 +58,22 @@ void cTrail::Render()
 	glUseProgram(shaderProgram);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindVertexArray(vao);
+
+	//enabling the position for vertex shader
+	GLuint posAttrib = glGetAttribLocation(shaderProgram, "pos");
+	glEnableVertexAttribArray(posAttrib);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+
+	//enabling the life timer for frag shader
+	GLuint lifeAttrib = glGetAttribLocation(shaderProgram, "life");
+	glEnableVertexAttribArray(lifeAttrib);
+	glVertexAttribPointer(lifeAttrib, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(2 * sizeof(float)));
+
 	glDrawArrays(GL_POINTS, 0, MAX_NODES);
+
+	glDisableVertexAttribArray(posAttrib);
+	glDisableVertexAttribArray(lifeAttrib);
+
 	glUseProgram(0);
 
 	glPopMatrix();
