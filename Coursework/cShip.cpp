@@ -8,7 +8,6 @@
 cShip::cShip(ShipType pType, Owner pOwner) : 
 	cGameObject(NULL, pOwner)
 {
-	//trail = new cTrail();
 	fliesRight = rand() % 3 - 1;
 
 	SetShipType(pType);
@@ -45,8 +44,6 @@ cShip::cShip(ShipType pType, Owner pOwner) :
 
 cShip::~cShip()
 {
-	if (trail)
-		delete trail;
 	delete weapOffsets;
 }
 
@@ -54,16 +51,6 @@ void cShip::Update(float delta)
 {
 	if (destroy)
 		return;
-
-	if (trail)
-	{
-		trailTimer += delta;
-		if (trailTimer > 0.5f)
-		{
-			trail->Add(GetPosition());
-			trailTimer = 0;
-		}
-	}
 
 	cPlayer *player = cGame::Get()->GetPlayer();
 	if (player && !player->IsDead())
@@ -96,13 +83,6 @@ void cShip::Update(float delta)
 		(*iter)->Update(delta);
 
 	cGameObject::Update(delta);
-}
-
-void cShip::Render()
-{
-	if (trail)
-		trail->Render();
-	sprite->render();
 }
 
 void cShip::CollidedWith(cGameObject *col)

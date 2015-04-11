@@ -11,17 +11,23 @@ cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 	SetMissileLevel(0);
 }
 
+cPlayer::~cPlayer()
+{
+	delete trail;
+}
+
 void cPlayer::Update(float delta)
 {
 	if (destroy)
 		return;
 
 	trailTimer += delta;
-	if (trailTimer > 0.5f)
+	if (trailTimer > 0.05f)
 	{
 		trail->Add(GetPosition());
 		trailTimer = 0;
 	}
+	trail->Update(delta);
 
 	glm::vec2 mousePos = cInput::GetMousePos() - cGame::Get()->GetWindowSize() * 0.5f + GetPosition();
 	if (cInput::ControllerConnected())
@@ -72,6 +78,12 @@ void cPlayer::Update(float delta)
 	}
 
 	cGameObject::Update(delta);
+}
+
+void cPlayer::Render()
+{
+	trail->Render();
+	sprite->render();
 }
 
 void cPlayer::CollidedWith(cGameObject *col)

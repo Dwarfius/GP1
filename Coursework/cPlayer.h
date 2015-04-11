@@ -5,11 +5,16 @@
 class cPlayer :
 	public cShip
 {
+private:
+	cTrail *trail = NULL;
+	float trailTimer = 0;
+
 public:
 	cPlayer(ShipType pType);
-	~cPlayer() {}
+	~cPlayer();
 
 	void Update(float delta);
+	void Render();
 	void CollidedWith(cGameObject *col);
 
 	string GetName() { return "Player"; }

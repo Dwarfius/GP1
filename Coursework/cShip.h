@@ -28,9 +28,6 @@ protected:
 	float maxVel;
 	float accelRate;
 
-	cTrail *trail = NULL;
-	float trailTimer = 0;
-
 	vector<cWeapon*> weapons;
 
 	void Shoot(cGameObject *target);
@@ -48,7 +45,6 @@ public:
 	int GetCollisionLayer() { return 1 << 1; }
 
 	void Update(float delta);
-	void Render();
 	void CollidedWith(cGameObject *col);
 	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }
 	

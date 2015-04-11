@@ -21,6 +21,8 @@ GLuint cTrail::shaderProgram;
 
 cTrail::cTrail()
 {
+	memset(nodes, 0, sizeof(nodes));
+
 	glGenBuffers(1, &vbo);
 
 	glGenVertexArrays(1, &vao);
@@ -117,19 +119,19 @@ void cTrail::GetFunctions()
 		
 		void main()
 		{
-			outColor = vec4(0.0, 1.0, 0.0, 1.0); //just blue trail
+			outColor = vec4(0.0, 1.0, 0.0, vLife / 5.0); //just blue trail
 		}
 	);
 
 	const char *geomShaderSrc = GLSL(
 		layout(points) in;
-		layout(triangle_strip, max_vertices = 3) out;
+		layout(triangle_strip, max_vertices = 6) out;
 
 		in float vLife[]; //per vertex life
 
 		void main()
 		{
-			float size = vLife[0] * 2.0;
+			float size = vLife[0];
 			if (size > 0) //if the node is still alive
 			{
 				//first triangle
