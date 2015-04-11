@@ -3,6 +3,7 @@
 #include "cPlayer.h"
 #include "cShip.h"
 #include "cSettings.h"
+#include "cTrail.h"
 
 #pragma warning(disable: 4018 4244)
 
@@ -10,6 +11,8 @@ cGame* cGame::singleton;
 
 cGame::cGame()
 {
+	cTrail::GetFunctions();
+
 	LoadTextures();
 	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT), textures["tutorial"]);
 	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -95,6 +98,7 @@ void cGame::Update(float delta)
 			}
 			else if (enemiesCount == 0)
 			{
+				AddScore(100);
 				gui->SetMenu(Screen::Upgrade);
 				paused = true;
 			}
@@ -255,11 +259,11 @@ void cGame::StartLevel(int level)
 	{
 		int rnd = rand() % 100;
 		ShipType t;
-		if (rnd < 10 + (-7 + level) * 2)
+		if (rnd < 10 + (-12 + level) * 2)
 			t = ShipType::Scout; //change this!
-		else if (rnd < 15 + (-4 + level) * 3)
+		else if (rnd < 15 + (-8 + level) * 3)
 			t = ShipType::Corvette;
-		else if (rnd < 20 + (-2 + level) * 5)
+		else if (rnd < 20 + (-4 + level) * 5)
 			t = ShipType::Fighter;
 		else
 			t = ShipType::Scout;
@@ -315,7 +319,8 @@ void cGame::Clear()
 
 void cGame::OnResize(int width, int height)
 {
-	gui->UpdateSize(glm::vec2(width, height));
+	windowSize = glm::vec2(width, height);
+	gui->UpdateSize(windowSize);
 	background->UpdateSize(width, height);
 }
 

@@ -117,6 +117,9 @@
     <ClInclude Include="cSoundMgr.h">
       <Filter>Header Files\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="cTrail.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="cSoundMgr.cpp">
       <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="cTrail.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -14,19 +14,29 @@ cGUILabel::cGUILabel(cTexture *pTexture, RECTF pRect, string pText, bool pCenter
 void cGUILabel::UpdateTextSize()
 { 
 	lines.clear();
-	widths.clear();
+	halfWidths.clear();
+	halfHeight = 0; //starting from 10 so that it's line1 => emptySpace + line2 => emptySpace + line3 =>...
 	for (int i = 0; i < text.size(); i++)
 	{
-		if (text[i] == '\n' || i == text.size() - 1)
+		bool newLine = text[i] == '\n';
+		bool end = i == text.size() - 1;
+
+		if (newLine)
+			halfHeight += 14; //10 for font height, 4 for whitespace
+		else if (end)
+			halfHeight += 10;
+
+		if (newLine || end)
 		{
-			string t = text.substr(0, i+1);
+			string t = text.substr(0, i+1); //including \n
 			lines.push_back(t);
 			int width = glutBitmapLength(GLUT_BITMAP_HELVETICA_12, reinterpret_cast<const unsigned char *>(t.c_str()));
-			widths.push_back(width);
+			halfWidths.push_back(width / 2);
 			text = text.substr(i + 1);
 			i = -1;
 		}
 	}
+	halfHeight /= 2;
 }
 
 void cGUILabel::Render(bool useElemRender)
@@ -40,23 +50,18 @@ void cGUILabel::Render(bool useElemRender)
 		float x, y;
 		if (centered)
 		{
-			x = center.x - widths[i] / 2;
-			y = center.y - 10 * (lines.size()-1) + 14 * i + 5; //although it's helvetica12, the height is kinda 10 pixels, so I need to offset it by 5 to center		
+			x = center.x - halfWidths[i];
+			y = center.y - halfHeight + 14 * i + 8; //I need to offset it by 8 to center it	
 		}							   //also, multyplying by 14 so that there's 4 pixels of spacing
 		else
 		{
 			x = rect.left;
-			y = rect.top + 14 * i + 5;
+			y = rect.top + 14 * i + 8;
 		}
-		
+		glRasterPos2f(x, y);
+
 		string line = lines[i];
 		for (int c = 0; c < line.size(); c++)
-		{
-			glRasterPos2f(x, y);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, line[c]);
-
-			int step = glutBitmapWidth(GLUT_BITMAP_HELVETICA_12, line[c]); //http://openglut.sourceforge.net/group__bitmapfont.html#ga2
-			x += step;
-		}
 	}
 }

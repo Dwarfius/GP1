@@ -35,6 +35,10 @@
 
 using namespace std;
 
+//
+#define GL_GLEXT_PROTOTYPES
+#include "glx\glext.h"
+
 //Define the string to appear in the top left corner of the window
 #define WINDOW_TITLE "Space Arcade Game"
 #define WINDOW_WIDTH 1024

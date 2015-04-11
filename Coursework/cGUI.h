@@ -57,5 +57,6 @@ public:
 	void Update(float delta);
 	void Render(glm::vec2 offset);
 	void SetFinalScore(int score) { finalScore = score; }
+	void UpdateUpgradeLabelText();
 };
 

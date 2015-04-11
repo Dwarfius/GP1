@@ -54,8 +54,8 @@ void cBackground::Render()
 		glPointSize(i + 1);
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
 		//http://ogldev.atspace.co.uk/www/tutorial02/tutorial02.html
-		glEnableVertexAttribArray(0); //turns out you have to bind a buffer before enabling attribs
-		glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 0, 0); //thanks documentation
+		glEnableVertexAttribArray(0); //turns out you have to bind a buffer before enabling attribs - thanks documentation
+		glVertexAttribPointer(0, 3, GL_INT, GL_FALSE, 0, 0);
 		glDrawArrays(GL_POINTS, 0, BG_PART_COUNT);
 		glDisableVertexAttribArray(0);
 		glPopMatrix();

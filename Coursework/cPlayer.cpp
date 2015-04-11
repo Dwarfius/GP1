@@ -4,6 +4,7 @@
 
 cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 {
+	trail = new cTrail();
 	SetBulletLevel(0);
 	SetEngineLevel(0);
 	SetHullLevel(0);
@@ -15,7 +16,14 @@ void cPlayer::Update(float delta)
 	if (destroy)
 		return;
 
-	glm::vec2 mousePos = cInput::GetMousePos() - glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT) * 0.5f + GetPosition();
+	trailTimer += delta;
+	if (trailTimer > 0.5f)
+	{
+		trail->Add(GetPosition());
+		trailTimer = 0;
+	}
+
+	glm::vec2 mousePos = cInput::GetMousePos() - cGame::Get()->GetWindowSize() * 0.5f + GetPosition();
 	if (cInput::ControllerConnected())
 	{
 		if (cInput::LeftStickActive())
@@ -35,14 +43,14 @@ void cPlayer::Update(float delta)
 	else
 	{
 		if (cInput::GetKey('W'))
-			AddVelocity(GetForward() * accelRate * delta);
+			AddVelocity(glm::vec2(0, -accelRate * delta));
 		else if (cInput::GetKey('S'))
-			AddVelocity(GetForward() * -accelRate * delta);
+			AddVelocity(glm::vec2(0, accelRate * delta));
 
 		if (cInput::GetKey('D'))
-			AddVelocity(GetRight() * -accelRate * delta);
+			AddVelocity(glm::vec2(accelRate * delta, 0));
 		else if (cInput::GetKey('A'))
-			AddVelocity(GetRight() * accelRate * delta);
+			AddVelocity(glm::vec2(-accelRate * delta, 0));
 
 		LookAt(mousePos);
 	}

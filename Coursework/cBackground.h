@@ -1,9 +1,6 @@
 #pragma once
-
+#include "GameConstants.h"
 #include "cGUIElement.h"
-
-#define GL_GLEXT_PROTOTYPES
-#include "glx\glext.h"
 
 #define BG_LAYER_COUNT 3
 #define BG_PART_COUNT 10000

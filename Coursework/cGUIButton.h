@@ -13,11 +13,13 @@ private:
 	bool active;
 
 public:
-	cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pOnClick);
+	cGUIButton(cTexture *pTexture, RECTF pRect, string pText);
 	~cGUIButton() {}
 
 	void SetBackgroundColor(glm::vec4 pBkgdColor) { savedColor = pBkgdColor; }
 	void SetHighlightColor(glm::vec4 pHighlightColor) { highlightColor = pHighlightColor; }
+
+	void SetCallback(std::function<void()> pOnClick) { onClick = pOnClick; }
 
 	void SetActive(bool state) { active = state; }
 

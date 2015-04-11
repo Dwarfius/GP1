@@ -13,7 +13,6 @@ cGUI::cGUI(glm::vec2 pWindowSize, cTexture *pTutorialTexture)
 	windowSize = pWindowSize;
 	tutorialTexture = pTutorialTexture;
 	SetUp();
-	
 }
 
 cGUI::~cGUI()
@@ -242,35 +241,40 @@ void cGUI::SetUpMain()
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 
-	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game", [this]() { cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game");
+	btn->SetCallback([this]() { cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
 	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Instructions", [this]() { SetMenu(Screen::Instructions); });
+	btn = new cGUIButton(NULL, r, "Instructions");
+	btn->SetCallback([this]() { SetMenu(Screen::Instructions); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
 	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Highscores", [this]() { SetMenu(Screen::Highscores); });
+	btn = new cGUIButton(NULL, r, "Highscores");
+	btn->SetCallback([this]() { SetMenu(Screen::Highscores); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
 	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::Options); });
+	btn = new cGUIButton(NULL, r, "Options");
+	btn->SetCallback([this]() { SetMenu(Screen::Options); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
 	btns[(int)Screen::Main].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Quit", []() { exit(0); });
+	btn = new cGUIButton(NULL, r, "Quit");
+	btn->SetCallback([]() { exit(0); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Main].push_back(btn);
@@ -302,7 +306,8 @@ void cGUI::SetUpHightscores()
 	}
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	cGUIButton *btn = new cGUIButton(NULL, r, "Back", [this](){ SetMenu(Screen::Main); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Back");
+	btn->SetCallback([this](){ SetMenu(Screen::Main); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Highscores].push_back(btn);
@@ -319,7 +324,8 @@ void cGUI::SetUpOptions()
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 	string state = cSettings::Get()->GetDrawBackground() ? "On" : "Off";
-	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state, [this]() { ToggleBackground(); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state);
+	btn->SetCallback([this]() { ToggleBackground(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
@@ -327,7 +333,8 @@ void cGUI::SetUpOptions()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
-	btn = new cGUIButton(NULL, r, "Volume: " + state, [this]() { ToggleVolume(); });
+	btn = new cGUIButton(NULL, r, "Volume: " + state);
+	btn->SetCallback([this]() { ToggleVolume(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
@@ -335,14 +342,16 @@ void cGUI::SetUpOptions()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
-	btn = new cGUIButton(NULL, r, "Clear Scores", []() { cSettings::Get()->ClearScores(); });
+	btn = new cGUIButton(NULL, r, "Clear Scores");
+	btn->SetCallback([]() { cSettings::Get()->ClearScores(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
 	btns[(int)Screen::Options].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Main); cSettings::Get()->Serialize(); });
+	btn = new cGUIButton(NULL, r, "Back");
+	btn->SetCallback([this]() { SetMenu(Screen::Main); cSettings::Get()->Serialize(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Options].push_back(btn);
@@ -380,14 +389,18 @@ void cGUI::SetUpUpgrade()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	r.left -= windowSize.x / 4; r.right -= windowSize.x / 4;
-	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\nCost:"+to_string(p->GetShipUpCost()), [](){ 
+	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\nCost:"+to_string(p->GetShipUpCost()));
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
-		int level = (int)cGame::Get()->GetPlayer()->GetShipType();
-		int cost = cGame::Get()->GetPlayer()->GetShipUpCost();
+		cPlayer *p = cGame::Get()->GetPlayer();
+		int level = (int)p->GetShipType();
+		int cost = p->GetShipUpCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->SetShipType((ShipType)(level + 1));
 			cGame::Get()->AddScore(-cost);
+			btn->SetText("Upgrade Ship\nCost:" + to_string(p->GetShipUpCost()));
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -396,14 +409,18 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Upgrade Hull\nCost:"+to_string(p->GetHullUpCost()), [](){
+	btn = new cGUIButton(NULL, r, "Upgrade Hull\nCost:"+to_string(p->GetHullUpCost()));
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
-		int level = cGame::Get()->GetPlayer()->GetHullLevel() + 1;
-		int cost = cGame::Get()->GetPlayer()->GetHullUpCost();
+		cPlayer *p = cGame::Get()->GetPlayer();
+		int level = p->GetHullLevel() + 1;
+		int cost = p->GetHullUpCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->SetHullLevel(level);
 			cGame::Get()->AddScore(-cost);
+			btn->SetText("Upgrade Hull\nCost:" + to_string(p->GetHullUpCost()));
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -412,14 +429,18 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Upgrade Guns\nCost:"+to_string(p->GetBulletUpCost()), [](){
+	btn = new cGUIButton(NULL, r, "Upgrade Guns\nCost:"+to_string(p->GetBulletUpCost()));
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
-		int level = cGame::Get()->GetPlayer()->GetBulletLevel() + 1;
-		int cost = cGame::Get()->GetPlayer()->GetBulletUpCost();
+		cPlayer *p = cGame::Get()->GetPlayer();
+		int level = p->GetBulletLevel() + 1;
+		int cost = p->GetBulletUpCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->SetBulletLevel(level);
 			cGame::Get()->AddScore(-cost);
+			btn->SetText("Upgrade Guns\nCost:" + to_string(p->GetBulletUpCost()));
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -428,14 +449,18 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Upgrade Missiles\nCost:"+to_string(p->GetMissileUpCost()), [](){
+	btn = new cGUIButton(NULL, r, "Upgrade Missiles\nCost:"+to_string(p->GetMissileUpCost()));
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
-		int level = cGame::Get()->GetPlayer()->GetMissileLevel() + 1;
-		int cost = cGame::Get()->GetPlayer()->GetMissileUpCost();
+		cPlayer *p = cGame::Get()->GetPlayer();
+		int level = p->GetMissileLevel() + 1;
+		int cost = p->GetMissileUpCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->SetMissileLevel(level);
 			cGame::Get()->AddScore(-cost);
+			btn->SetText("Upgrade Missiles\nCost:" + to_string(p->GetMissileUpCost()));
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -444,14 +469,18 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Upgrade Engine\nCost:"+to_string(p->GetEngineUpCost()), [](){
+	btn = new cGUIButton(NULL, r, "Upgrade Engine\nCost:"+to_string(p->GetEngineUpCost()));
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
-		int level = cGame::Get()->GetPlayer()->GetEngineLevel() + 1;
-		int cost = cGame::Get()->GetPlayer()->GetEngineUpCost();
+		cPlayer *p = cGame::Get()->GetPlayer();
+		int level = p->GetEngineLevel() + 1;
+		int cost = p->GetEngineUpCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->SetEngineLevel(level);
 			cGame::Get()->AddScore(-cost);
+			btn->SetText("Upgrade Engine\nCost:" + to_string(p->GetEngineUpCost()));
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -460,13 +489,15 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Fix Ship\nCost:"+to_string(p->GetFixCost()), [](){
+	btn = new cGUIButton(NULL, r, "Fix Ship\nCost:"+to_string(p->GetFixCost()));
+	btn->SetCallback([this](){
 		int score = cGame::Get()->GetScore();
 		int cost = cGame::Get()->GetPlayer()->GetFixCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->Repair();
 			cGame::Get()->AddScore(-cost);
+			SetMenu(Screen::Upgrade);
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -476,7 +507,8 @@ void cGUI::SetUpUpgrade()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace - 13;
 	r.left = x; r.right = x + btnWidth;
-	btn = new cGUIButton(NULL, r, "Continue", [this]() { SetMenu(Screen::GameOverlay); cGame::Get()->StartNextLevel(); });
+	btn = new cGUIButton(NULL, r, "Continue");
+	btn->SetCallback([this]() { SetMenu(Screen::GameOverlay); cGame::Get()->StartNextLevel(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Upgrade].push_back(btn);
@@ -502,21 +534,24 @@ void cGUI::SetUpPause()
 	float x = (windowSize.x - btnWidth) / 2;
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
-	cGUIButton *btn = new cGUIButton(NULL, r, "Resume", [this]() { cGame::Get()->SetPaused(false); SetMenu(Screen::GameOverlay); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Resume");
+	btn->SetCallback([this]() { cGame::Get()->SetPaused(false); SetMenu(Screen::GameOverlay); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
 	btns[(int)Screen::Pause].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Options", [this]() { SetMenu(Screen::PauseOptions); });
+	btn = new cGUIButton(NULL, r, "Options");
+	btn->SetCallback([this]() { SetMenu(Screen::PauseOptions); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
 	btns[(int)Screen::Pause].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Main Menu", [this]() { cGame::Get()->Clear(); SetMenu(Screen::Main); });
+	btn = new cGUIButton(NULL, r, "Main Menu");
+	btn->SetCallback([this]() { cGame::Get()->Clear(); SetMenu(Screen::Main); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Pause].push_back(btn);
@@ -537,7 +572,8 @@ void cGUI::SetUpPauseOptions()
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 	string state = cSettings::Get()->GetDrawBackground() ? "On" : "Off";
-	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state, [this]() { ToggleBackground(); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Background: " + state);
+	btn->SetCallback([this]() { ToggleBackground(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
@@ -545,7 +581,8 @@ void cGUI::SetUpPauseOptions()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
-	btn = new cGUIButton(NULL, r, "Volume: " + state, [this]() { ToggleVolume(); });
+	btn = new cGUIButton(NULL, r, "Volume: " + state);
+	btn->SetCallback([this]() { ToggleVolume(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
@@ -553,14 +590,16 @@ void cGUI::SetUpPauseOptions()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	state = to_string((int)(cSettings::Get()->GetVolume() * 100)) + "%";
-	btn = new cGUIButton(NULL, r, "Clear Scores", []() { cSettings::Get()->ClearScores(); });
+	btn = new cGUIButton(NULL, r, "Clear Scores");
+	btn->SetCallback([]() { cSettings::Get()->ClearScores(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
 	btns[(int)Screen::PauseOptions].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Back", [this]() { SetMenu(Screen::Pause); cSettings::Get()->Serialize(); });
+	btn = new cGUIButton(NULL, r, "Back");
+	btn->SetCallback([this]() { SetMenu(Screen::Pause); cSettings::Get()->Serialize(); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::PauseOptions].push_back(btn);
@@ -594,14 +633,16 @@ void cGUI::SetUpDeath()
 	}
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	cGUIButton *btn = new cGUIButton(NULL, r, "Try Again", [this]() { cGame::Get()->Clear(); cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
+	cGUIButton *btn = new cGUIButton(NULL, r, "Try Again");
+	btn->SetCallback([this]() { cGame::Get()->Clear(); cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Death].push_back(btn);
 	btns[(int)Screen::Death].push_back(btn);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
-	btn = new cGUIButton(NULL, r, "Back To Main", [this]() { SetMenu(Screen::Main); });
+	btn = new cGUIButton(NULL, r, "Back To Main");
+	btn->SetCallback([this]() { SetMenu(Screen::Main); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(COLOR_HIGHL);
 	menus[(int)Screen::Death].push_back(btn);
@@ -621,17 +662,31 @@ string cGUI::GetUpgradeLabelText()
 	cPlayer *player = cGame::Get()->GetPlayer();
 	ShipType type = player->GetShipType();
 	int t = cGame::Get()->GetScore();
-	string s = "Welcome to the Upgrade screen.\n";
-	s += "Here you have the options to upgrade parts of your ship. ";
-	s += "Currently you have " + to_string(t) + " points to spend.\n\n";
+	string s = "Welcome to the Upgrade screen.\nCurrent score: " + to_string(cGame::Get()->GetScore()) + "\n\n";
+	s += "Here you have the options to upgrade parts of your ship.\n";
 	string tmp = type == ShipType::Scout ? "Scout" : type == ShipType::Fighter ? "Fighter" : type == ShipType::Corvette ? "Corvette" : "Cruiser";
 	s += "Your ship is a " + tmp + " type. It has ";
 	tmp = type == ShipType::Scout ? "1 gun" : type == ShipType::Fighter ? "1 gun and 1 missile launcher" : type == ShipType::Corvette ? "2 guns and 1 missile launchers" : "2 guns, 1 missile launcher and 1 turret";
 	s += tmp + ".\n\n";
-	t = player->GetBulletLevel() + 1;
-	s += "Your guns are at level " + to_string(t) + ". They do " + to_string(t * 10) + " damage per hit.\n";
+	t = player->GetHullLevel();
+	s += "Your hull is level " + to_string(t) + ". Your max health is " + to_string(player->GetMaxHealth());
+	t = player->GetBulletLevel();
+	s += ". Your guns are at level " + to_string(t) + ". They do " + to_string(t * 10) + " damage per hit.\n";
 	s += "Each level in guns gives +10 damage.\n\n";
-	//s += "    Cost: " + to_string(player->GetBulletLevel()) + "\n\n";
-
+	t = player->GetMissileLevel();
+	s += "Your missiles are at level " + to_string(t) + ". They do " + to_string(t * 20) + " damage per hit.\n";
+	s += "Each level in missiles gives you +20 damage.\n\n";
+	t = player->GetEngineLevel();
+	s += "Your engines are at level " + to_string(t) + ". The maximum speed of the speed is " + to_string((int)player->GetMaxVel()) + "m/s.\n";
+	s += "The acceleration rate is " + to_string((int)player->GetAccelRate()) + "m/s^2.\n";
+	s += "The rotation speed is " + to_string((int)player->GetRotSpeed()) + "deg/s.\n\n";
+	t = player->GetMaxHealth() - player->GetHealth();
+	s += "Your ship sustained " + to_string(t) + "damage. You're at " + to_string(player->GetHealth()) + " health.";
  	return s;
+}
+
+void cGUI::UpdateUpgradeLabelText()
+{
+	auto m = menus[(int)Screen::Upgrade];
+	((cGUIButton*)m[m.size() - 1])->SetText(GetUpgradeLabelText());
 }

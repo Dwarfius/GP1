@@ -28,6 +28,7 @@
     <ClInclude Include="cSoundMgr.h" />
     <ClInclude Include="cSprite.h" />
     <ClInclude Include="cTexture.h" />
+    <ClInclude Include="cTrail.h" />
     <ClInclude Include="cWeapon.h" />
     <ClInclude Include="cWNDManager.h" />
     <ClInclude Include="cGame.h" />
@@ -54,6 +55,7 @@
     <ClCompile Include="cSoundMgr.cpp" />
     <ClCompile Include="cSprite.cpp" />
     <ClCompile Include="cTexture.cpp" />
+    <ClCompile Include="cTrail.cpp" />
     <ClCompile Include="cWeapon.cpp" />
     <ClCompile Include="cWNDManager.cpp" />
     <ClCompile Include="cGame.cpp" />

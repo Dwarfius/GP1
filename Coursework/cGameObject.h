@@ -57,7 +57,7 @@ public:
 
 	void SetSprite(cSprite *s) { sprite = s; }
 	virtual void Update(float delta);
-	void Render();
+	virtual void Render();
 	void LookAt(glm::vec2 target);
 	void UpdateForward();
 	virtual void CollidedWith(cGameObject *col);

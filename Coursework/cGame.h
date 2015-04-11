@@ -31,6 +31,7 @@ private:
 	map<string, cTexture*> textures;
 	int score = 0;
 	int currentLevel = 0;
+	glm::vec2 windowSize;
 
 	bool PerPixelCollision(cGameObject* g1, cGameObject* g2);
 	void LoadTextures();
@@ -55,6 +56,7 @@ public:
 	void Clear();
 	int GetGameObjetsCount() { return gameObjCount; }
 
+	glm::vec2 GetWindowSize() { return windowSize; }
 	void OnResize(int width, int height);
 	cShip* GetShipUnderPoint(glm::vec2 pos);
 

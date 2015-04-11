@@ -1,10 +1,9 @@
 #include "cGUIButton.h"
 #include "cInput.h"
 
-cGUIButton::cGUIButton(cTexture *pTexture, RECTF pRect, string pText, std::function<void()> pOnClick) :
+cGUIButton::cGUIButton(cTexture *pTexture, RECTF pRect, string pText) :
 	cGUILabel(pTexture, pRect, pText)
 {
-	onClick = pOnClick;
 	savedColor = bkgdColor;
 }
 

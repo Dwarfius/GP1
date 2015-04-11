@@ -2,6 +2,7 @@
 
 #include "cGameObject.h"
 #include "cWeapon.h"
+#include "cTrail.h"
 
 enum class ShipType { Scout, Fighter, Corvette, Cruiser };
 
@@ -27,13 +28,16 @@ protected:
 	float maxVel;
 	float accelRate;
 
+	cTrail *trail = NULL;
+	float trailTimer = 0;
+
 	vector<cWeapon*> weapons;
 
 	void Shoot(cGameObject *target);
 	
 public:
 	cShip(ShipType pType, Owner pOwner = Owner::Enemy);
-	~cShip() {}
+	~cShip();
 
 	int GetHealth() { return health; }
 	int GetMaxHealth() { return maxHealth; }
@@ -44,6 +48,7 @@ public:
 	int GetCollisionLayer() { return 1 << 1; }
 
 	void Update(float delta);
+	void Render();
 	void CollidedWith(cGameObject *col);
 	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }
 	
@@ -57,21 +62,25 @@ public:
 
 	int GetEngineLevel() { return engineLevel; }
 	void SetEngineLevel(int lvl);
-	int GetEngineUpCost() { return ((int)type + 1) * ((int)type + 1) * 50; }
+	int GetEngineUpCost() { return (engineLevel + 1) * (engineLevel + 1) * 50; }
 
 	int GetHullLevel() { return hullLevel; }
 	void SetHullLevel(int lvl);
-	int GetHullUpCost() { return ((int)type + 1) * ((int)type + 1) * 50; }
+	int GetHullUpCost() { return (hullLevel + 1) * (hullLevel + 1) * 50; }
 
 	int GetBulletLevel() { return bulletLevel; }
 	void SetBulletLevel(int lvl);
-	int GetBulletUpCost() { return ((int)type + 1) * ((int)type + 1) * 50; }
+	int GetBulletUpCost() { return (bulletLevel + 1) * (bulletLevel + 1) * 50; }
 
 	int GetMissileLevel() { return missileLevel; }
 	void SetMissileLevel(int lvl);
-	int GetMissileUpCost() { return ((int)type + 1) * ((int)type + 1) * 50; }
+	int GetMissileUpCost() { return (missileLevel + 1) * (missileLevel + 1) * 50; }
 
 	void Repair() { health = maxHealth; }
 	int GetFixCost() { return (maxHealth - health) / 2; }
+
+	float GetMaxVel() { return maxVel; }
+	float GetRotSpeed() { return rotSpeed; }
+	float GetAccelRate() { return accelRate; }
 };
 

@@ -7,7 +7,8 @@ class cGUILabel :
 {
 protected:
 	vector<string> lines;
-	vector<int> widths;
+	vector<int> halfWidths;
+	int halfHeight;
 	bool centered;
 	string text;
 	glm::vec2 textSize;
