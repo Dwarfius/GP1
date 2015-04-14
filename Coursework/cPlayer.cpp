@@ -9,6 +9,11 @@ cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 	SetEngineLevel(0);
 	SetHullLevel(0);
 	SetMissileLevel(0);
+
+	SetBulletLevel(3);
+	SetEngineLevel(4);
+	SetHullLevel(5);
+	SetMissileLevel(3);
 }
 
 cPlayer::~cPlayer()
@@ -71,11 +76,11 @@ void cPlayer::Update(float delta)
 	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
 		(*iter)->Update(delta);
 
+	if (!target || target->IsDead())
+		target = cGame::Get()->GetNearestShip(GetPosition());
+
 	if (cInput::GetButton(0) || cInput::GetRightTrigger())
-	{
-		cShip *ship = cGame::Get()->GetShipUnderPoint(mousePos);
-		Shoot(ship);
-	}
+		Shoot(target);
 
 	cGameObject::Update(delta);
 }

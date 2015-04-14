@@ -104,7 +104,7 @@ void cShip::Shoot(cGameObject *target)
 
 void cShip::OnDestroy()
 {
-	cGame::Get()->AddScore(10);
+	cGame::Get()->AddScore(10  + 20 * (int)type);
 }
 
 void cShip::SetShipType(ShipType pType)
@@ -133,38 +133,48 @@ void cShip::SetShipType(ShipType pType)
 		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
 		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
 		weapOffsets = new glm::vec4[3];
-		weapOffsets[0] = glm::vec4(-10, 0, 0, 1);
+		weapOffsets[0] = glm::vec4(-30, 0, 0, 1);
 		weapOffsets[1] = glm::vec4(0, 0, 0, 1);
-		weapOffsets[2] = glm::vec4(10, 0, 0, 1);
+		weapOffsets[2] = glm::vec4(30, 0, 0, 1);
 		break;
 	case ShipType::Cruiser:
 		sprite->setTexture(cGame::Get()->GetTexture("cruiser"));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
 		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
 		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
 		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
-		weapOffsets = new glm::vec4[4];
-		weapOffsets[0] = glm::vec4(-10, 0, 0, 1);
-		weapOffsets[1] = glm::vec4(0, 0, 0, 1);
-		weapOffsets[2] = glm::vec4(10, 0, 0, 1);
-		weapOffsets[2] = glm::vec4(0, -10, 0, 1);
+		weapOffsets = new glm::vec4[6];
+		weapOffsets[0] = glm::vec4(20, -5, 0, 1);
+		weapOffsets[1] = glm::vec4(-20, -5, 0, 1);
+		weapOffsets[2] = glm::vec4(-40, 0, 0, 1);
+		weapOffsets[3] = glm::vec4(40, 0, 0, 1);
+		weapOffsets[4] = glm::vec4(10, 20, 0, 1);
+		weapOffsets[5] = glm::vec4(-10, 20, 0, 1);
 		break;
 	default:
 		break;
 	}
+	//recalculating everything that depends on ship type
+	SetEngineLevel(engineLevel);
+	SetHullLevel(hullLevel);
 }
 
 void cShip::SetEngineLevel(int lvl)
 {
 	engineLevel = lvl;
-	maxVel = 100 + 25 * engineLevel;
-	rotSpeed = 100 + 10 * engineLevel;
-	accelRate = 200 + 50 * engineLevel;
+	int shipLvl = (int)type;
+	float pow2 = glm::pow(2.f, (float)shipLvl);
+	maxVel = 150 + 50 * engineLevel - 25 * shipLvl;
+	rotSpeed = 180 + 15 * engineLevel - 25 * pow2;
+	accelRate = 150 + 50 * engineLevel - 40 * pow2;
 }
 
 void cShip::SetHullLevel(int lvl)
 {
 	hullLevel = lvl;
-	health = maxHealth = 200 + 100 * hullLevel;
+	health = maxHealth = 200 + 100 * hullLevel + 100 * (int)type;
+	armor = 2 * (hullLevel + (int)type);
 }
 
 void cShip::SetBulletLevel(int lvl)
@@ -181,4 +191,12 @@ void cShip::SetMissileLevel(int lvl)
 	for (cWeapon *w : weapons)
 		if (w->GetType() == WeaponType::Missile)
 			w->SetDamage(20 + 20 * missileLevel);
+}
+
+void cShip::ApplyDamage(int damage)
+{
+	damage -= armor;
+	if (damage < 0)
+		damage = 0;
+	health -= damage; destroy = health <= 0;
 }

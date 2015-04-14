@@ -384,27 +384,33 @@ void cGUI::SetUpUpgrade()
 	float y = windowSize.y / 4;
 	RECTF r = { x, y, x + btnWidth, y + btnHeight };
 
+	r.top -= btnHeight; r.bottom -= btnHeight;
 	cGUILabel *lbl = new cGUILabel(NULL, r, "Upgrade Screen");
 	menus[(int)Screen::Upgrade].push_back(lbl);
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	r.left -= windowSize.x / 4; r.right -= windowSize.x / 4;
-	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\nCost:"+to_string(p->GetShipUpCost()));
-	btn->SetCallback([this, btn](){
-		int score = cGame::Get()->GetScore();
-		cPlayer *p = cGame::Get()->GetPlayer();
-		int level = (int)p->GetShipType();
-		int cost = p->GetShipUpCost();
-		if (cost < score)
-		{
-			cGame::Get()->GetPlayer()->SetShipType((ShipType)(level + 1));
-			cGame::Get()->AddScore(-cost);
-			btn->SetText("Upgrade Ship\nCost:" + to_string(p->GetShipUpCost()));
-			UpdateUpgradeLabelText();
-		}
-	});
+	bool canUpgrade = cGame::Get()->GetPlayer()->GetShipType() != ShipType::Cruiser;
+	string text = !canUpgrade ? "MAX" : "Cost : " + to_string(p->GetShipUpCost());
+	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\n" + text);
+	if (canUpgrade)
+	{
+		btn->SetCallback([this, btn](){
+			int score = cGame::Get()->GetScore();
+			cPlayer *p = cGame::Get()->GetPlayer();
+			int level = (int)p->GetShipType();
+			int cost = p->GetShipUpCost();
+			if (cost < score)
+			{
+				cGame::Get()->GetPlayer()->SetShipType((ShipType)(level + 1));
+				cGame::Get()->AddScore(-cost);
+				btn->SetText("Upgrade Ship\nCost:" + to_string(p->GetShipUpCost()));
+				UpdateUpgradeLabelText();
+			}
+		});
+	}
 	btn->SetBackgroundColor(COLOR_NORMAL);
-	btn->SetHighlightColor(COLOR_HIGHL);
+	btn->SetHighlightColor(canUpgrade ? COLOR_HIGHL : COLOR_NORMAL);
 	menus[(int)Screen::Upgrade].push_back(btn);
 	btns[(int)Screen::Upgrade].push_back(btn);
 
@@ -490,14 +496,15 @@ void cGUI::SetUpUpgrade()
 
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Fix Ship\nCost:"+to_string(p->GetFixCost()));
-	btn->SetCallback([this](){
+	btn->SetCallback([this, btn](){
 		int score = cGame::Get()->GetScore();
 		int cost = cGame::Get()->GetPlayer()->GetFixCost();
 		if (cost < score)
 		{
 			cGame::Get()->GetPlayer()->Repair();
 			cGame::Get()->AddScore(-cost);
-			SetMenu(Screen::Upgrade);
+			btn->SetText("Upgrade Engine\nCost:0");
+			UpdateUpgradeLabelText();
 		}
 	});
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -515,7 +522,7 @@ void cGUI::SetUpUpgrade()
 	btns[(int)Screen::Upgrade].push_back(btn);
 
 	x = windowSize.x / 4 + btnWidth + emptySpace;
-	y = windowSize.y / 4 + btnHeight + emptySpace;
+	y = windowSize.y / 4;
 	r = { x, y, x + windowSize.x / 4, y + btnHeight };
 	lbl = new cGUILabel(NULL, r, GetUpgradeLabelText(), false);
 	menus[(int)Screen::Upgrade].push_back(lbl);
@@ -662,26 +669,29 @@ string cGUI::GetUpgradeLabelText()
 	cPlayer *player = cGame::Get()->GetPlayer();
 	ShipType type = player->GetShipType();
 	int t = cGame::Get()->GetScore();
-	string s = "Welcome to the Upgrade screen.\nCurrent score: " + to_string(cGame::Get()->GetScore()) + "\n\n";
-	s += "Here you have the options to upgrade parts of your ship.\n";
+	string s = "Welcome to the Upgrade screen.\n";
+	s += "Current score: " + to_string(cGame::Get()->GetScore()) + "\n\n";
 	string tmp = type == ShipType::Scout ? "Scout" : type == ShipType::Fighter ? "Fighter" : type == ShipType::Corvette ? "Corvette" : "Cruiser";
 	s += "Your ship is a " + tmp + " type. It has ";
 	tmp = type == ShipType::Scout ? "1 gun" : type == ShipType::Fighter ? "1 gun and 1 missile launcher" : type == ShipType::Corvette ? "2 guns and 1 missile launchers" : "2 guns, 1 missile launcher and 1 turret";
-	s += tmp + ".\n\n";
+	s += tmp + ".\n";
+	s += "Upgrading the ship will also change your hull and engine values - the bigger the ship, the more armor\n";
+	s += "it has, yet the more slower it becomes.\n\n";
 	t = player->GetHullLevel();
-	s += "Your hull is level " + to_string(t) + ". Your max health is " + to_string(player->GetMaxHealth());
+	s += "Your hull is level " + to_string(t) + ". Your max health is " + to_string(player->GetMaxHealth()) + ". Your armor is " + to_string(player->GetArmor()) + ".\n";
+	s += "Each level gives 100 health and 2 armor.\n\n";
 	t = player->GetBulletLevel();
-	s += ". Your guns are at level " + to_string(t) + ". They do " + to_string(t * 10) + " damage per hit.\n";
+	s += "Your guns are at level " + to_string(t) + ". They do " + to_string(10 + t * 10) + " damage per hit.\n";
 	s += "Each level in guns gives +10 damage.\n\n";
 	t = player->GetMissileLevel();
-	s += "Your missiles are at level " + to_string(t) + ". They do " + to_string(t * 20) + " damage per hit.\n";
+	s += "Your missiles are at level " + to_string(t) + ". They do " + to_string(20 + t * 20) + " damage per hit.\n";
 	s += "Each level in missiles gives you +20 damage.\n\n";
 	t = player->GetEngineLevel();
 	s += "Your engines are at level " + to_string(t) + ". The maximum speed of the speed is " + to_string((int)player->GetMaxVel()) + "m/s.\n";
 	s += "The acceleration rate is " + to_string((int)player->GetAccelRate()) + "m/s^2.\n";
 	s += "The rotation speed is " + to_string((int)player->GetRotSpeed()) + "deg/s.\n\n";
 	t = player->GetMaxHealth() - player->GetHealth();
-	s += "Your ship sustained " + to_string(t) + "damage. You're at " + to_string(player->GetHealth()) + " health.";
+	s += "Your ship sustained " + to_string(t) + " damage. You're at " + to_string(player->GetHealth()) + " health.";
  	return s;
 }
 

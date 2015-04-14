@@ -8,6 +8,7 @@ class cPlayer :
 private:
 	cTrail *trail = NULL;
 	float trailTimer = 0;
+	cShip *target = NULL;
 
 public:
 	cPlayer(ShipType pType);

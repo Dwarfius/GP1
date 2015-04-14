@@ -30,7 +30,7 @@ void cWeapon::Shoot(Owner owner, glm::vec2 spawnPos, float angle, cGameObject *t
 	obj->SetPosition(spawnPos);
 	obj->SetRotation(angle);
 	if (type == WeaponType::Bullet)
-		obj->SetVelocity(obj->GetForward() * 400.f);
+		obj->SetVelocity(obj->GetForward() * 500.f);
 	cGame::Get()->AddGameObject(obj);
 
 	reload = reloadTimer;

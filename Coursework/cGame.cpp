@@ -15,7 +15,7 @@ cGame::cGame()
 
 	LoadTextures();
 	gui = new cGUI(glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT), textures["tutorial"]);
-	background = new cBackground(textures["space"], WINDOW_WIDTH, WINDOW_HEIGHT);
+	background = new cBackground(textures["space"], WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
 	//tree = new cQuadtree(0, { -10000, -10000, 10000, 10000 });
 	grid = new cGrid(WINDOW_WIDTH * 3 / 2, WINDOW_HEIGHT * 3 / 2);
 	soundMgr = new cSoundMgr();
@@ -114,14 +114,20 @@ void cGame::Render()
 {
 	background->Render();
 
+	//add a bit of zoom-out when flying fast
 	glm::vec2 pos = player ? player->GetPosition() : glm::vec2(0, 0);
 	float vel = player ? glm::length(player->GetVelocity()) : 0;
-	vel /= 3; //just for the time being, need to change it up in the future
+	//instead of proper resizing I do upscale
+	//also, depending on ship size I zoom out more
+	glm::vec2 size = player ? player->GetSize() : glm::vec2(0, 0);
+	float extraSize = glm::max(size.x, size.y);
+	float width = WINDOW_WIDTH + extraSize;
+	float height = WINDOW_HEIGHT + extraSize;
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(pos.x - WINDOW_WIDTH / 2 - vel, pos.x + WINDOW_WIDTH / 2 + vel, 
-		pos.y + WINDOW_HEIGHT / 2 + vel, pos.y - WINDOW_HEIGHT / 2 - vel, -1, 1);
+	glOrtho(pos.x - width / 2 - vel, pos.x + width / 2 + vel, 
+		pos.y + height / 2 + vel, pos.y - height / 2 - vel, -1, 1);
 
 	for (int i = gameObjCount - 1; i>=0; i--) //rendering backwards cause bullets are at the end, but should be hidden by ships
 		gameObjects[i]->Render();
@@ -248,7 +254,7 @@ void cGame::StartLevel(int level)
 	currentLevel = level;
 	if (level == 0)
 	{
-		player = new cPlayer(ShipType::Scout);
+		player = new cPlayer(ShipType::Cruiser);
 		gameObjects.push_back(player);
 		gameObjCount++;
 	}
@@ -260,7 +266,7 @@ void cGame::StartLevel(int level)
 		int rnd = rand() % 100;
 		ShipType t;
 		if (rnd < 10 + (-12 + level) * 2)
-			t = ShipType::Scout; //change this!
+			t = ShipType::Cruiser;
 		else if (rnd < 15 + (-8 + level) * 3)
 			t = ShipType::Corvette;
 		else if (rnd < 20 + (-4 + level) * 5)
@@ -269,7 +275,9 @@ void cGame::StartLevel(int level)
 			t = ShipType::Scout;
 			
 		cShip *ship = new cShip(t);
-		glm::vec2 offset = glm::vec2(rand() % 800 - 400, rand() % 800 - 400);
+		glm::vec2 offset = glm::vec2(rand() % 600 - 300, rand() % 600 - 300); //circle of r=300
+		offset.x += glm::sign(offset.x) * 150; //a circle area with removed circle of r=150
+		offset.y += glm::sign(offset.y) * 150; //meaning, they spawn from r=150 to r=450
 		ship->SetPosition(playerPos + offset);
 		gameObjects.push_back(ship);
 		ships.push_back(ship);
@@ -282,6 +290,7 @@ void cGame::LoadTextures()
 	textures.insert(make_pair("scout", new cTexture("Textures\\Ships\\scout.png")));
 	textures.insert(make_pair("fighter", new cTexture("Textures\\Ships\\fighter.png")));
 	textures.insert(make_pair("corvette", new cTexture("Textures\\Ships\\corvette.png")));
+	textures.insert(make_pair("cruiser", new cTexture("Textures\\Ships\\cruiser.png")));
 	textures.insert(make_pair("missile", new cTexture("Textures\\Weapons\\missile.png")));
 	textures.insert(make_pair("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
 	int randomBg = rand() % 6;
@@ -324,13 +333,19 @@ void cGame::OnResize(int width, int height)
 	background->UpdateSize(width, height);
 }
 
-cShip* cGame::GetShipUnderPoint(glm::vec2 pos)
+cShip* cGame::GetNearestShip(glm::vec2 pos)
 {
-	for (auto iter = ships.begin(); iter != ships.end(); iter++)
+	float min = 100000000.f;
+	cShip *ret = NULL;
+	for (cShip *ship : ships)
 	{
-		cShip *ship = (*iter);
-		if (!ship->IsDead() && RECTF::InRect(ship->GetRect(), pos))
-			return ship;
+		glm::vec2 delta = ship->GetPosition() - pos;
+		float dist = glm::length2(delta);
+		if (dist < min)
+		{
+			min = dist;
+			ret = ship;
+		}
 	}
-	return NULL;
+	return ret;
 }

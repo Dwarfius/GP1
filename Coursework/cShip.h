@@ -25,6 +25,7 @@ private:
 protected:
 	int health;
 	int maxHealth;
+	int armor;
 	float maxVel;
 	float accelRate;
 
@@ -46,7 +47,7 @@ public:
 
 	void Update(float delta);
 	void CollidedWith(cGameObject *col);
-	void ApplyDamage(int damage) { health -= damage; destroy = health <= 0; }
+	void ApplyDamage(int damage);
 	
 	string GetName() { return "Ship"; }
 	void OnDestroy();
@@ -63,6 +64,7 @@ public:
 	int GetHullLevel() { return hullLevel; }
 	void SetHullLevel(int lvl);
 	int GetHullUpCost() { return (hullLevel + 1) * (hullLevel + 1) * 50; }
+	int GetArmor() { return armor; }
 
 	int GetBulletLevel() { return bulletLevel; }
 	void SetBulletLevel(int lvl);
