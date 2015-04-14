@@ -19,7 +19,7 @@ void cSound::LoadWAVFile(LPCSTR filename)
 void cSound::Play(ALboolean loop)
 {
 	float volume = cSettings::Get()->GetVolume(); //no need to call to play the sound if volume is 0
-	if (volume > 0.05f)
+	if (volume > 0.05f) //floating point issues
 	{
 		alSourcei(m_OALSource, AL_LOOPING, loop);
 		alSourcef(m_OALSource, AL_GAIN, volume);

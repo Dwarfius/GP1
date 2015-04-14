@@ -20,6 +20,8 @@ cGame::cGame()
 	grid = new cGrid(WINDOW_WIDTH * 3 / 2, WINDOW_HEIGHT * 3 / 2);
 	soundMgr = new cSoundMgr();
 	LoadSounds();
+
+	PlaySnd("theme", true);
 }
 
 cGame::~cGame()
@@ -254,7 +256,7 @@ void cGame::StartLevel(int level)
 	currentLevel = level;
 	if (level == 0)
 	{
-		player = new cPlayer(ShipType::Cruiser);
+		player = new cPlayer(ShipType::Scout);
 		gameObjects.push_back(player);
 		gameObjCount++;
 	}
@@ -301,6 +303,7 @@ void cGame::LoadTextures()
 void cGame::LoadSounds()
 {
 	soundMgr->Add("bullet", "Audio\\Bullet.wav");
+	soundMgr->Add("theme", "Audio\\Theme.wav");
 }
 
 void cGame::Clear()

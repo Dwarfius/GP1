@@ -6,7 +6,7 @@ cBullet::cBullet(cTexture *pText, Owner pOwner, int pDamage) :
 	cGameObject(pText, pOwner)
 {
 	damage = pDamage; 
-	cGame::Get()->PlaySnd("bullet");
+	cGame::Get()->PlaySnd("bullet", false);
 }
 
 void cBullet::Update(float delta)

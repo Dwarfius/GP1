@@ -10,6 +10,9 @@ private:
 	float trailTimer = 0;
 	cShip *target = NULL;
 
+	bool invuln = false;
+	void CheatHandling();
+
 public:
 	cPlayer(ShipType pType);
 	~cPlayer();

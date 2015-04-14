@@ -9,11 +9,6 @@ cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 	SetEngineLevel(0);
 	SetHullLevel(0);
 	SetMissileLevel(0);
-
-	SetBulletLevel(3);
-	SetEngineLevel(4);
-	SetHullLevel(5);
-	SetMissileLevel(3);
 }
 
 cPlayer::~cPlayer()
@@ -76,11 +71,13 @@ void cPlayer::Update(float delta)
 	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
 		(*iter)->Update(delta);
 
-	if (!target || target->IsDead())
+	if (!target || target->IsDead() || cInput::GetKeyDown(9) || cInput::GetControllerKeyDown(GamepadKeys::LBumper))
 		target = cGame::Get()->GetNearestShip(GetPosition());
 
 	if (cInput::GetButton(0) || cInput::GetRightTrigger())
 		Shoot(target);
+
+	CheatHandling();
 
 	cGameObject::Update(delta);
 }
@@ -93,4 +90,14 @@ void cPlayer::Render()
 
 void cPlayer::CollidedWith(cGameObject *col)
 {
+}
+
+void cPlayer::CheatHandling()
+{
+	if (cInput::GetKeyDown('K'))
+		cGame::Get()->AddScore(10000);
+	if (cInput::GetKeyDown('L'))
+	{
+		armor += armor < 10000 ? 10000 : -10000;
+	}
 }

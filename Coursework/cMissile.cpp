@@ -6,7 +6,7 @@ cMissile::cMissile(cTexture *pText, Owner pOwner, cGameObject *pTarget, int pDam
 {
 	target = pTarget; 
 	damage = pDamage;
-	rotSpeed = 250;
+	rotSpeed = 80;
 }
 
 void cMissile::Update(float delta)

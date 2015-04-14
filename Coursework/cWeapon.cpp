@@ -3,10 +3,9 @@
 #include "cMissile.h"
 #include "cGame.h"
 
-cWeapon::cWeapon(cTexture *pProjTexture, float pReloadTimer, WeaponType pType, int pDamage)
+cWeapon::cWeapon(cTexture *pProjTexture, WeaponType pType, int pDamage)
 {
 	projTexture = pProjTexture;
-	reloadTimer = pReloadTimer;
 	type = pType;
 	damage = pDamage;
 }

@@ -29,3 +29,5 @@
 *.log
 *.sdf
 *.pdf
+Debug\
+Release\

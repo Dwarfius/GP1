@@ -62,5 +62,6 @@ public:
 
 	cTexture* GetTexture(string name) { return textures[name]; }
 
-	void PlaySnd(string name) { soundMgr->GetSnd(name)->Play(false); }
+	void PlaySnd(string name, bool loop) { soundMgr->GetSnd(name)->Play(loop); }
+	cSound *GetSnd(string name) { return soundMgr->GetSnd(name); }
 };

@@ -22,20 +22,20 @@ cShip::cShip(ShipType pType, Owner pOwner) :
 	case ShipType::Fighter:
 		SetBulletLevel(1);
 		SetEngineLevel(1);
-		SetHullLevel(2);
+		SetHullLevel(1);
 		SetMissileLevel(0);
 		break;
 	case ShipType::Corvette:
 		SetBulletLevel(2);
 		SetEngineLevel(2);
-		SetHullLevel(3);
-		SetMissileLevel(2);
+		SetHullLevel(2);
+		SetMissileLevel(1);
 		break;
 	case ShipType::Cruiser:
 		SetBulletLevel(3);
-		SetEngineLevel(4);
-		SetHullLevel(5);
-		SetMissileLevel(3);
+		SetEngineLevel(3);
+		SetHullLevel(3);
+		SetMissileLevel(1);
 		break;
 	default:
 		break;
@@ -113,7 +113,7 @@ void cShip::SetShipType(ShipType pType)
 	if (weapOffsets)
 		delete weapOffsets;
 	weapons.clear();
-	AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10)); //always has this
+	AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10)); //always has this
 	switch (type)
 	{
 	case ShipType::Scout:
@@ -123,15 +123,15 @@ void cShip::SetShipType(ShipType pType)
 		break;
 	case ShipType::Fighter:
 		sprite->setTexture(cGame::Get()->GetTexture("fighter"));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), WeaponType::Missile, 30));
 		weapOffsets = new glm::vec4[2];
 		weapOffsets[0] = glm::vec4(0, 0, 0, 1);
 		weapOffsets[1] = glm::vec4(0, 0, 0, 1);
 		break;
 	case ShipType::Corvette:
 		sprite->setTexture(cGame::Get()->GetTexture("corvette"));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), WeaponType::Missile, 30));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10));
 		weapOffsets = new glm::vec4[3];
 		weapOffsets[0] = glm::vec4(-30, 0, 0, 1);
 		weapOffsets[1] = glm::vec4(0, 0, 0, 1);
@@ -139,11 +139,11 @@ void cShip::SetShipType(ShipType pType)
 		break;
 	case ShipType::Cruiser:
 		sprite->setTexture(cGame::Get()->GetTexture("cruiser"));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), 1.5, WeaponType::Missile, 30));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
-		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), 0.5f, WeaponType::Bullet, 10));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), WeaponType::Missile, 30));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("missile"), WeaponType::Missile, 30));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10));
+		AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10));
 		weapOffsets = new glm::vec4[6];
 		weapOffsets[0] = glm::vec4(20, -5, 0, 1);
 		weapOffsets[1] = glm::vec4(-20, -5, 0, 1);
@@ -158,6 +158,9 @@ void cShip::SetShipType(ShipType pType)
 	//recalculating everything that depends on ship type
 	SetEngineLevel(engineLevel);
 	SetHullLevel(hullLevel);
+	//since we recreate the weapons, we need to reset their levels
+	SetBulletLevel(bulletLevel);
+	SetMissileLevel(missileLevel);
 }
 
 void cShip::SetEngineLevel(int lvl)
@@ -181,16 +184,26 @@ void cShip::SetBulletLevel(int lvl)
 {
 	bulletLevel = lvl;
 	for (cWeapon *w : weapons)
+	{
 		if (w->GetType() == WeaponType::Bullet)
-			w->SetDamage(10 + 10 * bulletLevel);
+		{
+			w->SetDamage(GetBulletDamage());
+			w->SetReloadTimer(GetBulletCooldown());
+		}
+	}
 }
 
 void cShip::SetMissileLevel(int lvl)
 {
 	missileLevel = lvl;
 	for (cWeapon *w : weapons)
+	{
 		if (w->GetType() == WeaponType::Missile)
-			w->SetDamage(20 + 20 * missileLevel);
+		{
+			w->SetDamage(GetMissileDamage());
+			w->SetReloadTimer(GetMissileCooldown());
+		}
+	}
 }
 
 void cShip::ApplyDamage(int damage)
@@ -198,5 +211,6 @@ void cShip::ApplyDamage(int damage)
 	damage -= armor;
 	if (damage < 0)
 		damage = 0;
-	health -= damage; destroy = health <= 0;
+	health -= damage; 
+	destroy = health <= 0;
 }

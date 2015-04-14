@@ -113,6 +113,11 @@
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /Y "$(ProjectDir)Textures\*" "$(OutDir)Textures\"
+xcopy /E /Y "$(ProjectDir)Audio\*" "$(OutDir)Audio\"
+xcopy /E /Y "$(ProjectDir)Libraries\*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -127,6 +132,11 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /Y "$(ProjectDir)Textures\*" "$(OutDir)Textures\"
+xcopy /E /Y "$(ProjectDir)Audio\*" "$(OutDir)Audio\"
+xcopy /E /Y "$(ProjectDir)Libraries\*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

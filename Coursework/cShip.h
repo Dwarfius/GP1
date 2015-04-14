@@ -59,20 +59,24 @@ public:
 
 	int GetEngineLevel() { return engineLevel; }
 	void SetEngineLevel(int lvl);
-	int GetEngineUpCost() { return (engineLevel + 1) * (engineLevel + 1) * 50; }
+	int GetEngineUpCost() { return (engineLevel + 1) * (engineLevel + 1) * 30; }
 
 	int GetHullLevel() { return hullLevel; }
 	void SetHullLevel(int lvl);
-	int GetHullUpCost() { return (hullLevel + 1) * (hullLevel + 1) * 50; }
+	int GetHullUpCost() { return (hullLevel + 1) * (hullLevel + 1) * 30; }
 	int GetArmor() { return armor; }
 
 	int GetBulletLevel() { return bulletLevel; }
 	void SetBulletLevel(int lvl);
-	int GetBulletUpCost() { return (bulletLevel + 1) * (bulletLevel + 1) * 50; }
+	int GetBulletUpCost() { return (bulletLevel + 1) * (bulletLevel + 1) * 30; }
+	int GetBulletDamage() { return 7 + 5 * bulletLevel; }
+	float GetBulletCooldown() { return 0.25f - 0.02f * bulletLevel; }
 
 	int GetMissileLevel() { return missileLevel; }
 	void SetMissileLevel(int lvl);
-	int GetMissileUpCost() { return (missileLevel + 1) * (missileLevel + 1) * 50; }
+	int GetMissileUpCost() { return (missileLevel + 1) * (missileLevel + 1) * 30; }
+	int GetMissileDamage() { return 15 + 10 * missileLevel; }
+	float GetMissileCooldown() { return 2 - 0.1f * missileLevel; }
 
 	void Repair() { health = maxHealth; }
 	int GetFixCost() { return (maxHealth - health) / 2; }
