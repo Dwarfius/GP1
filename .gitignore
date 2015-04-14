@@ -29,5 +29,5 @@
 *.log
 *.sdf
 *.pdf
-Debug\
-Release\
+Debug
+Release
