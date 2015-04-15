@@ -19,10 +19,11 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	srand(time(NULL));
 	glutInit(&__argc, __argv); //needed to have 2dfont writeout
 
-	//for debug
+#if _DEBUG
 	AllocConsole();
 	AttachConsole(GetCurrentProcessId());
 	freopen("CON", "w", stdout);
+#endif
 
     //Set our window settings
     const int windowWidth = WINDOW_WIDTH;

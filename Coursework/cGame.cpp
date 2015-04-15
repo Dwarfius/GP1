@@ -59,14 +59,9 @@ void cGame::Update(float delta)
 		if (player) //since everything depends on player - do it only then
 		{
 			glm::vec2 pos = player->GetPosition();
-			int enemiesCount = 0;
 			for (int i = 0; i < gameObjCount; i++)
 			{
 				cGameObject *obj = gameObjects[i];
-				cShip *ship = dynamic_cast<cShip*>(obj);
-				if (ship &&	ship->GetOwner() == Owner::Enemy)
-					enemiesCount++;
-					
 				obj->Update(delta);
 				if (obj->IsDead()) //removing scheduled for deletion objects
 				{
@@ -75,6 +70,7 @@ void cGame::Update(float delta)
 					i--;
 					gameObjCount--;
 
+					cShip *ship = dynamic_cast<cShip*>(obj);
 					if (ship)
 					{
 						int shipsCount = ships.size();
@@ -100,7 +96,7 @@ void cGame::Update(float delta)
 				gui->SetMenu(Screen::Death);
 				Clear();
 			}
-			else if (enemiesCount == 0) //wave cleared
+			else if (ships.size() == 0) //wave cleared
 			{
 				AddScore(100);
 				gui->SetMenu(Screen::Upgrade);
