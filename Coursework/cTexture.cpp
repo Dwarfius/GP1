@@ -43,7 +43,7 @@ bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
 
 	textureWidth = ilGetInteger(IL_IMAGE_WIDTH);
 	textureHeight = ilGetInteger(IL_IMAGE_HEIGHT);
-	txData = new char[textureWidth * textureHeight * 4];
+	txData = new char[textureWidth * textureHeight * 4]; //yeah, having 4 as a magic number is bad, but I wasn't going to change the format at any time yet
 	memcpy(txData, ilGetData(), textureWidth * textureHeight * 4); //saving the pixels locally since we perform cleanup after this
 
 	glGenTextures(1, &GLTextureID); // GLTexture name generation 

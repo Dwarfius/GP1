@@ -13,14 +13,14 @@ cBackground::cBackground(cTexture *pTexture, int width, int height)
 	int buffer[BG_PART_COUNT * 3];
 	for (int i = 0; i < BG_LAYER_COUNT; i++)
 	{
-		translation[i] = glm::vec2(0, 0);
+		translation[i] = glm::vec2(0, 0); //nulling our translations
 
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
 
 		for (int j = 0; j < BG_PART_COUNT * 3; j++)
-			buffer[j] = j % 3 == 2 ? 0 : (rand() % 50000 - 25000);
+			buffer[j] = j % 3 == 2 ? 0 : (rand() % 50000 - 25000); //filling the star buffers
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW); //pushing it on the GPU
 	}
 }
 
@@ -33,7 +33,7 @@ cBackground::~cBackground()
 void cBackground::Update(glm::vec2 deltaMove)
 {
 	for (int i = 0; i < BG_LAYER_COUNT; i++)
-		translation[i] += -deltaMove * (float)(i + 1);
+		translation[i] += -deltaMove * (float)(i + 1); //moving the transforms relative to player delta => paralax
 }
 
 void cBackground::Render()

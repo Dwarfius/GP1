@@ -18,7 +18,7 @@ void cGUILabel::UpdateTextSize()
 	halfHeight = 0; //starting from 10 so that it's line1 => emptySpace + line2 => emptySpace + line3 =>...
 	for (int i = 0; i < text.size(); i++)
 	{
-		bool newLine = text[i] == '\n';
+		bool newLine = text[i] == '\n'; //parsing up the lines
 		bool end = i == text.size() - 1;
 
 		if (newLine)
@@ -41,10 +41,10 @@ void cGUILabel::UpdateTextSize()
 
 void cGUILabel::Render(bool useElemRender)
 {
-	if (useElemRender)
+	if (useElemRender) //making sure the text is rendered over the background
 		cGUIElement::Render();
 
-	glColor3f(color.x, color.y, color.z);
+	glColor3f(color.x, color.y, color.z); //setting the color
 	for (int i = 0; i < lines.size(); i++)
 	{
 		float x, y;
@@ -58,7 +58,7 @@ void cGUILabel::Render(bool useElemRender)
 			x = rect.left;
 			y = rect.top + 14 * i + 8;
 		}
-		glRasterPos2f(x, y);
+		glRasterPos2f(x, y); //update position for each new line
 
 		string line = lines[i];
 		for (int c = 0; c < line.size(); c++)

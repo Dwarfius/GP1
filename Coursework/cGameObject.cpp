@@ -12,17 +12,19 @@ void cGameObject::Update(float delta)
 	if (destroy)
 		return;
 
+	//limited-delta rotation
 	float angleDelta = WrapAngle(targetRot - sprite->getSpriteRotation());
 	angleDelta = glm::clamp(angleDelta, -rotSpeed * delta, rotSpeed * delta);
 	sprite->setSpriteRotation(sprite->getSpriteRotation() + angleDelta);
 
+	//move along velocity
 	glm::vec2 pos = sprite->getSpritePos();
 	pos += velocity * delta;
 	sprite->setSpritePos(pos);
 
+	//since we moved, update transform and bounding rect
 	sprite->updateMatrix();
 	sprite->updateBoundingRect();
-	UpdateForward();
 }
 
 void cGameObject::Render()
@@ -42,11 +44,12 @@ void cGameObject::UpdateForward()
 	forward = glm::rotate(glm::vec2(0, -1), sprite->getSpriteRotation());
 }
 
+//collision plug
 void cGameObject::CollidedWith(cGameObject *col)
 {
-	cout << GetName() << " collided with " << col->GetName() << endl;
 }
 
+//thanks
 //http://stackoverflow.com/questions/11498169/dealing-with-angle-wrap-in-c-code
 float cGameObject::WrapAngle(float angle)
 {

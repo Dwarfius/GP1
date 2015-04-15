@@ -6,7 +6,7 @@ cBullet::cBullet(cTexture *pText, Owner pOwner, int pDamage) :
 	cGameObject(pText, pOwner)
 {
 	damage = pDamage; 
-	cGame::Get()->PlaySnd("bullet", false);
+	cGame::Get()->PlaySnd("bullet", false); //play on creation
 }
 
 void cBullet::Update(float delta)
@@ -14,10 +14,11 @@ void cBullet::Update(float delta)
 	if (destroy)
 		return;
 
-	currentLife -= delta;
+	currentLife -= delta; //has a life limit
 	if (currentLife < 0)
 		destroy = true;
 
+	//just move forward every update
 	glm::vec2 pos = sprite->getSpritePos();
 	pos += velocity * delta;
 	sprite->setSpritePos(pos);
@@ -28,8 +29,7 @@ void cBullet::Update(float delta)
 
 void cBullet::CollidedWith(cGameObject *col)
 {
-	if (!dynamic_cast<cBullet*>(col))
-		destroy = true;
-	if (cShip *ship = dynamic_cast<cShip*>(col))
+	destroy = true;
+	if (cShip *ship = dynamic_cast<cShip*>(col)) //only ships receive damage
 		ship->ApplyDamage(damage);
 }

@@ -20,12 +20,12 @@ void cSprite::render()
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glLoadMatrixf(glm::value_ptr(transform));
+	glLoadMatrixf(glm::value_ptr(transform)); //loading up our model transform
 
 	glBegin(GL_QUADS);
 		glColor3f(255.0f, 255.0f, 255.0f); //flush with white
 		glTexCoord2i(0, 0); //providing uv mapping
-		glVertex2i(-textureWidth / 2,  -textureHeight / 2);
+		glVertex2i(-textureWidth / 2,  -textureHeight / 2); //center rendering
 		glTexCoord2i(1, 0);
 		glVertex2i(textureWidth / 2, -textureHeight / 2);
 		glTexCoord2i(1, 1);
@@ -55,7 +55,7 @@ void cSprite::updateMatrix()
 
 void cSprite::setTexture(cTexture *pText)
 {
-	if (pText)
+	if (pText) //possible to have null sprites to avoid crashes for missing textures here
 	{
 		texture = pText;
 		textureWidth = texture->getTWidth();
@@ -74,6 +74,7 @@ void cSprite::updateBoundingRect()
 	for (int i = 0; i < 4; i++)
 		points[i] = transform * points[i];
 
+	//finding proper min/max
 	boundingRect.left = points[0].x;
 	boundingRect.bottom = points[0].y;
 	boundingRect.right = points[0].x;

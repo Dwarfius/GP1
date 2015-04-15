@@ -16,7 +16,7 @@ private:
 	glm::vec2 windowSize;
 	Screen currentMenu = Screen::Main;
 	vector<cGUIElement *> menus[GUI_SCREENS];
-	vector<cGUIButton *> btns[GUI_SCREENS];
+	vector<cGUIButton *> btns[GUI_SCREENS]; //for button GUI navigation
 	float timer = 0;
 	int frames = 0;
 	int fps = 0;

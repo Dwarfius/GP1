@@ -41,8 +41,8 @@ void cGUI::SetUp()
 
 void cGUI::Update(float delta)
 {
-	//global (almost) button handling
-	if (currentMenu != Screen::GameOverlay)
+	//managing keyboard-gamepad gui navigation
+	if (btns[(int)currentMenu].size() > 0)
 	{
 		bool updBtn = false;
 		if (cInput::GetControllerKeyDown(GamepadKeys::Up) || cInput::GetKeyDown('W'))
@@ -72,6 +72,7 @@ void cGUI::Update(float delta)
 	{
 	case Screen::GameOverlay:
 	{
+		//updating the bottom health bar
 		cPlayer *player = cGame::Get()->GetPlayer();
 		float health = player->GetHealth();
 		float max = player->GetMaxHealth();
@@ -79,6 +80,7 @@ void cGUI::Update(float delta)
 		bar->SetPercentage(health / max);
 		bar->SetText(to_string((int)health) + "/" + to_string((int)max));
 
+		//update the score - not efficient, but simple
 		cGUILabel *lbl = (cGUILabel*)menus[(int)Screen::GameOverlay][1];
 		lbl->SetText("Score: " + to_string(cGame::Get()->GetScore()));
 
@@ -103,7 +105,6 @@ void cGUI::Update(float delta)
 			SetMenu(Screen::Main);
 			cSettings::Get()->Serialize();
 		}
-			
 		break;
 	case Screen::PauseOptions:
 		if (cInput::GetKeyDown(27) || cInput::GetControllerKeyDown(GamepadKeys::B))
@@ -120,7 +121,7 @@ void cGUI::Update(float delta)
 		break;
 	}
 
-	//Global elements
+	//fps calculation implementation - simplest stuff and smoothed
 	timer += delta;
 	if (timer > 1)
 	{
@@ -129,11 +130,13 @@ void cGUI::Update(float delta)
 		frames = 0;
 	}
 
+	//Global elements
 	((cGUILabel*)menus[(int)Screen::Global][0])->SetText("FPS: " + to_string(fps));
 
 	int count = cGame::Get()->GetGameObjetsCount();
 	((cGUILabel*)menus[(int)Screen::Global][1])->SetText("Objects: " + to_string(count));
 
+	//updating current menu items
 	vector<cGUIElement *> menu = menus[(int)currentMenu];
 	for (auto iter = menu.begin(); iter != menu.end(); iter++)
 		(*iter)->Update();
@@ -141,17 +144,21 @@ void cGUI::Update(float delta)
 
 void cGUI::Render(glm::vec2 offest)
 {
-	frames++;
+	frames++; //counting the rendered frame
 	
+	//drawing the overlay in case we're in pause
 	if (currentMenu == Screen::Pause || currentMenu == Screen::PauseOptions) //yeah, dirty, I know
-		for (auto iter = menus[(int)Screen::GameOverlay].begin(); iter != menus[(int)Screen::GameOverlay].end(); iter++)
-			(*iter)->Render();
-	vector<cGUIElement *> menu = menus[(int)currentMenu];
-	for (auto iter = menu.begin(); iter != menu.end(); iter++)
-		(*iter)->Render();
+		for (cGUIElement *elem : menus[(int)Screen::GameOverlay])
+			elem->Render();
 
-	for (auto iter = menus[(int)Screen::Global].begin(); iter != menus[(int)Screen::Global].end(); iter++)
-		(*iter)->Render();
+	//rendering the current menu
+	vector<cGUIElement *> menu = menus[(int)currentMenu];
+	for (cGUIElement *elem : menu)
+		elem->Render();
+
+	//always rendering performance counters
+	for (cGUIElement *elem : menus[(int)Screen::Global])
+		elem->Render();
 }
 
 void cGUI::ToggleBackground()
@@ -162,6 +169,7 @@ void cGUI::ToggleBackground()
 
 void cGUI::ToggleVolume()
 {
+	//the actual toggling of sound level
 	float volume = cSettings::Get()->GetVolume() + 0.1f;
 	if (volume >= 1.1f)
 		volume = 0;
@@ -240,14 +248,17 @@ void cGUI::SetMenu(Screen menu)
 
 void cGUI::SetUpMain()
 {
+	//basic sizes
 	float btnWidth = 150;
 	float btnHeight = 25;
 	float emptySpace = 10;
 
+	//starting points
 	float x = (windowSize.x - btnWidth) / 2;
 	float y = windowSize.y / 4;
-	RECTF r = { x, y, x + btnWidth, y + btnHeight };
+	RECTF r = { x, y, x + btnWidth, y + btnHeight }; //rect an element occupies
 
+	//building the menu one element at a time
 	cGUIButton *btn = new cGUIButton(NULL, r, "Play Game");
 	btn->SetCallback([this]() { cGame::Get()->StartLevel(0); SetMenu(Screen::GameOverlay); });
 	btn->SetBackgroundColor(COLOR_NORMAL);
@@ -255,6 +266,7 @@ void cGUI::SetUpMain()
 	menus[(int)Screen::Main].push_back(btn);
 	btns[(int)Screen::Main].push_back(btn);
 
+	//now that button was created, the rect has to be moved to place another one
 	r.top += btnHeight + emptySpace; r.bottom += btnHeight + emptySpace;
 	btn = new cGUIButton(NULL, r, "Instructions");
 	btn->SetCallback([this]() { SetMenu(Screen::Instructions); });
@@ -400,27 +412,27 @@ void cGUI::SetUpUpgrade()
 	bool canUpgrade = cGame::Get()->GetPlayer()->GetShipType() != ShipType::Cruiser;
 	string text = !canUpgrade ? "MAX" : "Cost : " + to_string(p->GetShipUpCost());
 	cGUIButton *btn = new cGUIButton(NULL, r, "Upgrade Ship\n" + text);
-	if (canUpgrade)
+	if (canUpgrade) //there are 4 ship types in game - can't let to go upgrade more than that
 	{
-		btn->SetCallback([this, btn](){
+		btn->SetCallback([this, btn](){ //passing this to update GUI and btn to update it's label
 			int score = cGame::Get()->GetScore();
 			cPlayer *p = cGame::Get()->GetPlayer();
 			int level = (int)p->GetShipType();
 			int cost = p->GetShipUpCost();
-			if (cost <= score)
+			if (cost <= score) //if the score allows it
 			{
-				p->SetShipType((ShipType)(level + 1));
+				p->SetShipType((ShipType)(level + 1)); //upgrade
 				cGame::Get()->AddScore(-cost);
-				UpdateUpgradeLabelText();
+				UpdateUpgradeLabelText(); //update the text
 
-				bool canUpgrade = p->GetShipType() != ShipType::Cruiser;
+				bool canUpgrade = p->GetShipType() != ShipType::Cruiser; //updating the label
 				string text = !canUpgrade ? "MAX" : "Cost : " + to_string(p->GetShipUpCost());
 				btn->SetText("Upgrade Ship\n" + text);
 				if (!canUpgrade)
-					btn->SetCallback([](){});
+					btn->SetCallback([](){}); //remove the callback so it's impossible to do anything
 			}
-		});
-	}
+		}); //everything else is basically the same
+	} //other buttons are done in similar fashion
 	btn->SetBackgroundColor(COLOR_NORMAL);
 	btn->SetHighlightColor(canUpgrade ? COLOR_HIGHL : COLOR_NORMAL);
 	menus[(int)Screen::Upgrade].push_back(btn);
@@ -542,6 +554,7 @@ void cGUI::SetUpUpgrade()
 
 void cGUI::SetUpPause()
 {
+	//for pause and pauseOptions I overlay a semi-transparent black texture, to darken up everything except buttons
 	cGUIElement *elem = new cGUIElement(NULL, { 0, 0, windowSize.x, windowSize.y });
 	elem->SetBackgroundColor(glm::vec4(0, 0, 0, 0.3f));
 	menus[(int)Screen::Pause].push_back(elem);
@@ -676,7 +689,7 @@ void cGUI::SetUpGlobalDataOverlay()
 	menus[(int)Screen::Global].push_back(lbl);
 }
 
-string cGUI::GetUpgradeLabelText()
+string cGUI::GetUpgradeLabelText() //method which returns the big wall-o-text
 {
 	cPlayer *p = cGame::Get()->GetPlayer();
 	ShipType type = p->GetShipType();
@@ -710,5 +723,5 @@ string cGUI::GetUpgradeLabelText()
 void cGUI::UpdateUpgradeLabelText()
 {
 	auto m = menus[(int)Screen::Upgrade];
-	((cGUIButton*)m[m.size() - 1])->SetText(GetUpgradeLabelText());
+	((cGUILabel*)m[m.size() - 1])->SetText(GetUpgradeLabelText());
 }

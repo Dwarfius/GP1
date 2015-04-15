@@ -18,6 +18,7 @@ void cInput::Update(float delta)
 	memcpy(buttons[1], buttons[0], sizeof(buttons[0]));
 	memcpy(controller[1], controller[0], sizeof(controller[0]));
 
+	//polling less so that I don't take performance hit
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/ee417001%28v=vs.85%29.aspx
 	if (resetPollingTimer -= delta <= 0)
 	{
@@ -25,14 +26,14 @@ void cInput::Update(float delta)
 		XINPUT_STATE state;
 		memset(&state, 0, sizeof(state));
 		res = XInputGetState(0, &state);
-		if (res == ERROR_SUCCESS)
+		if (res == ERROR_SUCCESS) //if we got the state, parse it
 		{
 			connected = true;
 			if (msgInd != state.dwPacketNumber)
 				Parse(state.Gamepad);
 			msgInd = state.dwPacketNumber;
 		}
-		else
+		else //otherwise check for controller later again
 		{
 			connected = false;
 			resetPollingTimer = 2;
@@ -43,7 +44,7 @@ void cInput::Update(float delta)
 	}
 }
 
-void cInput::Reset()
+void cInput::Reset() //clear all buffers
 {
 	memset(keys, 0, sizeof(keys));
 	memset(buttons, 0, sizeof(buttons));

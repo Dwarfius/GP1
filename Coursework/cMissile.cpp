@@ -28,6 +28,7 @@ void cMissile::Update(float delta)
 			LookAt(target->GetPosition());
 	}
 
+	UpdateForward();
 	cGameObject::Update(delta);
 }
 

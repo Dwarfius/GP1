@@ -11,17 +11,18 @@ cSettings* cSettings::singleton = 0;
 
 cSettings::cSettings()
 {
-	drawBackground = true;
+	//basic settings
+	drawBackground = true; 
 	volume = 0.5f;
 	memset(scores, 0, sizeof(scores));
-	Deserialize();
+	Deserialize(); //attempt to get up to date settings
 }
 
 void cSettings::Serialize()
 {
-	fstream file("settings.txt", ios::out | ios::trunc);
+	fstream file("settings.txt", ios::out | ios::trunc); //open up the file for clean write
 
-	file << to_string(drawBackground) << endl;
+	file << to_string(drawBackground) << endl; //write down the settings
 	file << to_string(volume) << endl;
 	for (int i = 0; i < 10 && scores[i] != 0; i++) //don't write out end zeroes
 		file << to_string(scores[i]) << endl;
@@ -30,11 +31,11 @@ void cSettings::Serialize()
 
 void cSettings::Deserialize()
 {
-	fstream file("settings.txt", ios::in);
-	if (!file.is_open())
+	fstream file("settings.txt", ios::in); //open up for reading
+	if (!file.is_open()) //if doesn't exist, fall back to basic settings
 		return;
 
-	string line;
+	string line; //otherwise, parse it
 	int i = 0;
 	while (getline(file, line))
 	{
@@ -49,7 +50,7 @@ void cSettings::Deserialize()
 	file.close();
 }
 
-void cSettings::AddScore(int score)
+void cSettings::AddScore(int score) //add score while still keeping it sorted
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -63,6 +64,7 @@ void cSettings::AddScore(int score)
 	}
 }
 
+//utility - recursion to push scores down
 void cSettings::SwapDown(int val, int index)
 {
 	if (index == 10 || val == 0)
@@ -72,6 +74,7 @@ void cSettings::SwapDown(int val, int index)
 	scores[index] = val;
 }
 
+//resetting of scores and writing them down
 void cSettings::ClearScores()
 {
 	memset(scores, 0, sizeof(scores));

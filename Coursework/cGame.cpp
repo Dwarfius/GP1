@@ -9,6 +9,7 @@
 
 cGame* cGame::singleton;
 
+//put all loading/initialization here
 cGame::cGame()
 {
 	cTrail::GetFunctions();
@@ -24,6 +25,7 @@ cGame::cGame()
 	PlaySnd("theme", true);
 }
 
+//destructor - have cleanup here
 cGame::~cGame()
 {
 	delete gui;
@@ -38,6 +40,7 @@ cGame::~cGame()
 		delete it->second;
 }
 
+//global update method
 void cGame::Update(float delta)
 {
 	glm::vec2 deltaMove = glm::vec2(0, 0);
@@ -46,19 +49,17 @@ void cGame::Update(float delta)
 	{
 		//cleaning up objects scheduled for deletion
 		int size = objctsToDelete.size();
-		while (size-- > 0)
+		while (size-- > 0) //clear up the objects
 		{
 			objctsToDelete[0]->OnDestroy();
 			delete objctsToDelete[0];
 			objctsToDelete.erase(objctsToDelete.begin());
 		}
 
-		if (player)
+		if (player) //since everything depends on player - do it only then
 		{
 			glm::vec2 pos = player->GetPosition();
 			int enemiesCount = 0;
-			//start thinking about multithreading this
-			//http://gamedev.stackexchange.com/questions/7338/multi-threaded-games-best-practices-one-thread-for-logic-one-for-rendering
 			for (int i = 0; i < gameObjCount; i++)
 			{
 				cGameObject *obj = gameObjects[i];
@@ -67,7 +68,7 @@ void cGame::Update(float delta)
 					enemiesCount++;
 					
 				obj->Update(delta);
-				if (obj->IsDead())
+				if (obj->IsDead()) //removing scheduled for deletion objects
 				{
 					objctsToDelete.push_back(obj);
 					gameObjects.erase(gameObjects.begin() + i);
@@ -89,16 +90,17 @@ void cGame::Update(float delta)
 				}
 			}
 				
+			//calculate the offset for paralax background
 			deltaMove = player->GetPosition() - pos;
 
-			if (player->IsDead())
+			if (player->IsDead()) //game lost
 			{
 				cSettings::Get()->AddScore(score);
 				gui->SetFinalScore(score);
 				gui->SetMenu(Screen::Death);
 				Clear();
 			}
-			else if (enemiesCount == 0)
+			else if (enemiesCount == 0) //wave cleared
 			{
 				AddScore(100);
 				gui->SetMenu(Screen::Upgrade);
@@ -107,11 +109,13 @@ void cGame::Update(float delta)
 		}
 	}
 
+	//update all the utilities
 	background->Update(deltaMove);
 	gui->Update(delta);
 	cInput::Update(delta);
 }
 
+//global render
 void cGame::Render()
 {
 	background->Render();
@@ -126,7 +130,7 @@ void cGame::Render()
 	float width = WINDOW_WIDTH + extraSize;
 	float height = WINDOW_HEIGHT + extraSize;
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+	glPushMatrix(); //preserving the GUI ortho projection
 	glLoadIdentity();
 	glOrtho(pos.x - width / 2 - vel, pos.x + width / 2 + vel, 
 		pos.y + height / 2 + vel, pos.y - height / 2 - vel, -1, 1);
@@ -135,7 +139,7 @@ void cGame::Render()
 		gameObjects[i]->Render();
 
 	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+	glPopMatrix(); //and get the GUI back
 
 	gui->Render(pos);
 }
@@ -250,11 +254,12 @@ bool cGame::PerPixelCollision(cGameObject *g1, cGameObject *g2)
 	return false;
 }
 
+//method for sending a new wave
 void cGame::StartLevel(int level)
 {
 	paused = false;
 	currentLevel = level;
-	if (level == 0)
+	if (level == 0) //spawn the player for the start of the game
 	{
 		player = new cPlayer(ShipType::Scout);
 		gameObjects.push_back(player);
@@ -267,7 +272,7 @@ void cGame::StartLevel(int level)
 	{
 		int rnd = rand() % 100;
 		ShipType t;
-		if (rnd < 10 + (-12 + level) * 2)
+		if (rnd < 10 + (-12 + level) * 2) //random ships based on level
 			t = ShipType::Cruiser;
 		else if (rnd < 15 + (-8 + level) * 3)
 			t = ShipType::Corvette;
@@ -287,6 +292,7 @@ void cGame::StartLevel(int level)
 	gameObjCount += count;
 }
 
+//get all the required textures
 void cGame::LoadTextures()
 {
 	textures.insert(make_pair("scout", new cTexture("Textures\\Ships\\scout.png")));
@@ -295,17 +301,20 @@ void cGame::LoadTextures()
 	textures.insert(make_pair("cruiser", new cTexture("Textures\\Ships\\cruiser.png")));
 	textures.insert(make_pair("missile", new cTexture("Textures\\Weapons\\missile.png")));
 	textures.insert(make_pair("bullet", new cTexture("Textures\\Weapons\\bullet.png")));
+	textures.insert(make_pair("tutorial", new cTexture("Textures\\tutorial.png")));
 	int randomBg = rand() % 6;
 	string bg = "Textures\\Backgrounds\\space" + to_string(randomBg) + ".png";
 	textures.insert(make_pair("space", new cTexture(bg.c_str())));
 }
 
+//get all(2) required sounds
 void cGame::LoadSounds()
 {
 	soundMgr->Add("bullet", "Audio\\Bullet.wav");
 	soundMgr->Add("theme", "Audio\\Theme.wav");
 }
 
+//clean up
 void cGame::Clear()
 {
 	score = 0;
@@ -329,6 +338,7 @@ void cGame::Clear()
 	}
 }
 
+//on resize callback
 void cGame::OnResize(int width, int height)
 {
 	windowSize = glm::vec2(width, height);
@@ -336,6 +346,7 @@ void cGame::OnResize(int width, int height)
 	background->UpdateSize(width, height);
 }
 
+//targetting for missiles
 cShip* cGame::GetNearestShip(glm::vec2 pos)
 {
 	float min = 100000000.f;

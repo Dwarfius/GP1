@@ -2,6 +2,7 @@
 
 #pragma warning(disable : 4018)
 
+//quadtree class, ended up not using it
 cQuadtree::cQuadtree(short pDepth, RECTF pRect)
 {
 	depth = pDepth;
@@ -17,6 +18,7 @@ cQuadtree::~cQuadtree()
 	free(nodes);
 }
 
+//split the quad
 void cQuadtree::Split()
 {
 	float halfW = (rect.right - rect.left) / 2;
@@ -30,6 +32,7 @@ void cQuadtree::Split()
 	nodes[3] = new cQuadtree(depth + 1, { x + halfW, y + halfH, x + halfW * 2, y + halfH * 2});
 }
 
+//helper function which determines the quad for the rect
 int cQuadtree::GetIndex(RECTF pRect)
 {
 	float centerX = rect.left + (rect.right - rect.left) / 2;
@@ -54,6 +57,7 @@ int cQuadtree::GetIndex(RECTF pRect)
 	return -1;
 }
 
+//cleaning the tree
 void cQuadtree::Clear()
 {
 	objects.clear();
@@ -67,6 +71,7 @@ void cQuadtree::Clear()
 	}
 }
 
+//adding the object
 void cQuadtree::Insert(cGameObject *obj)
 {
 	if (nodes[0])
@@ -80,7 +85,7 @@ void cQuadtree::Insert(cGameObject *obj)
 	}
 
 	objects.push_back(obj);
-	if (objects.size() > cMaxObjects && depth < cMaxDepth)
+	if (objects.size() > cMaxObjects && depth < cMaxDepth) //if we pushed too many - split
 	{
 		if (!nodes[0])
 			Split();
@@ -88,13 +93,13 @@ void cQuadtree::Insert(cGameObject *obj)
 		int i = 0;
 		while (i < objects.size())
 		{
-			int index = GetIndex(objects[i]->GetRect());
+			int index = GetIndex(objects[i]->GetRect()); //if fits a child quad - push it there
 			if (index != -1)
 			{
 				nodes[index]->Insert(objects[i]);
 				objects.erase(objects.begin() + i);
 			}
-			else
+			else //otherwise let it stay in parent quad
 				i++;
 		}
 	}
@@ -104,7 +109,7 @@ void cQuadtree::Get(vector<cGameObject*> &ret, RECTF pRect)
 {
 	int index = GetIndex(pRect);
 	if (index != -1 && nodes[0])
-		nodes[index]->Get(ret, pRect);
+		nodes[index]->Get(ret, pRect); //recursively gather up the objects for quads that fit the pRect
 
 	ret.insert(ret.begin(), objects.begin(), objects.end());
 }

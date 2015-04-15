@@ -20,10 +20,10 @@ void cGUIElement::Render()
 	
 	glBindTexture(GL_TEXTURE_2D, texture ? texture->getTexture() : 0);
 
+	glColor4f(bkgdColor.x, bkgdColor.y, bkgdColor.z, bkgdColor.w); //setting the current background color
 	glBegin(GL_QUADS);
-		glColor4f(bkgdColor.x, bkgdColor.y, bkgdColor.z, bkgdColor.w);
 		glTexCoord2i(0, 0);
-		glVertex2i(rect.left, rect.top);
+		glVertex2i(rect.left, rect.top); //since not using a transform, rendering in proper absolutes
 		glTexCoord2i(1, 0);
 		glVertex2i(rect.right, rect.top);
 		glTexCoord2i(1, 1);

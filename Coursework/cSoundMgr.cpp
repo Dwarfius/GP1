@@ -1,5 +1,6 @@
 #include "cSoundMgr.h"
 
+//I've cleared the class
 cSoundMgr::cSoundMgr()
 {
 	CreateContext();
@@ -9,7 +10,6 @@ cSoundMgr::~cSoundMgr()
 {
 	CleanUp();
 
-	//is it required?
 	m_OALContext = alcGetCurrentContext();
 	m_OALDevice = alcGetContextsDevice(m_OALContext);
 

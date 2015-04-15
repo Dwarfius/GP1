@@ -13,7 +13,7 @@ private:
 	int fliesRight;
 	glm::vec4 *weapOffsets = NULL;
 
-	//levels
+	//upgrades
 	ShipType type;
 	int engineLevel;
 	int hullLevel;
@@ -52,7 +52,7 @@ public:
 	string GetName() { return "Ship"; }
 	void OnDestroy();
 
-	//levels
+	//component specific calls
 	ShipType GetShipType() { return type; }
 	void SetShipType(ShipType pType);
 	int GetShipUpCost() { return ((int)type + 1) * ((int)type + 1) * 100; }

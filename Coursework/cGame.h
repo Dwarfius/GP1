@@ -41,9 +41,11 @@ public:
 	~cGame();
 	static cGame* Get() { if (!singleton) singleton = new cGame(); return singleton; }
 
+	//current score
 	int GetScore() { return score; }
 	void AddScore(int delta) { score += delta; }
 
+	//globals
 	void Update(float delta);
 	void CollisionUpdate();
 	void Render();
@@ -58,10 +60,11 @@ public:
 
 	glm::vec2 GetWindowSize() { return windowSize; }
 	void OnResize(int width, int height);
-	cShip* GetNearestShip(glm::vec2 pos);
-
-	cTexture* GetTexture(string name) { return textures[name]; }
 
 	void PlaySnd(string name, bool loop) { soundMgr->GetSnd(name)->Play(loop); }
+	
+	//utility
 	cSound *GetSnd(string name) { return soundMgr->GetSnd(name); }
+	cTexture* GetTexture(string name) { return textures[name]; }
+	cShip* GetNearestShip(glm::vec2 pos);
 };

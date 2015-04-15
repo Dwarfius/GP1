@@ -55,10 +55,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
     }
 
 	cGame *game = cGame::Get();
-    //This is the mainloop, we render frames until isRunning returns false
 	float timer = 0;
-	int t = 0;
-	float time = 0;
+    //This is the mainloop, we render frames until isRunning returns false
 	while (pgmWNDMgr->isWNDRunning())
     {
 		pgmWNDMgr->processWNDEvents(); //Process any window events
@@ -68,11 +66,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 		game->Update(elapsedTime);
 		
-		timer -= elapsedTime;
-		if (timer < 0)
+		timer += elapsedTime;
+		if (timer > 1.f / 60.f) //collision check every 1/60 second
 		{
-			t++;
-			timer = 1 / 60.f; //locking collision detection at ~60fps max
+			timer = 0;
 			game->CollisionUpdate();
 		}
 

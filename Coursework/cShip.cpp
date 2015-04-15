@@ -11,7 +11,7 @@ cShip::cShip(ShipType pType, Owner pOwner) :
 	fliesRight = rand() % 3 - 1;
 
 	SetShipType(pType);
-	switch (type)
+	switch (type) //enemy-specific set-up
 	{
 	case ShipType::Scout:
 		SetBulletLevel(0);
@@ -53,35 +53,40 @@ void cShip::Update(float delta)
 		return;
 
 	cPlayer *player = cGame::Get()->GetPlayer();
-	if (player && !player->IsDead())
+	if (player && !player->IsDead()) //if we acquired the player
 	{
 		glm::vec2 deltaVec = player->GetPosition() - GetPosition();
-		float distanceSqr = deltaVec.y * deltaVec.y + deltaVec.x * deltaVec.x;
+		float distanceSqr = glm::length2(deltaVec);
 		LookAt(player->GetPosition());
-		glm::vec2 dir = glm::normalize(deltaVec);
+		glm::vec2 dir = glm::normalize(deltaVec); //get proper direction
 		if (distanceSqr <= 10000)
 			dir = -dir;
 		
+		//home on his position
 		AddVelocity(dir * accelRate * delta);
 		
 		//adding random right/0/left velocity so that they don't bunch up
 		//plays out better - the player has to deal with multiple clouds of ships
 		AddVelocity(GetRight() * accelRate * delta * (float)fliesRight);
 
+		//limiting the speed
 		float length2 = glm::length2(velocity);
 		if (length2 > maxVel * maxVel)
 			velocity = glm::normalize(velocity) * maxVel;
 
+		//if we're in range and facing the player
 		if (distanceSqr < 10000000 && glm::abs(glm::dot(GetForward(), dir)) > 0.9f)
 			Shoot(player);
 	}
 
+	//dampening
 	velocity.x -= glm::sign(velocity.x) * 25 * delta;
 	velocity.y -= glm::sign(velocity.y) * 25 * delta;
 
-	for (auto iter = weapons.begin(); iter != weapons.end(); iter++)
-		(*iter)->Update(delta);
+	for (cWeapon *weap : weapons)
+		weap->Update(delta);
 
+	UpdateForward();
 	cGameObject::Update(delta);
 }
 
@@ -94,7 +99,7 @@ void cShip::Shoot(cGameObject *target)
 {
 	for (int i = 0; i < weapons.size(); i++)
 	{
-		if (weapons[i]->CanShoot())
+		if (weapons[i]->CanShoot()) //shooting only if off cooldown
 		{
 			glm::vec4 spawnPos = GetTransform() * weapOffsets[i];
 			weapons[i]->Shoot(owner, glm::vec2(spawnPos.x, spawnPos.y), GetRotation(), target);
@@ -113,8 +118,9 @@ void cShip::SetShipType(ShipType pType)
 	if (weapOffsets)
 		delete weapOffsets;
 	weapons.clear();
+
 	AddWeapon(new cWeapon(cGame::Get()->GetTexture("bullet"), WeaponType::Bullet, 10)); //always has this
-	switch (type)
+	switch (type) //adding weapons and weapon offsets based on ship type
 	{
 	case ShipType::Scout:
 		sprite->setTexture(cGame::Get()->GetTexture("scout"));
