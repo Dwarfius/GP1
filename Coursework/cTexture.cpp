@@ -12,7 +12,7 @@ cTexture::cTexture(LPCSTR theFilename)
 
 cTexture::~cTexture()
 {
-	ilDeleteImages(1, &ilTextureID);
+	delete txData;
 }
 
 bool cTexture::createTexture(LPCSTR theFilename) 	// create the texture for use.
