@@ -6,7 +6,6 @@ class cPlayer :
 	public cShip
 {
 private:
-	cTrail *trail = NULL;
 	float trailTimer = 0;
 	cShip *target = NULL;
 
@@ -18,7 +17,6 @@ public:
 	~cPlayer();
 
 	void Update(float delta);
-	void Render();
 	void CollidedWith(cGameObject *col);
 
 	string GetName() { return "Player"; }

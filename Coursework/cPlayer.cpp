@@ -4,7 +4,6 @@
 
 cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 {
-	trail = new cTrail();
 	SetBulletLevel(0);
 	SetEngineLevel(0);
 	SetHullLevel(0);
@@ -13,22 +12,12 @@ cPlayer::cPlayer(ShipType pType) : cShip(pType, Owner::Player)
 
 cPlayer::~cPlayer()
 {
-	delete trail;
 }
 
 void cPlayer::Update(float delta)
 {
 	if (destroy)
 		return;
-
-	//trail implementaion
-	trailTimer += delta;
-	if (trailTimer > 0.05f)
-	{
-		trail->Add(GetPosition());
-		trailTimer = 0;
-	}
-	trail->Update(delta);
 
 	if (cInput::ControllerConnected()) //it's either controller or keyboard-mouse
 	{
@@ -86,12 +75,6 @@ void cPlayer::Update(float delta)
 	//do the basic routine
 	UpdateForward();
 	cGameObject::Update(delta);
-}
-
-void cPlayer::Render()
-{
-	trail->Render();
-	sprite->render();
 }
 
 void cPlayer::CollidedWith(cGameObject *col)
